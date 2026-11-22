@@ -45,7 +45,7 @@ export default function AlumnoFormulario() {
 interface PropsFormulario {
   nocontrol: string | undefined
   alumno: Alumno | null // el alumno a editar (null al crear)
-  opciones: OpcionesAlumno | null // sugerencias para carrera y campus (null si aún no llegan o fallaron)
+  opciones: OpcionesAlumno | null // carreras (lista fija) y sugerencias de campus (null si aún no llegan o fallaron)
 }
 
 // Convierte el alumno que devuelve la API en los textos que usan los campos
@@ -71,6 +71,11 @@ function Formulario({ nocontrol, alumno, opciones }: PropsFormulario) {
   const [errores, setErrores] = useState<ErroresAlumno>({})
   const [aviso, setAviso] = useState('')
   const [enviando, setEnviando] = useState(false)
+
+  // Opciones de la lista de carreras: las que manda el servidor. Si tardan o fallan, al menos aparece la carrera actual
+  const carreras = opciones?.carreras ?? []
+  const listaCarreras = datos.carrera && !carreras.includes(datos.carrera) ? [datos.carrera, ...carreras] : carreras
+  const opcionesCarrera = listaCarreras.map((c) => ({ valor: c, etiqueta: c }))
 
   // Cambia un campo y borra su mensaje de error (la persona ya lo está corrigiendo)
   function cambiar(campo: keyof DatosAlumno, valor: string) {
@@ -174,15 +179,15 @@ function Formulario({ nocontrol, alumno, opciones }: PropsFormulario) {
         error={errores.sexo}
       />
 
-      {/* Input con lista de sugerencias (datalist): se elige una carrera existente o se escribe una nueva */}
-      <CampoConLista
+      {/* Lista desplegable con las carreras oficiales (las manda el servidor, que también valida la elegida) */}
+      <CampoFormulario
         id="carrera"
         etiqueta="Carrera"
+        tipo="select"
         valor={datos.carrera}
         onCambio={(v) => cambiar('carrera', v)}
         error={errores.carrera}
-        sugerencias={opciones?.carreras}
-        maxLength={80}
+        opciones={opcionesCarrera}
       />
 
       <CampoConLista

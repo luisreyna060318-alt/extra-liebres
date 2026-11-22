@@ -203,7 +203,7 @@ def test_borrar_sin_inscritos_204(client, h, catalogos):
 def test_borrar_con_inscritos_409(client, db, h, catalogos):
     idgrupo = crear(client, h, catalogos).json()["idgrupo"]
     db.add(Alumno(nocontrol="99000001", nombre="Ana", apaterno="López", amaterno=None, sexo="F",
-                  carrera="Ingeniería Industrial", campus="Campus I"))
+                  carrera="ING. INDUSTRIAL", campus="Campus I"))
     db.add(AlumnoGrupo(nocontrol="99000001", idgrupo=idgrupo))
     db.commit()
 

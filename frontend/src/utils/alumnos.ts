@@ -87,8 +87,8 @@ export function validarAlumno(datos: DatosAlumno, editando: boolean): ErroresAlu
 
   if (datos.sexo !== 'M' && datos.sexo !== 'F') errores.sexo = 'Elige el sexo.'
 
-  const carrera = validarTexto(datos.carrera, 'la carrera', 80)
-  if (carrera) errores.carrera = carrera
+  // La carrera se elige de una lista; el servidor también comprueba que sea una de las oficiales
+  if (!datos.carrera.trim()) errores.carrera = 'Elige la carrera.'
   const campus = validarTexto(datos.campus, 'el campus', 40)
   if (campus) errores.campus = campus
 

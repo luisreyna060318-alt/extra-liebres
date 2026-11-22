@@ -13,7 +13,7 @@ ALUMNO = {
     "apaterno": "López",
     "amaterno": "García",
     "sexo": "F",
-    "carrera": "Ingeniería Industrial",
+    "carrera": "ING. INDUSTRIAL",
     "campus": "Campus I",
 }
 
@@ -95,6 +95,24 @@ def test_hu_02_1_datos_invalidos_dan_422_y_no_guardan_nada(client, db, h, cambio
     assert db.query(Alumno).count() == 0
 
 
+def test_hu_02_1_carrera_fuera_de_la_lista_da_422(client, db, h):
+    r = client.post("/api/alumnos", json={**ALUMNO, "carrera": "Ingeniería Industrial"}, headers=h)  # nombre viejo
+    assert r.status_code == 422
+    assert "Elige una carrera de la lista" in str(r.json())
+    assert db.query(Alumno).count() == 0
+
+
+def test_hu_02_1_la_carrera_se_guarda_con_el_nombre_oficial(client, h):
+    r = client.post("/api/alumnos", json={**ALUMNO, "carrera": "  ing. industrial (ead) "}, headers=h)
+    assert r.status_code == 201
+    assert r.json()["carrera"] == "ING. INDUSTRIAL (EAD)"
+
+
+def test_hu_02_3_editar_tambien_exige_una_carrera_de_la_lista(client, h, varios):
+    cuerpo = {"nombre": "Ana", "apaterno": "López", "sexo": "F", "carrera": "Arquitectura", "campus": "Campus I"}
+    assert client.put("/api/alumnos/19110001", json=cuerpo, headers=h).status_code == 422
+
+
 def test_hu_02_1_faltan_campos_obligatorios_da_422(client, h):
     assert client.post("/api/alumnos", json={"nocontrol": "19110001"}, headers=h).status_code == 422
 
@@ -112,10 +130,10 @@ def test_hu_02_1_el_segundo_apellido_es_opcional(client, h):
 
 @pytest.fixture()
 def varios(crear_alumno):
-    crear_alumno("19110001", "Ana", "López", "García", "F", "Ingeniería Industrial", "Campus I")
-    crear_alumno("19110002", "Luis", "Martínez", "López", "M", "Ingeniería Industrial", "Campus II")
-    crear_alumno("19110003", "María", "Pérez", "Ruiz", "F", "Arquitectura", "Campus I")
-    crear_alumno("19110004", "Pedro", "Gómez", None, "M", "Arquitectura", "Campus II", activo=False)
+    crear_alumno("19110001", "Ana", "López", "García", "F", "ING. INDUSTRIAL", "Campus I")
+    crear_alumno("19110002", "Luis", "Martínez", "López", "M", "ING. INDUSTRIAL", "Campus II")
+    crear_alumno("19110003", "María", "Pérez", "Ruiz", "F", "LIC. ADMINISTRACIÓN", "Campus I")
+    crear_alumno("19110004", "Pedro", "Gómez", None, "M", "LIC. ADMINISTRACIÓN", "Campus II", activo=False)
 
 
 def numeros(respuesta):
@@ -156,15 +174,15 @@ def test_hu_02_2_los_simbolos_de_comodin_se_buscan_tal_cual(client, h, varios):
 
 
 def test_hu_02_2_filtra_por_carrera_y_por_campus(client, h, varios):
-    assert sorted(numeros(client.get("/api/alumnos?carrera=Arquitectura", headers=h))) == ["19110003"]
+    assert sorted(numeros(client.get("/api/alumnos?carrera=LIC. ADMINISTRACIÓN", headers=h))) == ["19110003"]
     assert sorted(numeros(client.get("/api/alumnos?campus=Campus I", headers=h))) == ["19110001", "19110003"]
 
 
 def test_hu_02_2_los_filtros_se_combinan_con_y(client, h, varios):
-    r = client.get("/api/alumnos?carrera=Ingeniería Industrial&campus=Campus II&q=luis", headers=h)
+    r = client.get("/api/alumnos?carrera=ING. INDUSTRIAL&campus=Campus II&q=luis", headers=h)
     assert numeros(r) == ["19110002"]
-    sin_coincidencia = client.get("/api/alumnos?carrera=Arquitectura&campus=Campus II", headers=h)
-    assert sin_coincidencia.json()["total"] == 0  # el único de Campus II en Arquitectura está de baja
+    sin_coincidencia = client.get("/api/alumnos?carrera=LIC. ADMINISTRACIÓN&campus=Campus II", headers=h)
+    assert sin_coincidencia.json()["total"] == 0  # el único de Campus II en LIC. ADMINISTRACIÓN está de baja
 
 
 def test_hu_02_2_filtra_por_estado(client, h, varios):
@@ -201,10 +219,14 @@ def test_hu_02_2_el_tamano_de_pagina_esta_limitado(client, h):
     assert client.get("/api/alumnos?page=0", headers=h).status_code == 422
 
 
-def test_hu_02_2_opciones_devuelve_carreras_y_campus_sin_repetir(client, h, varios):
+def test_hu_02_2_opciones_devuelve_las_carreras_oficiales_y_los_campus_existentes(client, h, varios):
     r = client.get("/api/alumnos/opciones", headers=h)
     assert r.status_code == 200
-    assert r.json() == {"carreras": ["Arquitectura", "Ingeniería Industrial"], "campus": ["Campus I", "Campus II"]}
+    datos = r.json()
+    # Lista fija: no depende de los alumnos que existan
+    assert len(datos["carreras"]) == 16 and datos["carreras"][0] == "LIC. ADMINISTRACIÓN"
+    assert "ING. INDUSTRIAL MODALIDAD MIXTA" in datos["carreras"]
+    assert datos["campus"] == ["Campus I", "Campus II"]  # los campus sí son los que existen
 
 
 # ---------- HU-02.3 Editar y dar de baja ----------
@@ -255,7 +277,7 @@ def test_hu_02_3_dar_de_baja_dos_veces_o_a_un_inexistente(client, h, varios):
 
 
 def test_hu_02_3_reactivar_a_un_alumno_dado_de_baja(client, h, varios):
-    cuerpo = {"nombre": "Pedro", "apaterno": "Gómez", "sexo": "M", "carrera": "Arquitectura",
+    cuerpo = {"nombre": "Pedro", "apaterno": "Gómez", "sexo": "M", "carrera": "LIC. ADMINISTRACIÓN",
               "campus": "Campus II", "activo": True}
     r = client.put("/api/alumnos/19110004", json=cuerpo, headers=h)
     assert r.status_code == 200 and r.json()["activo"] is True
@@ -263,7 +285,8 @@ def test_hu_02_3_reactivar_a_un_alumno_dado_de_baja(client, h, varios):
 
 
 def test_hu_02_3_editar_sin_indicar_activo_no_cambia_el_estado(client, h, varios):
-    cuerpo = {"nombre": "Pedro", "apaterno": "Gómez", "sexo": "M", "carrera": "Arquitectura", "campus": "Campus II"}
+    cuerpo = {"nombre": "Pedro", "apaterno": "Gómez", "sexo": "M", "carrera": "LIC. ADMINISTRACIÓN",
+              "campus": "Campus II"}
     assert client.put("/api/alumnos/19110004", json=cuerpo, headers=h).json()["activo"] is False
 
 

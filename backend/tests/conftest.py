@@ -83,7 +83,7 @@ def crear_alumno(db):
     """Fábrica de alumnos: crear_alumno("19110001", nombre="Ana", activo=False)."""
 
     def _crear(nocontrol="19110001", nombre="Ana", apaterno="López", amaterno="García", sexo="F",
-               carrera="Ingeniería Industrial", campus="Campus I", activo=True):
+               carrera="ING. INDUSTRIAL", campus="Campus I", activo=True):
         alumno = Alumno(nocontrol=nocontrol, nombre=nombre, apaterno=apaterno, amaterno=amaterno, sexo=sexo,
                         carrera=carrera, campus=campus, activo=activo)
         db.add(alumno)

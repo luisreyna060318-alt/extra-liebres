@@ -25,7 +25,7 @@ actividad, grupo y apellidos.
 |---|---|---|
 | `nocontrol` | No. de control | 99000046 |
 | `alumno` | Alumno | Díaz Gutiérrez Mariana |
-| `carrera` | Carrera | Ingeniería Mecatrónica |
+| `carrera` | Carrera | ING. MECATRÓNICA |
 | `actividad` | Actividad | Ajedrez |
 | `semestre` | Semestre | Enero-Junio 2024 |
 | `idgrupo` | Grupo | 3 |
@@ -50,7 +50,7 @@ XML bien formado en UTF-8, con un elemento `<inscrito>` por renglón y el total 
   <inscrito>
     <nocontrol>99000046</nocontrol>
     <alumno>Díaz Gutiérrez Mariana</alumno>
-    <carrera>Ingeniería Mecatrónica</carrera>
+    <carrera>ING. MECATRÓNICA</carrera>
     <actividad>Ajedrez</actividad>
     <semestre>Enero-Junio 2024</semestre>
     <idgrupo>3</idgrupo>
@@ -61,7 +61,7 @@ XML bien formado en UTF-8, con un elemento `<inscrito>` por renglón y el total 
   <inscrito>
     <nocontrol>99000047</nocontrol>
     <alumno>Pérez Soto Luis</alumno>
-    <carrera>Ingeniería Industrial</carrera>
+    <carrera>ING. INDUSTRIAL</carrera>
     <actividad>Ajedrez</actividad>
     <semestre>Enero-Junio 2024</semestre>
     <idgrupo>3</idgrupo>

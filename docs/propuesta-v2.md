@@ -253,7 +253,7 @@ Cambios sobre la Tarea 1:
 - `desempenio` pasa a ser **calculado** a partir de `calificacion` (RN-05).
 - Restricciones: `CHECK (horainicio < horatermino)`, `CHECK (calificacion BETWEEN 0 AND 100)`,
   `UNIQUE (anio, mesinicio)` en semestre, `sexo` y `tipo` limitados a valores válidos.
-- `carrera` y `campus` quedan como texto/lista fija (no hace falta catálogo propio).
+- `carrera` es una lista fija de 16 carreras (`backend/app/core/constantes.py`; el servidor rechaza cualquier otra) y `campus` queda como texto (no hace falta catálogo propio).
 
 ## 7. Endpoints de la API (≥ 12 requeridos; la API final tiene 43 operaciones, ver `seguridad.md`)
 

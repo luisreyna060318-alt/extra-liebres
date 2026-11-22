@@ -6,6 +6,7 @@ from sqlalchemy import func, or_, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, joinedload
 
+from app.core.constantes import CARRERAS
 from app.core.errores import Conflicto, NoEncontrado
 from app.core.paginacion import Paginacion
 from app.models import Alumno, AlumnoGrupo, Extraescolar, Grupo, Semestre
@@ -144,6 +145,5 @@ def historial_alumno(db: Session, nocontrol: str) -> list[HistorialItem]:
 
 
 def opciones_alumnos(db: Session) -> OpcionesAlumno:
-    carreras = db.scalars(select(Alumno.carrera).distinct().order_by(Alumno.carrera))
     campus = db.scalars(select(Alumno.campus).distinct().order_by(Alumno.campus))
-    return OpcionesAlumno(carreras=list(carreras), campus=list(campus))
+    return OpcionesAlumno(carreras=list(CARRERAS), campus=list(campus))

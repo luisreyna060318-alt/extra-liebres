@@ -49,7 +49,7 @@ def test_inscribir_201_sin_calificacion(client, h, grupo, alumno):
     assert r.json() == {
         "nocontrol": "19110001",
         "alumno": "López García Ana",
-        "carrera": "Ingeniería Industrial",
+        "carrera": "ING. INDUSTRIAL",
         "activo": True,
         "calificacion": None,
         "desempenio": None,
