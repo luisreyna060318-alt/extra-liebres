@@ -32,6 +32,13 @@ class NoEncontrado(ErrorNegocio):
     status_code = 404
 
 
+class DatoInvalido(ErrorNegocio):
+    """422: el dato tiene buena forma pero no es válido según otra información de la BD
+    (por ejemplo, un lugar que no corresponde al tipo de la actividad)."""
+
+    status_code = 422
+
+
 class Conflicto(ErrorNegocio):
     """409: la acción choca con algo existente (duplicado, cruce de horario, registro referenciado...)."""
 

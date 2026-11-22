@@ -3,7 +3,8 @@
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session, joinedload, selectinload
 
-from app.core.errores import Conflicto, NoEncontrado
+from app.core.constantes import INSTALACIONES
+from app.core.errores import Conflicto, DatoInvalido, NoEncontrado
 from app.core.paginacion import Paginacion
 from app.models import Extraescolar, Grupo, Promotor, Semestre
 from app.schemas.grupo import GrupoDatos, GrupoSalida
@@ -69,14 +70,34 @@ def _obtener(db: Session, idgrupo: int) -> Grupo:
 # ---------- Reglas de negocio ----------
 
 
-def _validar_referencias(db: Session, datos: GrupoDatos) -> None:
-    """El semestre, la actividad y el promotor elegidos deben existir."""
+def _validar_referencias(db: Session, datos: GrupoDatos) -> Extraescolar:
+    """El semestre, la actividad y el promotor elegidos deben existir. Devuelve la actividad."""
     if db.get(Semestre, datos.idsemestre) is None:
         raise NoEncontrado("El semestre elegido no existe")
-    if db.get(Extraescolar, datos.idextraescolar) is None:
+    extraescolar = db.get(Extraescolar, datos.idextraescolar)
+    if extraescolar is None:
         raise NoEncontrado("La actividad elegida no existe")
     if db.get(Promotor, datos.rfcpromotor) is None:
         raise NoEncontrado("El promotor elegido no existe")
+    return extraescolar
+
+
+def validar_lugar(extraescolar: Extraescolar, datos: GrupoDatos) -> None:
+    """P9 / HU-04.2: si la actividad es deportiva, el lugar debe ser una instalación de la lista; si es
+    cultural o cívica, el aula es texto libre. Se valida aquí (y no en el esquema) porque el tipo no viene
+    en el cuerpo: depende de la actividad guardada en la BD. Así se rechaza aunque alguien salte la pantalla.
+    """
+    if extraescolar.tipo != "deportiva":
+        return
+    # Se acepta sin distinguir mayúsculas, pero se guarda con el nombre oficial de la lista
+    oficiales = {lugar.lower(): lugar for lugar in INSTALACIONES}
+    lugar = oficiales.get(datos.aula.lower())
+    if lugar is None:
+        raise DatoInvalido(
+            f"«{datos.aula}» no es una instalación deportiva válida para {extraescolar.nombreextra}. "
+            f"Elige una de: {', '.join(INSTALACIONES)}"
+        )
+    datos.aula = lugar
 
 
 def validar_cruces(db: Session, grupo: GrupoDatos, excluir_id: int | None = None) -> None:
@@ -158,7 +179,8 @@ def obtener_grupo(db: Session, idgrupo: int) -> GrupoSalida:
 
 
 def crear_grupo(db: Session, datos: GrupoDatos) -> GrupoSalida:
-    _validar_referencias(db, datos)
+    extraescolar = _validar_referencias(db, datos)
+    validar_lugar(extraescolar, datos)  # antes de los cruces: un lugar inválido es 422, no 409
     validar_cruces(db, datos)
     grupo = Grupo(**datos.model_dump())
     db.add(grupo)
@@ -168,7 +190,8 @@ def crear_grupo(db: Session, datos: GrupoDatos) -> GrupoSalida:
 
 def actualizar_grupo(db: Session, idgrupo: int, datos: GrupoDatos) -> GrupoSalida:
     grupo = _obtener(db, idgrupo)
-    _validar_referencias(db, datos)
+    extraescolar = _validar_referencias(db, datos)
+    validar_lugar(extraescolar, datos)
     validar_cruces(db, datos, excluir_id=idgrupo)  # sin esto, el grupo chocaría consigo mismo
     for campo, valor in datos.model_dump().items():
         setattr(grupo, campo, valor)
