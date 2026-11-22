@@ -95,6 +95,7 @@ y el CI se pone en rojo. Se verificó rompiendo la protección a propósito de t
 | Claves de ejemplo en producción | Con `ENTORNO=produccion` el backend **se niega a arrancar** si `SECRET_KEY` es corta o la de ejemplo, y el seed no crea usuarios con las claves de ejemplo | `backend/tests/test_config.py`; arranque real en Docker |
 | Secretos en los logs | `hide_input_in_errors`: un error de configuración ya no imprime la clave ni la contraseña | `test_config.py` (se verificó que falla sin el arreglo) |
 | CORS abierto | Lista explícita de orígenes (`CORS_ORIGINS`), nunca `*`; solo los métodos y encabezados necesarios | Prueba real: un origen ajeno no recibe `access-control-allow-origin` |
+| Cabeceras HTTP de seguridad ausentes | El backend agrega `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Cache-Control: no-store` en `/api` y HSTS en producción. El frontend (Vercel) agrega las mismas más `Permissions-Policy` y una **Content-Security-Policy estricta** (solo scripts, estilos e imágenes del propio sitio; solo se puede hablar con la API del proyecto; nadie puede incrustar el sitio) | `backend/tests/test_cabeceras.py` (9 pruebas, verificadas con una mutación). La CSP se probó en el navegador recorriendo las 8 pantallas y el tablero con gráficas: **0 violaciones** |
 | Contraseñas débiles o guardadas en claro | Mínimo 8 caracteres con letras y números, máximo 72 bytes; hash **bcrypt** con sal | `test_security.py`, `test_auth.py` |
 | Contenedor con demasiados privilegios | El proceso corre como usuario `app`, no `root` | `docker compose exec backend whoami` → `app` |
 | Base de datos expuesta | PostgreSQL se publica solo en `127.0.0.1`, nunca en la red | `infra/docker-compose.yml` |
@@ -123,5 +124,7 @@ Cosas que decidimos no hacer en esta entrega y que un sistema real debería tene
 5. **`/docs` queda público**, también en producción: es útil para la demo y para el profesor; un sistema real lo cerraría.
 6. **`SEED_ON_START=true` en producción** carga datos ficticios. Es explícito en `render.yaml`; hay que quitarlo si algún día
    hubiera datos reales.
-7. **Datos personales:** los datos de ejemplo son ficticios (los números de control empiezan con `99`) y los registros reales
+7. **La CSP fija la URL de la API de producción** (`connect-src`): si la API cambia de dirección hay que editar `frontend/vercel.json`. Las cabeceras
+   del frontend solo aplican en Vercel; el frontend de `docker compose` (nginx) no lleva CSP.
+8. **Datos personales:** los datos de ejemplo son ficticios (los números de control empiezan con `99`) y los registros reales
    de alumnos no se suben al repositorio ni a un asistente de IA (RN-07).
