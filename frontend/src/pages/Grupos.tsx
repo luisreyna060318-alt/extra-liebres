@@ -1,12 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { cargarCatalogos } from '../api/catalogos.ts'
-import { TAMANO_PAGINA, listarGrupos } from '../api/grupos.ts'
+import { ErrorApi } from '../api/cliente.ts'
+import { TAMANO_PAGINA, eliminarGrupo, listarGrupos } from '../api/grupos.ts'
 import type { FiltrosGrupos } from '../api/grupos.ts'
 import CampoFormulario from '../components/CampoFormulario.tsx'
+import Confirmacion from '../components/Confirmacion.tsx'
 import Estado from '../components/Estado.tsx'
 import { useApi } from '../hooks/useApi.ts'
 import { useTitulo } from '../hooks/useTitulo.ts'
+import type { Grupo } from '../types.ts'
 import { DIAS, nombreDia, nombrePromotor, nombreSemestre, recortarHora } from '../utils/grupos.ts'
 
 const SIN_FILTROS: FiltrosGrupos = { semestre: '', extraescolar: '', promotor: '', dia: '' }
@@ -19,10 +22,24 @@ interface EstadoNavegacion {
 // Lista de grupos con filtros y paginación (HU-04.3). Los filtros se aplican en el servidor.
 export default function Grupos() {
   useTitulo('Grupos')
-  const mensaje = (useLocation().state as EstadoNavegacion | null)?.mensaje
+  const mensajeInicial = (useLocation().state as EstadoNavegacion | null)?.mensaje ?? ''
 
   const [filtros, setFiltros] = useState<FiltrosGrupos>(SIN_FILTROS)
   const [pagina, setPagina] = useState(1)
+
+  // Eliminar (HU-04.4): el grupo que espera confirmación, el aviso de éxito y el error del servidor
+  const [porEliminar, setPorEliminar] = useState<Grupo | null>(null)
+  const [eliminando, setEliminando] = useState(false)
+  const [aviso, setAviso] = useState(mensajeInicial)
+  const [errorEliminar, setErrorEliminar] = useState('')
+  const [eliminados, setEliminados] = useState(0) // cuenta los borrados para mover el foco solo después de uno
+  const botonQueAbrio = useRef<HTMLButtonElement | null>(null) // el botón "Eliminar" al que vuelve el foco al cancelar
+  const refAviso = useRef<HTMLParagraphElement>(null)
+
+  // La fila borrada se lleva su botón: el foco pasa al mensaje "Grupo eliminado." cuando ya está en pantalla
+  useEffect(() => {
+    if (eliminados > 0) refAviso.current?.focus()
+  }, [eliminados])
 
   // Los catálogos llenan las listas de los filtros; si fallan, solo esa parte muestra el error
   const catalogos = useApi(cargarCatalogos)
@@ -40,6 +57,42 @@ export default function Grupos() {
     setPagina(1)
   }
 
+  function pedirConfirmacion(grupo: Grupo, boton: HTMLButtonElement) {
+    botonQueAbrio.current = boton
+    setAviso('')
+    setErrorEliminar('')
+    setPorEliminar(grupo)
+  }
+
+  // Cancelar (o Esc): se cierra el panel y el foco regresa al botón "Eliminar" de esa fila
+  function cancelarEliminar() {
+    setPorEliminar(null)
+    setErrorEliminar('')
+    botonQueAbrio.current?.focus()
+  }
+
+  async function confirmarEliminar() {
+    if (!porEliminar) return
+    setEliminando(true)
+    setErrorEliminar('')
+    try {
+      await eliminarGrupo(porEliminar.idgrupo) // DELETE: 204 si se pudo
+      setPorEliminar(null)
+      setAviso('Grupo eliminado.')
+      setEliminados((n) => n + 1)
+      // Si se borró la única fila de una página que no es la primera, se retrocede una página
+      if (grupos.datos?.items.length === 1 && pagina > 1) setPagina(pagina - 1)
+      else grupos.recargar()
+    } catch (e) {
+      // 409: el grupo tiene alumnos inscritos. Se muestra el mensaje del servidor y el panel sigue abierto.
+      setErrorEliminar(e instanceof Error ? e.message : 'No se pudo eliminar el grupo.')
+      // 404: otra persona ya lo eliminó; la lista se actualiza para que deje de aparecer
+      if (e instanceof ErrorApi && e.status === 404) grupos.recargar()
+    } finally {
+      setEliminando(false)
+    }
+  }
+
   const hayFiltros = Object.values(filtros).some(Boolean)
   const total = grupos.datos?.total ?? 0
   const totalPaginas = Math.max(1, Math.ceil(total / TAMANO_PAGINA))
@@ -53,10 +106,24 @@ export default function Grupos() {
         </Link>
       </div>
 
-      {mensaje && (
-        <p role="status" className="alerta alerta-exito">
-          {mensaje}
+      {aviso && (
+        <p ref={refAviso} tabIndex={-1} role="status" className="alerta alerta-exito">
+          {aviso}
         </p>
+      )}
+
+      {porEliminar && (
+        <Confirmacion
+          id="confirmar-eliminar-grupo"
+          nivelTitulo={2}
+          titulo="Eliminar grupo"
+          texto={`¿Eliminar el grupo de ${porEliminar.actividad} del ${nombreDia(porEliminar.dia).toLowerCase()}, de ${recortarHora(porEliminar.horainicio)} a ${recortarHora(porEliminar.horatermino)} (${porEliminar.semestre})? Esta acción no se puede deshacer.`}
+          textoConfirmar="Sí, eliminar"
+          enviando={eliminando}
+          error={errorEliminar}
+          onConfirmar={() => void confirmarEliminar()}
+          onCancelar={cancelarEliminar}
+        />
       )}
 
       <fieldset className="filtros">
@@ -151,7 +218,7 @@ export default function Grupos() {
                       <td data-etiqueta="Lugar">{g.aula}</td>
                       <td data-etiqueta="Inscritos">{g.inscritos}</td>
                       <td data-etiqueta="Acciones">
-                        {/* Un solo contenedor: en celular la celda reparte el espacio entre la etiqueta y los enlaces */}
+                        {/* Un solo contenedor: en celular la celda reparte el espacio entre la etiqueta y las acciones */}
                         <span className="enlaces-acciones">
                           <Link to={`/grupos/${g.idgrupo}`} aria-label={`Ver inscritos del grupo de ${g.actividad}, ${nombreDia(g.dia)} ${recortarHora(g.horainicio)}`}>
                             Ver
@@ -159,6 +226,15 @@ export default function Grupos() {
                           <Link to={`/grupos/${g.idgrupo}/editar`} aria-label={`Editar el grupo de ${g.actividad}, ${nombreDia(g.dia)} ${recortarHora(g.horainicio)}`}>
                             Editar
                           </Link>
+                          <button
+                            type="button"
+                            className="boton-texto boton-texto-peligro"
+                            disabled={eliminando}
+                            onClick={(e) => pedirConfirmacion(g, e.currentTarget)}
+                            aria-label={`Eliminar grupo de ${g.actividad} del ${nombreDia(g.dia)} a las ${recortarHora(g.horainicio)}`}
+                          >
+                            Eliminar
+                          </button>
                         </span>
                       </td>
                     </tr>

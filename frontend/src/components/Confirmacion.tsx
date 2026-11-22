@@ -7,6 +7,7 @@ interface Props {
   texto: string
   textoConfirmar: string // por ejemplo "Sí, eliminar"
   enviando: boolean
+  error?: string // mensaje del servidor si la acción falló (por ejemplo un 409): el panel sigue abierto para leerlo
   peligrosa?: boolean // true pinta el botón en rojo (eliminar, suspender)
   nivelTitulo?: 2 | 3 // h2 si el panel va justo debajo del h1 (sin h2 antes); h3 si va dentro de una sección con h2
   onConfirmar: () => void
@@ -14,8 +15,9 @@ interface Props {
 }
 
 // Panel de confirmación dentro de la página (no es un modal): nada se envía hasta pulsar el botón de confirmar.
-export default function Confirmacion({ id, titulo, texto, textoConfirmar, enviando, peligrosa = true, nivelTitulo = 3, onConfirmar, onCancelar }: Props) {
+export default function Confirmacion({ id, titulo, texto, textoConfirmar, enviando, peligrosa = true, nivelTitulo = 3, error = '', onConfirmar, onCancelar }: Props) {
   const refTitulo = useRef<HTMLHeadingElement>(null)
+  const refError = useRef<HTMLParagraphElement>(null)
   // Así los encabezados no se saltan un nivel (h1 → h3), que desorienta a quien navega por encabezados
   const Titulo = nivelTitulo === 2 ? 'h2' : 'h3'
 
@@ -23,6 +25,11 @@ export default function Confirmacion({ id, titulo, texto, textoConfirmar, envian
   useEffect(() => {
     refTitulo.current?.focus()
   }, [])
+
+  // Si llega un error, el foco pasa a él (sigue dentro del panel, así Esc todavía cancela)
+  useEffect(() => {
+    if (error) refError.current?.focus()
+  }, [error])
 
   // Esc cancela, como en cualquier diálogo
   function alTeclear(evento: KeyboardEvent<HTMLElement>) {
@@ -41,6 +48,11 @@ export default function Confirmacion({ id, titulo, texto, textoConfirmar, envian
         {titulo}
       </Titulo>
       <p id={`${id}-texto`}>{texto}</p>
+      {error && (
+        <p ref={refError} tabIndex={-1} role="alert" className="alerta alerta-error">
+          {error}
+        </p>
+      )}
       <div className="acciones">
         <button type="button" className={peligrosa ? 'boton boton-peligro' : 'boton'} onClick={onConfirmar} disabled={enviando}>
           {enviando ? 'Enviando…' : textoConfirmar}

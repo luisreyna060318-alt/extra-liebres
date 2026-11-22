@@ -37,6 +37,11 @@ export function actualizarGrupo(id: string, datos: GrupoEntrada): Promise<Grupo>
   return api.put<Grupo>(`/api/grupos/${encodeURIComponent(id)}`, datos)
 }
 
+// DELETE /api/grupos/{id} (204, sin cuerpo). Puede responder 404 o 409 (el grupo tiene alumnos inscritos).
+export function eliminarGrupo(id: number): Promise<void> {
+  return api.delete<void>(`/api/grupos/${id}`)
+}
+
 // GET /api/clima: temperatura y probabilidad de lluvia en Ciudad Juárez (el backend consulta Open-Meteo)
 export function pedirClima(): Promise<Clima> {
   return api.get<Clima>('/api/clima')
