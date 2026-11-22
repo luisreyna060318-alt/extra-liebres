@@ -8,6 +8,7 @@ export default function Layout() {
   const { usuario, logout } = useAuth()
   const navegar = useNavigate()
   const esAdmin = usuario?.rol === 'administrador'
+  const esLector = usuario?.rol === 'lector'
 
   // La app es una SPA: al cambiar de pantalla la página no se recarga y el foco se queda en el enlace pulsado
   // (que puede desaparecer). Se mueve el foco al contenido para que teclado y lector de pantalla empiecen ahí.
@@ -45,7 +46,7 @@ export default function Layout() {
           Extra-Liebres
         </Link>
 
-        {usuario && (
+        {usuario && !esLector && (
           <form className="buscador-global" role="search" aria-label="Buscar en todo el sistema" onSubmit={buscar}>
             <label htmlFor="buscador-global-texto" className="solo-lectores">
               Buscar alumnos y grupos
@@ -81,9 +82,10 @@ export default function Layout() {
           {usuario ? (
             <>
               <li><NavLink to="/" end>Tablero</NavLink></li>
-              <li><NavLink to="/alumnos">Alumnos</NavLink></li>
+              {/* El lector solo ve Tablero y Grupos; la API protege lo demás de todos modos */}
+              {!esLector && <li><NavLink to="/alumnos">Alumnos</NavLink></li>}
               <li><NavLink to="/grupos">Grupos</NavLink></li>
-              <li><NavLink to="/consultas">Consultas</NavLink></li>
+              {!esLector && <li><NavLink to="/consultas">Consultas</NavLink></li>}
               {/* Solo se muestran a administrador; la API protege estas rutas de todos modos */}
               {esAdmin && <li><NavLink to="/catalogos">Catálogos</NavLink></li>}
               {esAdmin && <li><NavLink to="/usuarios">Usuarios</NavLink></li>}

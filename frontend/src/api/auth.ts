@@ -16,7 +16,7 @@ export function pedirToken(correo: string, password: string): Promise<Token> {
   })
 }
 
-// POST /api/auth/register: crea la cuenta (siempre con rol capturista). Devuelve 201.
+// POST /api/auth/register: crea la cuenta (siempre con rol lector). Devuelve 201.
 export function registrarCuenta(datos: { nombre: string; correo: string; password: string }): Promise<Usuario> {
   return api.post<Usuario>('/api/auth/register', datos)
 }

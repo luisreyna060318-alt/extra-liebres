@@ -8,7 +8,7 @@ from app.core.database import Base
 
 
 class Usuario(Base):
-    """Cuenta para entrar al sistema. Tiene un solo rol: administrador o capturista (RN-06)."""
+    """Cuenta para entrar al sistema. Tiene un solo rol: administrador, capturista o lector (RN-06)."""
 
     __tablename__ = "usuario"
 
@@ -16,7 +16,7 @@ class Usuario(Base):
     nombre: Mapped[str] = mapped_column(String(100))
     correo: Mapped[str] = mapped_column(String(120), unique=True)
     password_hash: Mapped[str] = mapped_column(String(255))  # nunca la contraseña en claro
-    rol: Mapped[str] = mapped_column(String(20), default="capturista")
+    rol: Mapped[str] = mapped_column(String(20), default="lector")
     activo: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())
     creado_en: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 

@@ -35,9 +35,10 @@ por rol, un tablero de resumen y un aviso de clima para las actividades al aire 
 |---|---|---|---|
 | **Administrador** | Jefatura del Departamento | Todo lo del capturista + administrar usuarios, roles y catálogos | I |
 | **Capturista** | Personal administrativo | Capturar y consultar alumnos, grupos e inscripciones; ver el tablero | I |
+| **Lector** | Cualquier persona que se registra | Ver el tablero y las listas de grupos y catálogos, sin datos de alumnos y sin cambiar nada | I |
 
-Una persona tiene **un solo rol**. Solo el administrador cambia roles. No hay acceso público: los
-registros contienen datos personales de alumnos (ver RN-07).
+Una persona tiene **un solo rol**. Solo el administrador cambia roles. Las cuentas nuevas nacen como **lector**, que no ve
+datos de alumnos: los registros contienen datos personales (ver RN-07).
 
 ## 3. Épicas e historias de usuario
 
@@ -60,7 +61,7 @@ Prioridad **I** = indispensable · **D** = deseable. Cada historia es un issue e
 
 **HU-01.1 Crear una cuenta · I · Visitante**
 Como persona del departamento, quiero registrarme, para poder entrar al sistema.
-- CA1 Dado que lleno nombre, correo y contraseña válidos, cuando envío el registro, entonces se crea mi cuenta con rol Capturista.
+- CA1 Dado que lleno nombre, correo y contraseña válidos, cuando envío el registro, entonces se crea mi cuenta con rol Lector, que solo ve el tablero y los grupos.
 - CA2 Dado que el correo ya existe, cuando envío el registro, entonces veo un mensaje claro y no se crea otra cuenta.
 - CA3 Dado que la contraseña tiene menos de 8 caracteres o no mezcla letras y números, cuando envío, entonces veo el error junto al campo sin perder lo capturado.
 
@@ -73,8 +74,9 @@ Como usuario, quiero entrar y salir, para que nadie use mi cuenta en un equipo c
 
 **HU-01.3 Hacer solo lo que mi rol permite · I · Todos**
 Como departamento, queremos que cada quien haga solo lo que su rol permite, para proteger los datos.
-- CA1 Dado que soy Capturista, cuando navego, entonces no veo opciones de administración.
+- CA1 Dado que soy Capturista o Lector, cuando navego, entonces no veo opciones de administración; si soy Lector, tampoco veo Alumnos ni Consultas.
 - CA2 Dado que soy Capturista y conozco la ruta de una función de administrador, cuando la intento por cualquier medio (por ejemplo desde `/docs`), entonces el servidor responde 403 y ningún dato cambia.
+- CA2b Dado que soy Lector y llamo por cualquier medio una ruta de alumnos, búsqueda, consultas, inscripciones o de crear, editar o eliminar grupos, entonces el servidor responde 403 y ningún dato cambia.
 - CA3 Dado que no tengo sesión, cuando llamo cualquier endpoint privado, entonces el servidor responde 401.
 
 **HU-01.4 Administrar usuarios y roles · I · Administrador**
@@ -201,6 +203,7 @@ Como capturista, quiero ver el clima de Ciudad Juárez, para saber si una activi
 - CA2 Dado que hay ⚠️ 50 % o más de probabilidad de lluvia, cuando entro al tablero, entonces veo un aviso destacado para las actividades al aire libre.
 - CA3 Dado que la información tiene más de 1 hora, cuando alguien consulta, entonces el backend la actualiza (caché de 1 hora, RN-10).
 - CA4 Dado que el servicio externo no responde, cuando entro, entonces el sistema sigue funcionando y muestra "Pronóstico no disponible".
+- CA5 Dado que Open-Meteo rechaza la consulta (por ejemplo 429 por límite de uso), cuando entro, entonces el backend usa el servicio de respaldo (wttr.in) y, si también falla, muestra la última copia de menos de 6 horas; solo si no hay ninguna aparece "Pronóstico no disponible".
 
 ## 4. Reglas de negocio
 
@@ -211,11 +214,11 @@ Como capturista, quiero ver el clima de Ciudad Juárez, para saber si una activi
 | RN-03 | **No se permiten cruces**: un promotor o un aula no pueden tener dos grupos con horario traslapado el mismo día y semestre. Hora de inicio < hora de término. |
 | RN-04 | Un alumno no puede inscribirse dos veces al mismo grupo, ni estando de baja. |
 | RN-05 | Calificación entera de 0 a 100. El **desempeño lo calcula el servidor** (el usuario no lo captura): Excelente 95–100, Notable 85–94, Bueno 75–84, Suficiente 70–74, Insuficiente < 70 (escala del TecNM). ⚠️ Confirmar con el profesor que este es el criterio que quiere. |
-| RN-06 | Un rol por persona. Solo el administrador cambia roles. Siempre debe existir al menos un administrador activo. |
+| RN-06 | Un rol por persona (administrador, capturista o lector). Las cuentas nuevas son lector. Solo el administrador cambia roles. Siempre debe existir al menos un administrador activo. |
 | RN-07 | **Privacidad:** los datos de alumnos son personales (Ley General de Protección de Datos Personales en Posesión de Sujetos Obligados). Solo se ven con sesión. Las contraseñas se guardan con hash y nunca se muestran. Los datos semilla del repositorio son **ficticios**. |
 | RN-08 | Un registro referenciado por otros (promotor, actividad, semestre) no se elimina: se desactiva, o el sistema responde 409. |
 | RN-09 | Todas las fechas y horas se muestran en hora local de Ciudad Juárez (`America/Ciudad_Juarez`). |
-| RN-10 | El pronóstico se consulta solo desde el backend y se guarda en caché 1 hora. Si falla, el sistema sigue funcionando. |
+| RN-10 | El pronóstico se consulta solo desde el backend y se guarda en caché 1 hora. Si falla Open-Meteo se usa wttr.in como respaldo (solo se le mandan las coordenadas de Ciudad Juárez); si también falla, se muestra la última copia de menos de 6 horas y no se vuelve a intentar durante 1 minuto. El sistema siempre sigue funcionando. |
 | RN-11 | Los listados se paginan de 10 en 10 (valor ajustable, documentado en el reporte). |
 
 ## 5. Requerimientos no funcionales

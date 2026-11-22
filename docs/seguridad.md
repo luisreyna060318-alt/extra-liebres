@@ -12,7 +12,9 @@ el servidor responde `401` (sin sesión) o `403` (sin permiso) y no cambia ning�
 
 - El **rol y el estado de la cuenta se leen de la base de datos en cada petición**. Si el administrador cambia un rol o
   suspende una cuenta, el cambio se aplica en la siguiente acción de esa persona aunque conserve su token.
-- Un usuario nuevo **siempre nace como capturista**. El campo `rol` que se mande al registrarse se ignora.
+- Un usuario nuevo **siempre nace como lector**: solo ve el tablero y las listas de grupos y catálogos. No ve datos de alumnos
+  (alumnos, historial, búsqueda, consultas, inscritos) ni puede crear, editar o eliminar nada. El campo `rol` que se mande al
+  registrarse se ignora, y solo un administrador puede subirlo a capturista o administrador.
 - No se puede quitar el rol ni suspender al **último administrador activo** (`409`).
 - La **exportación** de inscritos (`/api/export/...`) es solo del administrador. En el CSV, un texto que empieza con `=`, `+`, `-` o `@`
   se escribe con una comilla al inicio para que la hoja de cálculo no lo ejecute como fórmula (`backend/tests/test_exportar.py`).
@@ -21,7 +23,7 @@ el servidor responde `401` (sin sesión) o `403` (sin permiso) y no cambia ning�
 
 ### Matriz de permisos de toda la API (43 operaciones)
 
-Públicas: **3** · Con sesión (ambos roles): **27** · Solo administrador: **13**
+Públicas: **3** · Con sesión, cualquier rol: **11** · Administrador o capturista: **16** · Solo administrador: **13**
 
 | Método | Ruta | Quién puede |
 |---|---|---|
@@ -33,45 +35,45 @@ Públicas: **3** · Con sesión (ambos roles): **27** · Solo administrador: **1
 | PUT | `/api/alumnos/{nocontrol}` | Administrador o capturista |
 | GET | `/api/alumnos/{nocontrol}/historial` | Administrador o capturista |
 | POST | `/api/auth/login` | Público (no exige sesión) |
-| GET | `/api/auth/me` | Administrador o capturista |
+| GET | `/api/auth/me` | Cualquier rol con sesión (incluido el lector) |
 | POST | `/api/auth/register` | Público (no exige sesión) |
 | GET | `/api/busqueda` | Administrador o capturista |
-| GET | `/api/clima` | Administrador o capturista |
+| GET | `/api/clima` | Cualquier rol con sesión (incluido el lector) |
 | GET | `/api/consultas/inscritos` | Administrador o capturista |
-| GET | `/api/dashboard/resumen` | Administrador o capturista |
+| GET | `/api/dashboard/resumen` | Cualquier rol con sesión (incluido el lector) |
 | GET | `/api/export/inscritos.csv` | Solo administrador |
 | GET | `/api/export/inscritos.xml` | Solo administrador |
-| GET | `/api/extraescolares` | Administrador o capturista |
+| GET | `/api/extraescolares` | Cualquier rol con sesión (incluido el lector) |
 | POST | `/api/extraescolares` | Solo administrador |
 | DELETE | `/api/extraescolares/{idextraescolar}` | Solo administrador |
-| GET | `/api/extraescolares/{idextraescolar}` | Administrador o capturista |
+| GET | `/api/extraescolares/{idextraescolar}` | Cualquier rol con sesión (incluido el lector) |
 | PUT | `/api/extraescolares/{idextraescolar}` | Solo administrador |
-| GET | `/api/grupos` | Administrador o capturista |
+| GET | `/api/grupos` | Cualquier rol con sesión (incluido el lector) |
 | POST | `/api/grupos` | Administrador o capturista |
 | DELETE | `/api/grupos/{idgrupo}` | Administrador o capturista |
-| GET | `/api/grupos/{idgrupo}` | Administrador o capturista |
+| GET | `/api/grupos/{idgrupo}` | Cualquier rol con sesión (incluido el lector) |
 | PUT | `/api/grupos/{idgrupo}` | Administrador o capturista |
 | POST | `/api/grupos/{idgrupo}/inscripciones` | Administrador o capturista |
 | DELETE | `/api/grupos/{idgrupo}/inscripciones/{nocontrol}` | Administrador o capturista |
 | PUT | `/api/grupos/{idgrupo}/inscripciones/{nocontrol}` | Administrador o capturista |
 | GET | `/api/grupos/{idgrupo}/inscritos` | Administrador o capturista |
 | GET | `/api/health` | Público (no exige sesión) |
-| GET | `/api/promotores` | Administrador o capturista |
+| GET | `/api/promotores` | Cualquier rol con sesión (incluido el lector) |
 | POST | `/api/promotores` | Solo administrador |
 | DELETE | `/api/promotores/{rfc}` | Solo administrador |
-| GET | `/api/promotores/{rfc}` | Administrador o capturista |
+| GET | `/api/promotores/{rfc}` | Cualquier rol con sesión (incluido el lector) |
 | PUT | `/api/promotores/{rfc}` | Solo administrador |
-| GET | `/api/semestres` | Administrador o capturista |
+| GET | `/api/semestres` | Cualquier rol con sesión (incluido el lector) |
 | POST | `/api/semestres` | Solo administrador |
 | DELETE | `/api/semestres/{idsemestre}` | Solo administrador |
-| GET | `/api/semestres/{idsemestre}` | Administrador o capturista |
+| GET | `/api/semestres/{idsemestre}` | Cualquier rol con sesión (incluido el lector) |
 | PUT | `/api/semestres/{idsemestre}` | Solo administrador |
 | GET | `/api/usuarios` | Solo administrador |
 | PATCH | `/api/usuarios/{usuario_id}` | Solo administrador |
 
 Esta tabla no se escribió a mano: sale de las mismas listas que usa la prueba automática
 [`backend/tests/test_matriz_permisos.py`](../backend/tests/test_matriz_permisos.py), que **llama a cada ruta** sin sesión y
-como capturista y comprueba lo que el servidor responde. Si alguien agrega una ruta nueva sin protegerla, esa prueba falla
+como capturista y como lector y comprueba lo que el servidor responde. Si alguien agrega una ruta nueva sin protegerla, esa prueba falla
 y el CI se pone en rojo. Se verificó rompiendo la protección a propósito de tres maneras distintas (pruebas de mutación).
 
 ### Cómo demostrar el 403 en la demo
@@ -85,7 +87,8 @@ y el CI se pone en rojo. Se verificó rompiendo la protección a propósito de t
 ### Pruebas que respaldan A01
 | Qué se comprueba | Dónde |
 |---|---|
-| Matriz de las 43 operaciones (401 sin sesión, 403 al capturista) | `backend/tests/test_matriz_permisos.py` |
+| Matriz de las 43 operaciones (401 sin sesión, 403 al capturista en las de administrador y 403 al lector en las de administrador y personal) | `backend/tests/test_matriz_permisos.py` |
+| El registro crea lectores aunque se pida otro rol; el lector no ve datos de alumnos ni cambia nada | `backend/tests/test_rol_lector.py`, `test_auth.py` |
 | Capturista no puede listar usuarios ni cambiar roles (403) y no cambia ningún dato | `backend/tests/test_usuarios.py` |
 | El cambio de rol y la suspensión se aplican en la siguiente petición | `backend/tests/test_usuarios.py`, `test_auth.py` |
 | No se puede dejar el sistema sin administradores | `backend/tests/test_usuarios.py` |

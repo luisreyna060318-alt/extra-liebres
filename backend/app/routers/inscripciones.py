@@ -2,16 +2,20 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, Response, status
 
-from app.core.deps import SesionDB, get_current_user
+from app.core.constantes import ROLES_DE_PERSONAL
+from app.core.deps import SesionDB, require_role
 from app.schemas.inscripcion import EvaluacionDatos, InscripcionCrear, InscritoSalida
 from app.services import inscripcion_service
 
-# Las inscripciones cuelgan de un grupo. Todas exigen sesión (administrador o capturista): 401 si no hay
+# Las inscripciones cuelgan de un grupo. Son para administrador y capturista: 401 sin sesión, 403 si es lector
 router = APIRouter(
     prefix="/api/grupos/{idgrupo}",
     tags=["Inscripciones"],
-    dependencies=[Depends(get_current_user)],
-    responses={401: {"description": "Sin sesión o sesión expirada"}},
+    dependencies=[Depends(require_role(*ROLES_DE_PERSONAL))],
+    responses={
+        401: {"description": "Sin sesión o sesión expirada"},
+        403: {"description": "Los lectores no tienen acceso"},
+    },
 )
 
 NO_EXISTE = {404: {"description": "El grupo no existe o el alumno no está inscrito"}}

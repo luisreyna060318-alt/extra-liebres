@@ -70,7 +70,7 @@ Los valores "de máquina" se guardan sin acentos; la interfaz muestra la etiquet
 
 | Campo | Valores |
 |---|---|
-| `usuario.rol` | `administrador`, `capturista` |
+| `usuario.rol` | `administrador`, `capturista`, `lector` |
 | `alumno.sexo` | `M`, `F` |
 | `extraescolar.tipo` | `deportiva`, `cultural`, `civica` |
 | `grupo.dia` | `lunes`, `martes`, `miercoles`, `jueves`, `viernes`, `sabado` |

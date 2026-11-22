@@ -14,7 +14,7 @@ GET /api/export/inscritos.csv?semestre=1
 GET /api/export/inscritos.xml?extraescolar=2&semestre=1
 ```
 
-Sin sesión responde `401`; con sesión de capturista, `403`.
+Sin sesión responde `401`; con sesión de capturista o de lector, `403`.
 
 ## Columnas
 

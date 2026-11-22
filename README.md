@@ -88,6 +88,9 @@ Con el `.env` copiado de `.env.example` (solo para correr en tu computadora; en 
 | Administrador | `admin@ejemplo.com` | `cambia-esta-clave-admin1` | Todo, incluidos los usuarios y los catálogos |
 | Capturista | `capturista@ejemplo.com` | `cambia-esta-clave-capt1` | Alumnos, grupos e inscripciones; no puede administrar usuarios ni catálogos (el servidor responde 403) |
 
+Las cuentas que se crean desde la pantalla de registro nacen con el rol **lector**: ven el tablero y los grupos, pero no los datos de los
+alumnos ni pueden cambiar nada. Un administrador puede subirlas a capturista o administrador en la pantalla de usuarios.
+
 Se pueden cambiar en `.env` (variables `SEED_*`) antes de la primera vez que se levanta el proyecto.
 
 ## Estructura del repositorio

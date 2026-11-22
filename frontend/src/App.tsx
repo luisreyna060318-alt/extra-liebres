@@ -25,16 +25,20 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
 
-        {/* Privadas: sin sesión redirigen a /login */}
+        {/* Privadas para cualquier rol (también el lector): sin sesión redirigen a /login */}
         <Route element={<RutaPrivada />}>
           <Route path="/" element={<Tablero />} />
+          <Route path="/grupos" element={<Grupos />} />
+          <Route path="/grupos/:id" element={<GrupoDetalle />} />
+        </Route>
+
+        {/* Solo administrador y capturista (el lector no ve datos de alumnos; la API también lo valida) */}
+        <Route element={<RutaPrivada soloPersonal />}>
           <Route path="/alumnos" element={<Alumnos />} />
           <Route path="/alumnos/nuevo" element={<AlumnoFormulario />} />
           <Route path="/alumnos/:nocontrol" element={<AlumnoHistorial />} />
           <Route path="/alumnos/:nocontrol/editar" element={<AlumnoFormulario />} />
-          <Route path="/grupos" element={<Grupos />} />
           <Route path="/grupos/nuevo" element={<GrupoFormulario />} />
-          <Route path="/grupos/:id" element={<GrupoDetalle />} />
           <Route path="/grupos/:id/editar" element={<GrupoFormulario />} />
           <Route path="/consultas" element={<Consultas />} />
           <Route path="/buscar" element={<Busqueda />} />

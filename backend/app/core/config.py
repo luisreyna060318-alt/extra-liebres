@@ -40,6 +40,7 @@ class Settings(BaseSettings):
 
     # --- Servicio externo (clima) ---
     clima_url: str = "https://api.open-meteo.com/v1/forecast"
+    clima_respaldo_url: str = "https://wttr.in"  # se usa si Open-Meteo falla (por ejemplo, 429)
     clima_umbral_lluvia: int = 50
 
     # --- Usuarios de prueba del seed (solo desarrollo) ---
