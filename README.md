@@ -25,18 +25,21 @@ _Pendiente de desplegar._
 
 ## Cómo correr el proyecto
 
-Solo necesitas **Docker Desktop encendido** y Git. Desde la raíz del repositorio:
+Solo necesitas **Docker Desktop encendido** (con **Docker Compose 2.24 o más nuevo**: compruébalo con
+`docker compose version`) y Git. Desde la raíz del repositorio:
 
 ```powershell
 copy .env.example .env
 docker compose up --build
 ```
 
-La primera vez tarda 2 minutos aproximadamente (descarga las imágenes y construye el backend); las siguientes, unos segundos.
-Cuando termina:
+Levanta los tres servicios (base de datos, backend y frontend). La primera vez tarda menos de 2 minutos (descarga las
+imágenes y construye el backend y el frontend); las siguientes, unos segundos. Para correrlo en segundo plano y
+esperar a que todo esté sano: `docker compose up --build -d --wait`. Cuando termina:
 
 | Qué | Dónde |
 |---|---|
+| Aplicación (frontend) | <http://localhost:5173> |
 | API (backend) | <http://localhost:8000> |
 | Documentación interactiva de la API (OpenAPI) | <http://localhost:8000/docs> |
 | Estado del servicio | <http://localhost:8000/api/health> |
@@ -44,8 +47,9 @@ Cuando termina:
 El backend aplica las migraciones y carga los datos de ejemplo (**todos ficticios**) por sí solo. Para apagarlo: `Ctrl+C`
 o `docker compose down`. Para empezar de cero (borra los datos): `docker compose down -v`.
 
-> El frontend se agrega a este comando cuando su Dockerfile esté en el repositorio. Mientras tanto se corre con
-> `npm run dev` dentro de `frontend/`. Si quieres desarrollar el backend sin Docker, mira `backend/README.md`.
+> La URL de la API que usa el frontend (`VITE_API_URL`) se escribe en el código al construir la imagen: si la
+> cambias en `.env`, vuelve a correr `docker compose up --build`. Para desarrollar el frontend con recarga
+> automática usa `npm run dev` dentro de `frontend/`; para el backend sin Docker, mira `backend/README.md`.
 
 **Si `docker compose up` falla con "port is already allocated" (o "address already in use") en el 5432**, ya tienes
 un PostgreSQL instalado en tu computadora. Agrega a tu `.env` la línea `DB_HOST_PORT=5433` (o cualquier puerto libre)
