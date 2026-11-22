@@ -1,0 +1,124 @@
+/* Pantallas de alumnos: búsqueda, acciones por fila, confirmación de baja y datos del alumno.
+   La tabla, los filtros y la paginación reutilizan las clases de grupos.css y componentes.css. */
+
+/* --- Búsqueda: campo y botón en una fila (en celular, uno debajo del otro) --- */
+.busqueda {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--espacio-3);
+  width: 100%;
+}
+
+.busqueda .campo {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Tres filtros: en celular una columna; en tablet y escritorio, tres columnas */
+.alumnos-filtros {
+  grid-template-columns: 1fr;
+}
+
+/* --- Acciones de cada fila: enlaces y botones de texto que se acomodan en varias líneas --- */
+.acciones-fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end; /* en la tarjeta de celular la celda alinea a la derecha */
+  gap: var(--espacio-2) var(--espacio-3);
+}
+
+/* Botón que parece enlace, con área de toque cómoda */
+.boton-texto {
+  min-height: 2.75rem;
+  padding: 0 var(--espacio-1);
+  font: inherit;
+  color: var(--color-primario);
+  text-decoration: underline;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.boton-texto:hover {
+  color: var(--color-primario-oscuro);
+}
+
+.boton-texto:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Enlace-botón en rojo (texto rojo, sin fondo). Se llama distinto a ".boton-peligro" (botón con fondo rojo,
+   en admin.css e inscripciones.css): con el mismo nombre se pisaban y el texto quedaba rojo sobre fondo rojo. */
+.boton-texto-peligro {
+  color: var(--color-error);
+}
+
+.boton-texto-peligro:hover {
+  color: var(--color-error);
+}
+
+.boton-peligro-solido,
+.boton-peligro-solido:hover {
+  background: var(--color-error);
+  border-color: var(--color-error);
+}
+
+/* --- Confirmación de baja (<dialog> modal) --- */
+.dialogo {
+  width: calc(100% - 2 * var(--espacio-3));
+  max-width: 28rem;
+  padding: var(--espacio-4);
+  color: var(--color-texto);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+}
+
+.dialogo::backdrop {
+  background: rgb(0 0 0 / 50%);
+}
+
+/* --- Datos del alumno en el historial: etiqueta y valor en rejilla --- */
+.datos-alumno {
+  margin-bottom: var(--espacio-4);
+}
+
+.datos-alumno dl {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-2) var(--espacio-4);
+  margin: 0;
+}
+
+.datos-alumno dt {
+  font-weight: 600;
+}
+
+.datos-alumno dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 600px) {
+  .busqueda {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+
+  .alumnos-filtros {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .datos-alumno dl {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* En la tabla de escritorio las acciones van pegadas a la izquierda */
+  .acciones-fila {
+    justify-content: flex-start;
+  }
+}

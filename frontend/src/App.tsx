@@ -1,6 +1,8 @@
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout.tsx'
 import RutaPrivada from './components/RutaPrivada.tsx'
+import AlumnoFormulario from './pages/AlumnoFormulario.tsx'
+import AlumnoHistorial from './pages/AlumnoHistorial.tsx'
 import Alumnos from './pages/Alumnos.tsx'
 import Catalogos from './pages/Catalogos.tsx'
 import Consultas from './pages/Consultas.tsx'
@@ -26,6 +28,9 @@ export default function App() {
         <Route element={<RutaPrivada />}>
           <Route path="/" element={<Tablero />} />
           <Route path="/alumnos" element={<Alumnos />} />
+          <Route path="/alumnos/nuevo" element={<AlumnoFormulario />} />
+          <Route path="/alumnos/:nocontrol" element={<AlumnoHistorial />} />
+          <Route path="/alumnos/:nocontrol/editar" element={<AlumnoFormulario />} />
           <Route path="/grupos" element={<Grupos />} />
           <Route path="/grupos/nuevo" element={<GrupoFormulario />} />
           <Route path="/grupos/:id" element={<GrupoDetalle />} />
