@@ -1,0 +1,129 @@
+/* Pantallas de administración: pestañas de catálogos, paneles de formulario, confirmaciones y acciones por fila */
+
+/* --- Pestañas (role="tablist"): se acomodan en filas si no caben en 360 px --- */
+.pestanas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-1);
+  margin-bottom: var(--espacio-3);
+  border-bottom: 2px solid var(--color-borde);
+}
+
+.pestana {
+  flex: 1 1 auto;
+  min-height: 2.75rem;
+  padding: var(--espacio-2) var(--espacio-3);
+  font: inherit;
+  font-weight: 600;
+  color: var(--color-primario-oscuro);
+  background: var(--color-superficie);
+  border: 2px solid var(--color-borde);
+  border-bottom: 0;
+  border-radius: var(--radio) var(--radio) 0 0;
+  cursor: pointer;
+}
+
+.pestana:hover {
+  background: var(--color-fondo);
+}
+
+/* La pestaña elegida se distingue por el color y el borde, no solo por el color */
+.pestana[aria-selected='true'] {
+  color: #ffffff;
+  background: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.panel-pestana[hidden] {
+  display: none;
+}
+
+/* El título de cada pestaña (h2) no lleva margen extra dentro del encabezado */
+.encabezado-pagina h2 {
+  margin: 0;
+}
+
+/* --- Panel de formulario y confirmación: aparecen dentro de la página, arriba de la lista --- */
+.panel-formulario,
+.confirmacion {
+  margin-bottom: var(--espacio-3);
+}
+
+/* El panel ya es una tarjeta: el formulario de adentro no repite borde ni relleno */
+.panel-formulario .formulario {
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+}
+
+.panel-formulario h3,
+.confirmacion h3 {
+  margin-bottom: var(--espacio-2);
+}
+
+.confirmacion {
+  border-color: var(--color-error);
+}
+
+.confirmacion p {
+  color: var(--color-texto);
+}
+
+/* --- Botón de acción destructiva (eliminar, suspender) --- */
+.boton-peligro {
+  background: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.boton-peligro:hover {
+  background: #8c1d18;
+  border-color: #8c1d18;
+}
+
+/* --- Casilla con su etiqueta y ayuda al lado --- */
+.campo-casilla {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espacio-2);
+}
+
+.campo-casilla input {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0.125rem 0 0;
+}
+
+.campo-casilla label {
+  font-weight: 600;
+}
+
+.campo-casilla p {
+  margin: 0;
+}
+
+/* --- Botones (y select) de una fila de la tabla --- */
+.acciones-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+}
+
+.acciones-fila select {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 2.75rem;
+  padding: var(--espacio-1) var(--espacio-2);
+  font: inherit;
+  color: var(--color-texto);
+  background: #ffffff;
+  border: 2px solid var(--color-borde);
+  border-radius: var(--radio);
+}
+
+/* En celular la tarjeta alinea los botones a la derecha, junto a la etiqueta */
+@media (max-width: 599px) {
+  .acciones-fila {
+    justify-content: flex-end;
+  }
+}
