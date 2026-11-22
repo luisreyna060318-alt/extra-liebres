@@ -5,8 +5,8 @@
 > todo el material, incluido el generado por la herramienta. Si no podemos explicar un fragmento en la
 > demo, no cuenta como nuestro.
 >
-> **Estado:** actualizado el 22 de noviembre de 2026 (commits de `main` hasta `c656a3f`). Las celdas marcadas
-> como _pendiente_ las confirma el integrante que corresponde antes de la etiqueta `v1.0.0`.
+> **Estado:** actualizado el 22 de noviembre de 2026 (commits de `main` hasta `c656a3f`). No quedan celdas
+> marcadas como _pendiente_.
 
 ## 1. Herramientas y modelos
 
@@ -41,7 +41,7 @@
 | [`docs/prompts.md`](docs/prompts.md) | Plantillas de prompts estructurados (P1–P13) que usamos y corregimos |
 | [`docs/plan-de-trabajo.md`](docs/plan-de-trabajo.md) | Cronograma, flujo de Git y plan de commits |
 
-Servidores MCP o *skills* adicionales: Luis no usó ninguno para programar el proyecto; probó pantallas con el navegador integrado de la app de Claude. Carlos: _pendiente: Carlos confirma si usó alguno_. Para el reporte técnico se usaron herramientas locales
+Servidores MCP o *skills* adicionales: Luis no usó ninguno para programar el proyecto; probó pantallas con el navegador integrado de la app de Claude. Carlos usó el navegador integrado de la app de Claude (herramientas MCP del navegador) para probar las pantallas y la *skill* `built-in-browser`, además de `gh` y Docker desde la terminal; no se usó ningún otro servidor MCP ni conector para el proyecto. Para el reporte técnico se usaron herramientas locales
 fuera del repositorio (python-docx, PyMuPDF y puppeteer-core en carpetas temporales, Microsoft Word y Edge); no se agregó ninguna dependencia al proyecto.
 En el caso de Carlos, los subagentes de frontend probaron las pantallas en el navegador integrado de la app de
 Claude (lo dicen los PR #36, #39 y #41) y usaron `gh` para abrir los PR.
