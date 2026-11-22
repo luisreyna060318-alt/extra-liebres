@@ -2,7 +2,8 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, Response, status
 
-from app.core.deps import SesionDB, get_current_user
+from app.core.constantes import ROLES_DE_PERSONAL
+from app.core.deps import SesionDB, require_role
 from app.core.paginacion import Paginacion
 from app.schemas.alumno import (
     AlumnoActualizar,
@@ -15,12 +16,15 @@ from app.schemas.comun import Pagina
 from app.services import alumno_service
 from app.services.alumno_service import Estado
 
-# Todas las rutas de alumnos exigen sesión (administrador o capturista): 401 si no hay
+# Todas las rutas de alumnos son para administrador y capturista: 401 si no hay sesión, 403 si es lector
 router = APIRouter(
     prefix="/api/alumnos",
     tags=["Alumnos"],
-    dependencies=[Depends(get_current_user)],
-    responses={401: {"description": "Sin sesión o sesión expirada"}},
+    dependencies=[Depends(require_role(*ROLES_DE_PERSONAL))],
+    responses={
+        401: {"description": "Sin sesión o sesión expirada"},
+        403: {"description": "Los lectores no tienen acceso"},
+    },
 )
 
 NO_EXISTE = {404: {"description": "El alumno no existe"}}

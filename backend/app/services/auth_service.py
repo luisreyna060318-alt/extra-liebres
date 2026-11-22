@@ -20,14 +20,14 @@ def _hash_falso() -> str:
 
 
 def registrar_usuario(db: Session, datos: UsuarioRegistro) -> Usuario:
-    """Crea una cuenta nueva. Siempre con rol capturista: solo un administrador puede cambiarlo después."""
+    """Crea una cuenta nueva. Siempre con rol lector: solo un administrador puede cambiarlo después."""
     if db.scalar(select(Usuario).where(Usuario.correo == datos.correo)):
         raise Conflicto("Ese correo ya está registrado")
     usuario = Usuario(
         nombre=datos.nombre,
         correo=datos.correo,
         password_hash=hash_password(datos.password),
-        rol="capturista",
+        rol="lector",
     )
     db.add(usuario)
     try:

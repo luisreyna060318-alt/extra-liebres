@@ -20,7 +20,9 @@ router = APIRouter(prefix="/api/auth", tags=["Autenticación"])
     responses={409: {"description": "El correo ya está registrado"}},
 )
 def registrar(datos: UsuarioRegistro, db: SesionDB):
-    """Crea una cuenta nueva con rol **capturista**. Solo un administrador puede cambiar el rol después.
+    """Crea una cuenta nueva con rol **lector** (solo ve el tablero y las listas).
+
+    Solo un administrador puede cambiar el rol después.
 
     La contraseña debe tener al menos 8 caracteres, con letras y números."""
     return auth_service.registrar_usuario(db, datos)

@@ -2,18 +2,22 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query
 
-from app.core.deps import SesionDB, get_current_user
+from app.core.constantes import ROLES_DE_PERSONAL
+from app.core.deps import SesionDB, require_role
 from app.core.paginacion import Paginacion
 from app.schemas.comun import Pagina
 from app.schemas.consulta import InscritoConsulta
 from app.services import consulta_service
 
-# Las consultas exigen sesión (administrador o capturista): 401 si no hay
+# Las consultas son para administrador y capturista (muestran datos de alumnos): 401 sin sesión, 403 si es lector
 router = APIRouter(
     prefix="/api/consultas",
     tags=["Consultas"],
-    dependencies=[Depends(get_current_user)],
-    responses={401: {"description": "Sin sesión o sesión expirada"}},
+    dependencies=[Depends(require_role(*ROLES_DE_PERSONAL))],
+    responses={
+        401: {"description": "Sin sesión o sesión expirada"},
+        403: {"description": "Los lectores no tienen acceso"},
+    },
 )
 
 

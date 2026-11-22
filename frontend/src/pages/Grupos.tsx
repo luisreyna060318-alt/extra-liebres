@@ -7,6 +7,7 @@ import type { FiltrosGrupos } from '../api/grupos.ts'
 import CampoFormulario from '../components/CampoFormulario.tsx'
 import Confirmacion from '../components/Confirmacion.tsx'
 import Estado from '../components/Estado.tsx'
+import { useAuth } from '../context/AuthContext.tsx'
 import { useApi } from '../hooks/useApi.ts'
 import { useTitulo } from '../hooks/useTitulo.ts'
 import type { Grupo } from '../types.ts'
@@ -22,6 +23,7 @@ interface EstadoNavegacion {
 // Lista de grupos con filtros y paginación (HU-04.3). Los filtros se aplican en el servidor.
 export default function Grupos() {
   useTitulo('Grupos')
+  const esLector = useAuth().usuario?.rol === 'lector' // el lector solo mira: sin Nuevo, Editar ni Eliminar
   const mensajeInicial = (useLocation().state as EstadoNavegacion | null)?.mensaje ?? ''
 
   const [filtros, setFiltros] = useState<FiltrosGrupos>(SIN_FILTROS)
@@ -101,9 +103,11 @@ export default function Grupos() {
     <section>
       <div className="encabezado-pagina">
         <h1>Grupos</h1>
-        <Link to="/grupos/nuevo" className="boton">
-          Nuevo grupo
-        </Link>
+        {!esLector && (
+          <Link to="/grupos/nuevo" className="boton">
+            Nuevo grupo
+          </Link>
+        )}
       </div>
 
       {aviso && (
@@ -220,21 +224,25 @@ export default function Grupos() {
                       <td data-etiqueta="Acciones">
                         {/* Un solo contenedor: en celular la celda reparte el espacio entre la etiqueta y las acciones */}
                         <span className="enlaces-acciones">
-                          <Link to={`/grupos/${g.idgrupo}`} aria-label={`Ver inscritos del grupo de ${g.actividad}, ${nombreDia(g.dia)} ${recortarHora(g.horainicio)}`}>
+                          <Link to={`/grupos/${g.idgrupo}`} aria-label={`${esLector ? 'Ver el grupo' : 'Ver inscritos del grupo'} de ${g.actividad}, ${nombreDia(g.dia)} ${recortarHora(g.horainicio)}`}>
                             Ver
                           </Link>
-                          <Link to={`/grupos/${g.idgrupo}/editar`} aria-label={`Editar el grupo de ${g.actividad}, ${nombreDia(g.dia)} ${recortarHora(g.horainicio)}`}>
-                            Editar
-                          </Link>
-                          <button
-                            type="button"
-                            className="boton-texto boton-texto-peligro"
-                            disabled={eliminando}
-                            onClick={(e) => pedirConfirmacion(g, e.currentTarget)}
-                            aria-label={`Eliminar grupo de ${g.actividad} del ${nombreDia(g.dia)} a las ${recortarHora(g.horainicio)}`}
-                          >
-                            Eliminar
-                          </button>
+                          {!esLector && (
+                            <>
+                              <Link to={`/grupos/${g.idgrupo}/editar`} aria-label={`Editar el grupo de ${g.actividad}, ${nombreDia(g.dia)} ${recortarHora(g.horainicio)}`}>
+                                Editar
+                              </Link>
+                              <button
+                                type="button"
+                                className="boton-texto boton-texto-peligro"
+                                disabled={eliminando}
+                                onClick={(e) => pedirConfirmacion(g, e.currentTarget)}
+                                aria-label={`Eliminar grupo de ${g.actividad} del ${nombreDia(g.dia)} a las ${recortarHora(g.horainicio)}`}
+                              >
+                                Eliminar
+                              </button>
+                            </>
+                          )}
                         </span>
                       </td>
                     </tr>

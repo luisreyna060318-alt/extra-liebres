@@ -23,7 +23,7 @@ def listar(
     db: SesionDB,
     paginacion: Annotated[Paginacion, Depends()],
     q: Annotated[str | None, Query(description="Busca en nombre o correo")] = None,
-    rol: Annotated[str | None, Query(description="administrador o capturista")] = None,
+    rol: Annotated[str | None, Query(description="administrador, capturista o lector")] = None,
     activo: Annotated[bool | None, Query(description="true = activas, false = suspendidas")] = None,
 ):
     """Lista las cuentas con búsqueda, filtros y paginación (10 por página por defecto)."""

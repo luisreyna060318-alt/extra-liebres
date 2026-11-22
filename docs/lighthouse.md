@@ -107,7 +107,9 @@ la fórmula de WCAG: blanco sobre el rojo del encabezado 5.88:1, blanco sobre el
 cursor sobre 156 botones y pestañas: **0** con el texto por debajo de 3:1. Axe también reportó que había dos formularios
 `role="search"` sin nombre en `/alumnos` y `/grupos/1` (`landmark-unique`); cada uno ya tiene su `aria-label`. El logo es el
 icono de la pestaña (`favicon-32.png`, `favicon-192.png`, `apple-touch-icon.png`) y va en el encabezado con `alt=""`, porque el
-nombre de la aplicación ya está escrito al lado. **No se volvió a correr Lighthouse** después de este cambio.
+nombre de la aplicación ya está escrito al lado. Después se agregó el rol lector y las acciones de las tablas pasaron a grafito (el rojo quedó solo para eliminar y dar de baja):
+se repitió axe (13 pantallas del administrador y `/`, `/grupos`, `/grupos/1` y `/alumnos` con una cuenta de lector, a 1280 y 360 px:
+**0 violaciones**) y la prueba del cursor (158 elementos, **0** ilegibles). **No se volvió a correr Lighthouse** después de estos cambios.
 
 ## Lo que no se pudo medir y límites
 

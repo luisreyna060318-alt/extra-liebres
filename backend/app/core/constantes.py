@@ -3,7 +3,11 @@
 Se guardan sin acentos (son valores "de máquina"); la interfaz muestra la etiqueta bonita.
 """
 
-ROLES = ("administrador", "capturista")
+# "lector" es el rol de las cuentas que se crean solas desde el registro: solo ve el tablero y las listas de grupos
+# y catálogos. Solo un administrador puede subirlo a capturista o administrador.
+ROLES = ("administrador", "capturista", "lector")
+# Los roles que pueden ver datos de alumnos y registrar o cambiar información
+ROLES_DE_PERSONAL = ("administrador", "capturista")
 SEXOS = ("M", "F")
 TIPOS_ACTIVIDAD = ("deportiva", "cultural", "civica")
 DIAS = ("lunes", "martes", "miercoles", "jueves", "viernes", "sabado")

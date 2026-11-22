@@ -44,6 +44,7 @@ services:
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
       CLIMA_URL: ${CLIMA_URL:-https://api.open-meteo.com/v1/forecast}
+      CLIMA_RESPALDO_URL: ${CLIMA_RESPALDO_URL:-https://wttr.in}
       CLIMA_UMBRAL_LLUVIA: ${CLIMA_UMBRAL_LLUVIA:-50}
       # Dentro de Docker la base de datos se llama "db" (el nombre del servicio de arriba)
       POSTGRES_HOST: db

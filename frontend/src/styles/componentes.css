@@ -175,6 +175,19 @@ a.boton:hover {
   background: var(--color-fondo);
 }
 
+/* Acciones de las tablas (Ver, Editar, Ver historial, Reactivar...): en grafito y subrayadas. El rojo se queda solo
+   para lo que borra o da de baja (.boton-texto-peligro), así se distingue qué acción es delicada. */
+.tabla td a:not(.boton),
+.tabla td .boton-texto:not(.boton-texto-peligro) {
+  color: var(--color-primario);
+}
+
+.tabla td a:not(.boton):hover,
+.tabla td .boton-texto:not(.boton-texto-peligro):hover {
+  color: var(--color-primario-oscuro);
+  text-decoration-thickness: 2px;
+}
+
 /* Tablet y escritorio: los formularios pueden tener dos columnas */
 @media (min-width: 600px) {
   .formulario {

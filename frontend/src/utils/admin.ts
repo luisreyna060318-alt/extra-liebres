@@ -31,6 +31,7 @@ export function nombreTipo(tipo: string): string {
 export const ROLES: { valor: Rol; etiqueta: string }[] = [
   { valor: 'administrador', etiqueta: 'Administrador' },
   { valor: 'capturista', etiqueta: 'Capturista' },
+  { valor: 'lector', etiqueta: 'Lector' },
 ]
 
 export function nombreRol(rol: string): string {

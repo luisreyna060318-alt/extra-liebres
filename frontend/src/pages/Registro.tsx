@@ -66,7 +66,10 @@ export default function Registro() {
   return (
     <section>
       <h1>Crear cuenta</h1>
-      <p>Las cuentas nuevas tienen rol de capturista. Un administrador puede cambiarlo después.</p>
+      <p>
+        Las cuentas nuevas tienen rol de lector: pueden ver el tablero y los grupos. Un administrador puede darles más
+        permisos después.
+      </p>
 
       <form className="formulario" onSubmit={enviar} noValidate>
         <div className="campo">

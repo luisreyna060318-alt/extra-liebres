@@ -74,6 +74,11 @@ def admin(crear_usuario):
 
 
 @pytest.fixture()
+def lector(crear_usuario):
+    return crear_usuario("lector@correo.com", rol="lector", nombre="Lector Prueba")
+
+
+@pytest.fixture()
 def capturista(crear_usuario):
     return crear_usuario("capturista@correo.com", rol="capturista", nombre="Capturista Prueba")
 

@@ -17,19 +17,20 @@ def iniciar_sesion(client, correo, password=PASSWORD_PRUEBA):
 # ---------- HU-01.1 Crear una cuenta ----------
 
 
-def test_hu_01_1_registro_crea_cuenta_capturista_sin_exponer_la_contrasena(client):
+def test_hu_01_1_registro_crea_cuenta_lector_sin_exponer_la_contrasena(client):
     r = client.post("/api/auth/register", json=REGISTRO)
     assert r.status_code == 201
     cuerpo = r.json()
-    assert cuerpo["rol"] == "capturista"
+    assert cuerpo["rol"] == "lector"
     assert cuerpo["correo"] == "ana@correo.com"
     assert "password" not in cuerpo and "password_hash" not in cuerpo
 
 
-def test_hu_01_1_no_se_puede_pedir_rol_administrador_al_registrarse(client):
-    r = client.post("/api/auth/register", json={**REGISTRO, "rol": "administrador"})
+@pytest.mark.parametrize("pedido", ["administrador", "capturista"])
+def test_hu_01_1_no_se_puede_pedir_un_rol_con_permisos_al_registrarse(client, pedido):
+    r = client.post("/api/auth/register", json={**REGISTRO, "rol": pedido})
     assert r.status_code == 201
-    assert r.json()["rol"] == "capturista"  # el campo "rol" se ignora: nadie se hace admin solo
+    assert r.json()["rol"] == "lector"  # el campo "rol" se ignora: nadie se sube los permisos solo
 
 
 def test_hu_01_1_correo_duplicado_da_409_aunque_cambien_las_mayusculas(client):

@@ -1,6 +1,6 @@
 // Tipos compartidos. Reflejan lo que devuelve la API.
 
-export type Rol = 'administrador' | 'capturista'
+export type Rol = 'administrador' | 'capturista' | 'lector'
 
 // GET /api/auth/me
 export interface Usuario {

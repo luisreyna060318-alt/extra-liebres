@@ -11,7 +11,7 @@ from app.core.security import MAX_BYTES_PASSWORD
 
 
 class UsuarioRegistro(BaseModel):
-    """Datos para crear una cuenta (HU-01.1). El rol NO se pide: siempre nace como capturista."""
+    """Datos para crear una cuenta (HU-01.1). El rol NO se pide: siempre nace como lector."""
 
     nombre: str = Field(min_length=2, max_length=100, examples=["Ana López"])
     correo: EmailStr = Field(examples=["ana@correo.com"])
@@ -59,7 +59,7 @@ class UsuarioSalida(BaseModel):
 class UsuarioActualizar(BaseModel):
     """Cambios que puede hacer un administrador sobre otra cuenta (HU-01.4): rol y/o suspensión."""
 
-    rol: str | None = Field(default=None, description="administrador o capturista")
+    rol: str | None = Field(default=None, description="administrador, capturista o lector")
     activo: bool | None = Field(default=None, description="false suspende la cuenta; true la reactiva")
 
     @field_validator("rol")
