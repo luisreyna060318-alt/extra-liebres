@@ -1,0 +1,26 @@
+# Servicios de Extra-Liebres. Por ahora solo la base de datos; backend y frontend se agregan después.
+#
+# Uso (desde la raíz del repositorio):
+#   copy .env.example .env
+#   docker compose -f infra/docker-compose.yml up -d db
+name: extra-liebres
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    # POSTGRES_USER, POSTGRES_PASSWORD y POSTGRES_DB salen del archivo .env de la raíz
+    env_file: ../.env
+    # Solo accesible desde esta computadora (127.0.0.1), nunca desde la red
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:
