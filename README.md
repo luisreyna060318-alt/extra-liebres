@@ -21,7 +21,17 @@ grupos e inscripciones con su desempeño.
 
 ## URL pública
 
-_Pendiente de desplegar._
+| Qué | Dirección |
+|---|---|
+| **Aplicación** (frontend, en Vercel) | <https://extra-liebres.vercel.app> |
+| API (backend, en Render) | <https://extra-liebres.onrender.com> |
+| Documentación interactiva de la API | <https://extra-liebres.onrender.com/docs> |
+
+> El backend gratuito de Render **se duerme tras 15 minutos sin uso**: la primera petición tarda de 30 a 60 segundos en
+> despertarlo. Es normal; conviene abrir la aplicación unos minutos antes de una demostración.
+>
+> Las contraseñas del sitio público **no son** las de la tabla de abajo (esas son solo para correr el proyecto en tu
+> computadora): las define quien despliega y se entregan al profesor junto con el reporte.
 
 ## Cómo correr el proyecto
 

@@ -15,13 +15,21 @@ panel de cada servicio.
 1. Crea un proyecto en <https://neon.tech> (elige una región; usa la misma o una cercana para Render).
 2. En **Connect**, copia la cadena de conexión. Se ve así: `postgresql://usuario:clave@ep-xxxx.neon.tech/neondb?sslmode=require`
 3. Guárdala: es el valor de `DATABASE_URL` del paso 2. **No la pegues en chats, issues ni commits.**
+4. Usa la conexión **directa**: en el cuadro *Connect* apaga el interruptor **Connection pooling**, de modo que el host
+   **no** diga `-pooler`. La conexión con pool está pensada para muchas conexiones cortas y puede dar problemas con las
+   migraciones. Deja la cadena completa, con todo lo que trae después del `?`.
+5. Si por accidente pegas la cadena en un chat o en un archivo del repositorio, **cambia la contraseña** en
+   *Roles & Databases > tu rol > Reset password* y usa la cadena nueva.
 
 No hay que crear tablas a mano: el backend aplica las migraciones al arrancar.
 
 ## 2. Render (backend)
 
-1. En <https://render.com>: **New + > Blueprint**, elige este repositorio. Render lee `render.yaml`.
-2. Render pide los valores que no se pueden guardar en Git:
+> **Si en tu cuenta no aparece _Blueprint_** (la interfaz de Render cambia), no pasa nada: usa **New Web Service**
+> (alternativa de abajo). El resultado es el mismo.
+
+**Opción A: Blueprint.** En <https://render.com>: **New + > Blueprint**, elige este repositorio. Render lee `render.yaml`.
+Render pide los valores que no se pueden guardar en Git:
 
 | Variable | Qué poner |
 |---|---|
@@ -30,10 +38,28 @@ No hay que crear tablas a mano: el backend aplica las migraciones al arrancar.
 | `SEED_ADMIN_CORREO` / `SEED_ADMIN_PASSWORD` | Cuenta de administrador de la demo y **una clave tuya** (8 o más caracteres, con letras y números) |
 | `SEED_CAPTURISTA_CORREO` / `SEED_CAPTURISTA_PASSWORD` | Cuenta de capturista de la demo |
 
-   `SECRET_KEY` la genera Render sola. Con `ENTORNO=produccion`, el backend **se niega a arrancar** si la
-   clave es corta o es la del ejemplo, y el seed se niega a crear usuarios con las claves de ejemplo.
-3. Espera a que el servicio diga **Live**. Prueba `https://TU-SERVICIO.onrender.com/api/health` (debe responder
-   `{"estado":"ok"}`) y `https://TU-SERVICIO.onrender.com/docs`.
+`SECRET_KEY` la genera Render sola. Con `ENTORNO=produccion`, el backend **se niega a arrancar** si la
+clave es corta o es la del ejemplo, y el seed se niega a crear usuarios con las claves de ejemplo.
+
+**Opción B: New Web Service** (la que se usó en este proyecto). Elige el repositorio y llena:
+
+| Campo | Valor |
+|---|---|
+| Branch | `main` |
+| Language | **Docker** |
+| Dockerfile Path | `backend/Dockerfile` |
+| Docker Build Context Directory | `.` (la raíz del repositorio) |
+| Region | La misma de Neon (en este proyecto, **Virginia, US East**) |
+| Instance Type | **Free** |
+| Health Check Path (en *Advanced*) | `/api/health` |
+| Docker Command y Pre-Deploy Command | **vacíos**: el arranque del contenedor ya aplica las migraciones |
+
+Variables de entorno: `ENTORNO=produccion`, `SEED_ON_START=true`, `CLIMA_UMBRAL_LLUVIA=50`, `CORS_ORIGINS`, `DATABASE_URL`,
+`SEED_ADMIN_CORREO`, `SEED_ADMIN_PASSWORD`, `SEED_CAPTURISTA_CORREO`, `SEED_CAPTURISTA_PASSWORD` (como en la tabla de
+arriba) y `SECRET_KEY`, que se obtiene con el botón **Generate** de Render.
+
+**Con la opción A o con la B**, espera a que el servicio diga **Live**. Prueba `https://TU-SERVICIO.onrender.com/api/health` (debe
+responder `{"estado":"ok"}`) y `https://TU-SERVICIO.onrender.com/docs`.
 
 ## 3. Vercel (frontend)
 
