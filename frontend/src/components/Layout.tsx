@@ -1,4 +1,5 @@
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.tsx'
 
 // Estructura semántica común: header, nav, main y footer
@@ -6,6 +7,16 @@ export default function Layout() {
   const { usuario, logout } = useAuth()
   const navegar = useNavigate()
   const esAdmin = usuario?.rol === 'administrador'
+
+  // La app es una SPA: al cambiar de pantalla la página no se recarga y el foco se queda en el enlace pulsado
+  // (que puede desaparecer). Se mueve el foco al contenido para que teclado y lector de pantalla empiecen ahí.
+  const { pathname } = useLocation()
+  const rutaAnterior = useRef(pathname)
+  useEffect(() => {
+    if (rutaAnterior.current === pathname) return // la primera carga no roba el foco
+    rutaAnterior.current = pathname
+    document.getElementById('contenido')?.focus()
+  }, [pathname])
 
   function cerrarSesion() {
     logout()

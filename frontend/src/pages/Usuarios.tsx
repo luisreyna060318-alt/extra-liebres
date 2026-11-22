@@ -123,6 +123,7 @@ export default function Usuarios() {
       {porConfirmar && (
         <Confirmacion
           id="confirmar-usuario"
+          nivelTitulo={2}
           titulo={porConfirmar.accion === 'suspender' ? 'Suspender cuenta' : 'Quitar rol de administrador'}
           texto={textoConfirmacion(porConfirmar)}
           textoConfirmar={porConfirmar.accion === 'suspender' ? 'Sí, suspender' : 'Sí, quitar el rol'}

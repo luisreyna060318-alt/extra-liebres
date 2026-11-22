@@ -21,6 +21,12 @@
   top: var(--espacio-2);
 }
 
+/* Sobre el encabezado azul el anillo naranja oscuro casi no se ve: ahí va blanco */
+.saltar:focus-visible,
+.encabezado :focus-visible {
+  outline-color: var(--color-foco-claro);
+}
+
 /* --- Encabezado --- */
 .encabezado {
   display: flex;

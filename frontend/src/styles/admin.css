@@ -57,6 +57,7 @@
 }
 
 .panel-formulario h3,
+.confirmacion h2,
 .confirmacion h3 {
   margin-bottom: var(--espacio-2);
 }
@@ -117,7 +118,7 @@
   font: inherit;
   color: var(--color-texto);
   background: #ffffff;
-  border: 2px solid var(--color-borde);
+  border: 2px solid var(--color-borde-campo);
   border-radius: var(--radio);
 }
 
