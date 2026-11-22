@@ -54,11 +54,12 @@
   min-width: 0;
 }
 
-/* Enlaces "Ver" y "Editar" de cada grupo, separados para tocarlos sin equivocarse */
+/* Acciones "Ver", "Editar" y "Eliminar" de cada grupo, separadas para tocarlos sin equivocarse */
 .enlaces-acciones {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: var(--espacio-3);
+  align-items: center;
+  gap: var(--espacio-2) var(--espacio-3);
 }
 
 /* --- Paginación --- */
