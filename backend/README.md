@@ -84,6 +84,12 @@ Están definidos una sola vez en `app/core/constantes.py` y las restricciones `C
 - `promotor.rfc` debe tener 12 o 13 caracteres.
 - `usuario.correo` es único; el servicio de registro lo guarda siempre en minúsculas.
 
+## Limitaciones conocidas
+
+- **La búsqueda de alumnos distingue los acentos**: `Chávez` se encuentra escribiendo `chávez` o `CHÁVEZ`, pero no
+  `chavez`. PostgreSQL ignora los acentos solo con la extensión `unaccent`, que no se activó para no complicar las
+  pruebas (SQLite no la tiene). Es una mejora posible si sobra tiempo.
+
 ## Datos de ejemplo
 
 Todo es **ficticio**. Los números de control empiezan con `99` (`99000001` a `99000200`) para que nunca
