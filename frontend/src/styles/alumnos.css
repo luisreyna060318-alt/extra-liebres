@@ -105,9 +105,15 @@
 }
 
 @media (min-width: 600px) {
+  /* El campo y el botón en una fila. El botón se alinea con el cuadro de texto (debajo de la etiqueta) y no con el
+     texto de ayuda, que lo bajaba */
   .busqueda {
     flex-direction: row;
-    align-items: flex-end;
+    align-items: flex-start;
+  }
+
+  .busqueda .boton {
+    margin-top: 1.75rem;
   }
 
   .alumnos-filtros {
