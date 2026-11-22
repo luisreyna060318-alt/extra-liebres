@@ -1,0 +1,196 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1400" viewBox="0 0 2000 1400" font-family="Segoe UI, Arial, sans-serif">
+  <title>Arquitectura de Extra-Liebres</title>
+  <desc>Navegador, frontend React, API FastAPI con capas, PostgreSQL, Open-Meteo, entornos local y en la nube, e integración continua.</desc>
+  <defs>
+    <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
+    </marker>
+    <style>
+      .caja { fill: #ffffff; stroke: #374151; stroke-width: 2.5; }
+      .interna { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.5; }
+      .externa { fill: #fef9c3; stroke: #a16207; stroke-width: 2.5; }
+      .ci { fill: #ede9fe; stroke: #6d28d9; stroke-width: 2.5; }
+      .local { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 1.5; }
+      .nube { fill: #ffedd5; stroke: #c2410c; stroke-width: 1.5; stroke-dasharray: 7 4; }
+      .linea { stroke: #374151; stroke-width: 2.5; fill: none; }
+      .titulo { font-size: 36px; font-weight: 700; fill: #111827; }
+      .sub { font-size: 19px; fill: #374151; }
+      .h { font-size: 20px; font-weight: 700; fill: #111827; }
+      .d { font-size: 16px; fill: #1f2937; }
+      .dn { font-size: 16px; font-weight: 700; fill: #1f2937; }
+      .etq { font-size: 15px; fill: #111827; }
+      .tl { font-size: 15px; fill: #1e3a8a; }
+      .tn { font-size: 15px; fill: #7c2d12; }
+      .b { font-weight: 700; }
+    </style>
+  </defs>
+  <rect width="2000" height="1400" fill="#ffffff"/>
+
+  <text class="titulo" x="40" y="55">Extra-Liebres · Arquitectura del sistema</text>
+  <text class="sub" x="40" y="90">SPA de React + API REST de FastAPI + PostgreSQL. El navegador habla con la API; el clima solo lo consulta el backend.</text>
+
+  <!-- ===== Usuario y navegador ===== -->
+  <rect class="caja" x="40" y="150" width="260" height="100" rx="12"/>
+  <text class="h" x="60" y="185">Usuario</text>
+  <text class="d" x="60" y="213">administrador o capturista</text>
+  <line class="linea" x1="170" y1="250" x2="170" y2="300" marker-end="url(#flecha)"/>
+  <text class="etq" x="182" y="281">HTTP(S)</text>
+
+  <rect class="caja" x="40" y="300" width="260" height="300" rx="12"/>
+  <text class="h" x="60" y="335">Navegador</text>
+  <text class="d" x="60" y="368">Ejecuta la SPA de React.</text>
+  <text class="d" x="60" y="405">Guarda el token JWT en</text>
+  <text class="d" x="60" y="427">memoria y en localStorage.</text>
+  <text class="d" x="60" y="464">Manda el token en el</text>
+  <text class="d" x="60" y="486">encabezado Authorization.</text>
+  <text class="dn" x="60" y="535">Nunca llama a Open-Meteo.</text>
+
+  <!-- ===== Frontend ===== -->
+  <rect class="caja" x="460" y="150" width="380" height="330" rx="12"/>
+  <text class="h" x="480" y="185">Frontend · React + Vite (TS)</text>
+  <text class="d" x="480" y="215">SPA con rutas de react-router</text>
+  <text class="d" x="480" y="238">pages/ · components/ · api/ (fetch)</text>
+  <text class="d" x="480" y="261">context/ (sesión) · CSS externo</text>
+  <text class="d" x="480" y="284">Se compila a archivos estáticos (dist/)</text>
+  <text class="d" x="480" y="307">VITE_API_URL se fija al compilar</text>
+  <rect class="local" x="480" y="325" width="340" height="76" rx="8"/>
+  <text class="tl b" x="492" y="347">LOCAL · servicio "frontend"</text>
+  <text class="tl" x="492" y="368">nginx-unprivileged 1.28, puerto 8080</text>
+  <text class="tl" x="492" y="389">se abre en localhost:5173</text>
+  <rect class="nube" x="480" y="411" width="340" height="56" rx="8"/>
+  <text class="tn b" x="492" y="432">NUBE · Vercel (carpeta frontend)</text>
+  <text class="tn" x="492" y="453">vercel.json: toda ruta → /index.html</text>
+
+  <line class="linea" x1="460" y1="350" x2="300" y2="350" marker-end="url(#flecha)"/>
+  <text class="etq" x="380" y="337" text-anchor="middle">HTML, JS, CSS</text>
+  <text class="etq" x="380" y="372" text-anchor="middle">(estáticos)</text>
+
+  <!-- Navegador <-> API -->
+  <line class="linea" x1="300" y1="540" x2="940" y2="540" marker-start="url(#flecha)" marker-end="url(#flecha)"/>
+  <text class="etq b" x="620" y="522" text-anchor="middle">fetch · JSON · Authorization: Bearer JWT</text>
+  <text class="etq" x="620" y="562" text-anchor="middle">http://localhost:8000 (local)</text>
+  <text class="etq" x="620" y="582" text-anchor="middle">URL de Render (nube)</text>
+
+  <!-- ===== API ===== -->
+  <rect class="caja" x="940" y="150" width="560" height="810" rx="12"/>
+  <text class="h" x="960" y="185">API REST · FastAPI (Python 3.12)</text>
+
+  <rect class="interna" x="960" y="205" width="520" height="62" rx="8"/>
+  <text class="dn" x="974" y="229">1. CORS (CORSMiddleware)</text>
+  <text class="d" x="974" y="254">Solo deja pasar al dominio de CORS_ORIGINS, nunca "*"</text>
+  <line class="linea" x1="1220" y1="267" x2="1220" y2="287" marker-end="url(#flecha)"/>
+
+  <rect class="interna" x="960" y="289" width="520" height="132" rx="8"/>
+  <text class="dn" x="974" y="313">2. routers/ · capa HTTP (sin lógica de negocio)</text>
+  <text class="d" x="974" y="337">/api: auth · usuarios · alumnos · grupos · inscripciones</text>
+  <text class="d" x="974" y="358">consultas · dashboard · promotores · extraescolares</text>
+  <text class="d" x="974" y="379">semestres · clima · health</text>
+  <text class="d" x="974" y="406">schemas/ Pydantic v2: esquemas de entrada y de salida</text>
+  <line class="linea" x1="1220" y1="421" x2="1220" y2="441" marker-end="url(#flecha)"/>
+
+  <rect class="interna" x="960" y="443" width="520" height="86" rx="8"/>
+  <text class="dn" x="974" y="467">core/deps.py · seguridad por dependencias</text>
+  <text class="d" x="974" y="491">get_current_user: valida el JWT (401 si falla)</text>
+  <text class="d" x="974" y="513">require_role: exige el rol en el servidor (403)</text>
+  <line class="linea" x1="1220" y1="529" x2="1220" y2="549" marker-end="url(#flecha)"/>
+
+  <rect class="interna" x="960" y="551" width="520" height="86" rx="8"/>
+  <text class="dn" x="974" y="575">3. services/ · lógica de negocio</text>
+  <text class="d" x="974" y="599">Reglas RN-xx, cruces de horario, desempeño</text>
+  <text class="d" x="974" y="621">clima.py: cliente de Open-Meteo con caché</text>
+  <line class="linea" x1="1220" y1="637" x2="1220" y2="657" marker-end="url(#flecha)"/>
+
+  <rect class="interna" x="960" y="659" width="520" height="86" rx="8"/>
+  <text class="dn" x="974" y="683">4. models/ · SQLAlchemy 2</text>
+  <text class="d" x="974" y="707">Usuario, Alumno, Promotor, Extraescolar,</text>
+  <text class="d" x="974" y="729">Semestre, Grupo, AlumnoGrupo</text>
+
+  <rect class="interna" x="960" y="757" width="520" height="62" rx="8"/>
+  <text class="dn" x="974" y="781">core/ · apoyo</text>
+  <text class="d" x="974" y="804">config (variables de entorno) · security (bcrypt, PyJWT)</text>
+
+  <rect class="interna" x="960" y="829" width="520" height="62" rx="8"/>
+  <text class="dn" x="974" y="853">entrypoint.sh al arrancar</text>
+  <text class="d" x="974" y="876">alembic upgrade head → seed (SEED_ON_START) → uvicorn</text>
+
+  <rect class="local" x="960" y="901" width="250" height="50" rx="8"/>
+  <text class="tl b" x="972" y="922">LOCAL · servicio "backend"</text>
+  <text class="tl" x="972" y="942">puerto 8000</text>
+  <rect class="nube" x="1220" y="901" width="260" height="50" rx="8"/>
+  <text class="tn b" x="1232" y="922">NUBE · Render (Docker)</text>
+  <text class="tn" x="1232" y="942">extra-liebres-api · /api/health</text>
+
+  <!-- ===== Leyenda de entornos ===== -->
+  <rect class="caja" x="1660" y="150" width="310" height="230" rx="12"/>
+  <text class="h" x="1680" y="185">Entornos</text>
+  <rect class="local" x="1680" y="200" width="270" height="76" rx="8"/>
+  <text class="tl b" x="1692" y="222">LOCAL · Docker Compose</text>
+  <text class="tl" x="1692" y="243">compose.yaml incluye</text>
+  <text class="tl" x="1692" y="264">infra/docker-compose.yml</text>
+  <rect class="nube" x="1680" y="288" width="270" height="76" rx="8"/>
+  <text class="tn b" x="1692" y="310">NUBE · Vercel + Render + Neon</text>
+  <text class="tn" x="1692" y="331">render.yaml y vercel.json listos;</text>
+  <text class="tn" x="1692" y="352">aún sin URL pública</text>
+
+  <!-- ===== Open-Meteo ===== -->
+  <rect class="externa" x="1660" y="420" width="310" height="170" rx="12"/>
+  <text class="h" x="1680" y="455">Open-Meteo · API externa</text>
+  <text class="d" x="1680" y="484">api.open-meteo.com/v1/forecast</text>
+  <text class="d" x="1680" y="507">Pública, sin llave. Solo la llama</text>
+  <text class="d" x="1680" y="528">el backend (httpx, máximo 5 s,</text>
+  <text class="d" x="1680" y="549">caché en memoria de 1 hora)</text>
+  <line class="linea" x1="1480" y1="575" x2="1660" y2="575" marker-end="url(#flecha)"/>
+  <text class="etq" x="1570" y="564" text-anchor="middle">HTTPS GET</text>
+
+  <!-- ===== PostgreSQL ===== -->
+  <rect class="caja" x="1660" y="630" width="310" height="330" rx="12"/>
+  <text class="h" x="1680" y="665">PostgreSQL 16</text>
+  <text class="d" x="1680" y="693">7 tablas: usuario, alumno, promotor,</text>
+  <text class="d" x="1680" y="714">extraescolar, semestre, grupo,</text>
+  <text class="d" x="1680" y="735">alumno_grupo</text>
+  <text class="d" x="1680" y="763">Esquema: Alembic (db/migrations)</text>
+  <text class="d" x="1680" y="786">Datos de ejemplo: db/seed.py</text>
+  <rect class="local" x="1680" y="802" width="270" height="86" rx="8"/>
+  <text class="tl b" x="1692" y="824">LOCAL · servicio "db"</text>
+  <text class="tl" x="1692" y="845">postgres:16-alpine, volumen pgdata</text>
+  <text class="tl" x="1692" y="866">127.0.0.1:5432 (solo tu equipo)</text>
+  <rect class="nube" x="1680" y="898" width="270" height="52" rx="8"/>
+  <text class="tn b" x="1692" y="918">NUBE · Neon</text>
+  <text class="tn" x="1692" y="939">DATABASE_URL con sslmode=require</text>
+
+  <line class="linea" x1="1480" y1="705" x2="1660" y2="705" marker-end="url(#flecha)"/>
+  <text class="etq" x="1570" y="694" text-anchor="middle">SQL (psycopg 3)</text>
+
+  <!-- ===== Integración continua ===== -->
+  <rect class="ci" x="40" y="1010" width="1930" height="330" rx="12" fill-opacity="0.35"/>
+  <text class="h" x="60" y="1045">Integración continua · GitHub Actions (.github/workflows/ci.yml)</text>
+  <text class="d" x="60" y="1070">Se ejecuta en cada push y en cada pull request. Solo verifica: no despliega ni publica imágenes.</text>
+
+  <rect class="caja" x="60" y="1100" width="330" height="140" rx="12"/>
+  <text class="h" x="80" y="1135">Repositorio en GitHub</text>
+  <text class="d" x="80" y="1163">luisreyna060318-alt/extra-liebres</text>
+  <text class="d" x="80" y="1186">Monorepo: frontend/, backend/,</text>
+  <text class="d" x="80" y="1208">db/, infra/, docs/</text>
+  <line class="linea" x1="390" y1="1170" x2="480" y2="1170" marker-end="url(#flecha)"/>
+
+  <rect class="caja" x="480" y="1100" width="460" height="140" rx="12"/>
+  <text class="h" x="500" y="1135">Job backend</text>
+  <text class="d" x="500" y="1163">ubuntu-latest, Python 3.12</text>
+  <text class="d" x="500" y="1186">ruff check backend db</text>
+  <text class="d" x="500" y="1209">pytest (SQLite en memoria, sin PostgreSQL)</text>
+
+  <rect class="caja" x="960" y="1100" width="460" height="140" rx="12"/>
+  <text class="h" x="980" y="1135">Job frontend</text>
+  <text class="d" x="980" y="1163">ubuntu-latest, Node 22</text>
+  <text class="d" x="980" y="1186">npm ci · npm run lint (oxlint)</text>
+  <text class="d" x="980" y="1209">npm run build (tsc + vite)</text>
+
+  <rect class="caja" x="1440" y="1100" width="510" height="140" rx="12"/>
+  <text class="h" x="1460" y="1135">Job docker</text>
+  <text class="d" x="1460" y="1163">docker compose config con .env.example</text>
+  <text class="d" x="1460" y="1186">docker build de la imagen del backend</text>
+  <text class="d" x="1460" y="1209">docker build de la imagen del frontend</text>
+
+  <text class="d" x="60" y="1280">El despliegue en Vercel, Render y Neon se configura en sus paneles (render.yaml, vercel.json, infra/DEPLOY.md).</text>
+  <text class="d" x="60" y="1305">Las imágenes de backend y frontend se construyen desde backend/Dockerfile y frontend/Dockerfile.</text>
+</svg>
