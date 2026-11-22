@@ -124,7 +124,8 @@ Cosas que decidimos no hacer en esta entrega y que un sistema real debería tene
 5. **`/docs` queda público**, también en producción: es útil para la demo y para el profesor; un sistema real lo cerraría.
 6. **`SEED_ON_START=true` en producción** carga datos ficticios. Es explícito en `render.yaml`; hay que quitarlo si algún día
    hubiera datos reales.
-7. **La CSP fija la URL de la API de producción** (`connect-src`): si la API cambia de dirección hay que editar `frontend/vercel.json`. Las cabeceras
-   del frontend solo aplican en Vercel; el frontend de `docker compose` (nginx) no lleva CSP.
-8. **Datos personales:** los datos de ejemplo son ficticios (los números de control empiezan con `99`) y los registros reales
+7. **La CSP fija la URL de la API de producción** (`connect-src`): si la API cambia de dirección hay que editar
+   `frontend/vercel.json`.
+8. **El frontend de `docker compose` (nginx) no lleva estas cabeceras ni la CSP**: solo aplican en Vercel y en el backend.
+9. **Datos personales:** los datos de ejemplo son ficticios (los números de control empiezan con `99`) y los registros reales
    de alumnos no se suben al repositorio ni a un asistente de IA (RN-07).
