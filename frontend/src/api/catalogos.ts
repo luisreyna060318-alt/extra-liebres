@@ -14,6 +14,11 @@ async function pedirLista<T>(ruta: string, conInactivos = false): Promise<T[]> {
   return Array.isArray(respuesta) ? respuesta : respuesta.items
 }
 
+// Solo los semestres (el más reciente va primero). El tablero no necesita los demás catálogos.
+export function pedirSemestres(): Promise<Semestre[]> {
+  return pedirLista<Semestre>('/api/semestres')
+}
+
 export interface Catalogos {
   actividades: Actividad[]
   promotores: Promotor[]

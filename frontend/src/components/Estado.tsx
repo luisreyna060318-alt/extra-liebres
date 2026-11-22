@@ -6,7 +6,7 @@ interface Props {
   vacio?: boolean // true cuando la consulta salió bien pero no hay resultados
   textoVacio?: string
   onReintentar?: () => void
-  children: ReactNode // el contenido real, que solo se muestra si no hay carga, error ni vacío
+  children?: ReactNode // el contenido real, que solo se muestra si no hay carga, error ni vacío
 }
 
 // Toda pantalla que consulta la API muestra uno de estos estados: cargando, error, vacío o el contenido
