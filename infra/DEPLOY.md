@@ -38,8 +38,9 @@ Render pide los valores que no se pueden guardar en Git:
 | `SEED_ADMIN_CORREO` / `SEED_ADMIN_PASSWORD` | Cuenta de administrador de la demo y **una clave tuya** (8 o más caracteres, con letras y números) |
 | `SEED_CAPTURISTA_CORREO` / `SEED_CAPTURISTA_PASSWORD` | Cuenta de capturista de la demo |
 
-   `SECRET_KEY` la genera Render sola. Con `ENTORNO=produccion`, el backend **se niega a arrancar** si la
-   clave es corta o es la del ejemplo, y el seed se niega a crear usuarios con las claves de ejemplo.
+`SECRET_KEY` la genera Render sola. Con `ENTORNO=produccion`, el backend **se niega a arrancar** si la
+clave es corta o es la del ejemplo, y el seed se niega a crear usuarios con las claves de ejemplo.
+
 **Opción B: New Web Service** (la que se usó en este proyecto). Elige el repositorio y llena:
 
 | Campo | Valor |
@@ -57,8 +58,8 @@ Variables de entorno: `ENTORNO=produccion`, `SEED_ON_START=true`, `CLIMA_UMBRAL_
 `SEED_ADMIN_CORREO`, `SEED_ADMIN_PASSWORD`, `SEED_CAPTURISTA_CORREO`, `SEED_CAPTURISTA_PASSWORD` (como en la tabla de
 arriba) y `SECRET_KEY`, que se obtiene con el botón **Generate** de Render.
 
-3. Espera a que el servicio diga **Live**. Prueba `https://TU-SERVICIO.onrender.com/api/health` (debe responder
-   `{"estado":"ok"}`) y `https://TU-SERVICIO.onrender.com/docs`.
+**Con la opción A o con la B**, espera a que el servicio diga **Live**. Prueba `https://TU-SERVICIO.onrender.com/api/health` (debe
+responder `{"estado":"ok"}`) y `https://TU-SERVICIO.onrender.com/docs`.
 
 ## 3. Vercel (frontend)
 
