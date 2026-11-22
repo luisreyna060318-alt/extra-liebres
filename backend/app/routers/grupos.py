@@ -18,6 +18,8 @@ router = APIRouter(
 
 NO_EXISTE = {404: {"description": "El grupo no existe"}}
 CRUCE = {409: {"description": "Cruce de horario con otro grupo del mismo promotor o lugar"}}
+# 422 de negocio (además de los de Pydantic): actividad deportiva con un lugar fuera de la lista de instalaciones
+LUGAR = {422: {"description": "Datos inválidos, o lugar que no es una instalación deportiva permitida"}}
 
 
 @router.get("", response_model=Pagina[GrupoSalida], summary="Listar y filtrar grupos")
@@ -39,7 +41,7 @@ def listar(
     response_model=GrupoSalida,
     status_code=status.HTTP_201_CREATED,
     summary="Crear un grupo",
-    responses={404: {"description": "El semestre, la actividad o el promotor no existe"}, **CRUCE},
+    responses={404: {"description": "El semestre, la actividad o el promotor no existe"}, **CRUCE, **LUGAR},
 )
 def crear(datos: GrupoCrear, db: SesionDB):
     """Crea el grupo si no se cruza con otro del mismo promotor o lugar (mismo semestre y día)."""
@@ -51,7 +53,12 @@ def obtener(idgrupo: int, db: SesionDB):
     return grupo_service.obtener_grupo(db, idgrupo)
 
 
-@router.put("/{idgrupo}", response_model=GrupoSalida, summary="Editar un grupo", responses={**NO_EXISTE, **CRUCE})
+@router.put(
+    "/{idgrupo}",
+    response_model=GrupoSalida,
+    summary="Editar un grupo",
+    responses={**NO_EXISTE, **CRUCE, **LUGAR},
+)
 def actualizar(idgrupo: int, datos: GrupoActualizar, db: SesionDB):
     """Reemplaza los datos del grupo y vuelve a validar los cruces (sin compararlo consigo mismo)."""
     return grupo_service.actualizar_grupo(db, idgrupo, datos)
