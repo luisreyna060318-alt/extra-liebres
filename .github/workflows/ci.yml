@@ -84,3 +84,26 @@ jobs:
         if: steps.detectar.outputs.existe == 'true'
         working-directory: frontend
         run: npm run build
+
+  # Comprueba que las dos imágenes se construyen (no se publican en ningún registro).
+  # Es un job aparte: no depende de los otros y no los retrasa.
+  docker:
+    name: Imágenes de Docker (construcción)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      # Misma validación que hace "docker compose up": el .env de ejemplo debe bastar para armar la configuración
+      - name: Validar docker compose con el .env de ejemplo
+        run: |
+          cp .env.example .env
+          docker compose config --quiet
+
+      # La imagen del backend se construye desde la raíz porque necesita backend/ y db/
+      - name: Construir la imagen del backend
+        run: docker build -f backend/Dockerfile -t extra-liebres-api:ci .
+
+      - name: Construir la imagen del frontend
+        run: docker build --build-arg VITE_API_URL=http://localhost:8000 -t extra-liebres-web:ci frontend

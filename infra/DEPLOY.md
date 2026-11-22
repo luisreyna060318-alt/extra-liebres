@@ -38,15 +38,21 @@ No hay que crear tablas a mano: el backend aplica las migraciones al arrancar.
 ## 3. Vercel (frontend)
 
 1. En <https://vercel.com>: **Add New > Project**, elige este repositorio.
-2. **Root Directory:** `frontend`. Framework: Vite (lo detecta solo).
-3. **Environment Variables:** `VITE_API_URL` = la URL de Render del paso 2 (sin diagonal final).
-4. Para que las rutas de React Router funcionen al recargar la página, el frontend necesita
-   `frontend/vercel.json` con `{"rewrites": [{"source": "/(.*)", "destination": "/index.html"}]}`.
+2. **Root Directory:** `frontend` (el repositorio es un monorepo; sin esto Vercel no encuentra `package.json`).
+   Framework Preset: Vite (lo detecta solo; build `npm run build`, salida `dist`).
+3. **Environment Variables:** `VITE_API_URL` = la URL de Render del paso 2 (sin diagonal final), por ejemplo
+   `https://TU-SERVICIO.onrender.com`. Vite la escribe en el código al compilar: si la cambias después, haz
+   **Redeploy** para que surta efecto.
+4. **Deploy.** Las rutas de React Router (`/grupos`, `/alumnos/3`...) funcionan al recargar la página gracias a
+   `frontend/vercel.json`, que ya está en el repositorio y reescribe todas las rutas a `/index.html`.
+5. Copia la URL que te da Vercel (`https://TU-PROYECTO.vercel.app`, sin diagonal final): la necesitas en el paso 4.
 
 ## 4. Cerrar el círculo (CORS)
 
-Vuelve a Render > **Environment** y pon en `CORS_ORIGINS` la URL final de Vercel. Render reinicia el servicio.
-CORS es lo que hace que **solo tu frontend** pueda llamar a la API desde un navegador.
+Vuelve a Render > **Environment** y pon en `CORS_ORIGINS` la URL final de Vercel (la del paso 3, sin diagonal
+final; si usas también un dominio propio, sepáralos con comas). Render reinicia el servicio.
+CORS es lo que hace que **solo tu frontend** pueda llamar a la API desde un navegador. Si al iniciar sesión el
+navegador marca un error de CORS, casi siempre es que esta URL tiene una diagonal final o no coincide exactamente.
 
 ## 5. Comprobar
 
@@ -60,7 +66,8 @@ CORS es lo que hace que **solo tu frontend** pueda llamar a la API desde un nave
 - **Render (plan gratuito) se duerme** tras 15 minutos sin tráfico y tarda 30 a 60 segundos en despertar.
   Abre el frontend y el `/api/health` unos **10 minutos antes** de tu turno.
 - **Plan B obligatorio:** si la nube falla, el sistema se levanta en la laptop con un solo comando
-  (`docker compose up`, ver el README). Pruébalo antes.
+  (`docker compose up --build`, ver el README; requiere Docker Compose 2.24 o más nuevo). Levanta base de datos,
+  backend y frontend en <http://localhost:5173>. Pruébalo antes.
 - Los límites de los planes gratuitos cambian: verifícalos en el sitio de cada proveedor antes de desplegar.
 
 ## Seguridad (para el reporte)
