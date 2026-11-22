@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 
 from app.core.config import settings
 from app.core.errores import ErrorNegocio
-from app.routers import alumnos, auth, extraescolares, health, promotores, usuarios
+from app.routers import alumnos, auth, extraescolares, health, promotores, semestres, usuarios
 
 app = FastAPI(
     title="Extra-Liebres API",
@@ -40,3 +40,4 @@ app.include_router(usuarios.router)
 app.include_router(alumnos.router)
 app.include_router(promotores.router)
 app.include_router(extraescolares.router)
+app.include_router(semestres.router)
