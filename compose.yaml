@@ -1,0 +1,7 @@
+# Punto de entrada de Docker Compose: permite escribir solo "docker compose up" desde la raíz del repositorio.
+# Incluye los servicios de infra/docker-compose.yml y les pasa las variables del archivo .env de la raíz.
+#   copy .env.example .env
+#   docker compose up --build
+include:
+  - path: infra/docker-compose.yml
+    env_file: .env

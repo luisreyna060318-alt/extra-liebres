@@ -15,7 +15,9 @@ RAIZ = Path(__file__).resolve().parents[3]
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=RAIZ / ".env", extra="ignore")
+    # hide_input_in_errors: si la configuración es inválida, el error NO imprime los valores recibidos
+    # (podrían ser la SECRET_KEY o la contraseña de la BD, y los errores terminan en los logs del servidor).
+    model_config = SettingsConfigDict(env_file=RAIZ / ".env", extra="ignore", hide_input_in_errors=True)
 
     # --- Base de datos ---
     # En producción (Neon) la plataforma da una DATABASE_URL completa. En desarrollo se arma con las
