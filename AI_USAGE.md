@@ -122,6 +122,38 @@ equivocarse en cosas pequeñas y silenciosas, así que revisar el diff, correr t
 reportes de otros agentes es parte del trabajo. Y que podemos explicar el código porque lo revisamos línea por línea, no porque
 lo escribimos nosotros.
 
+### Reflexión de Carlos
+
+> **Borrador: Carlos lo reescribe con sus palabras.** Lo redactó el agente de documentación (Claude Opus 5.5) a
+> partir de commits y corridas de CI reales; la reflexión final tiene que ser de Carlos.
+
+**Un error que la IA introdujo y cómo lo detectamos.** Para fusionar `main` en la rama del tablero (PR #34), el
+orquestador usó un script que resolvía los conflictos de `backend/app/main.py`. El script no supo manejar el `import`
+de varias líneas (`from app.routers import (...)`) y el comando siguiente se ejecutó de todos modos, porque los pasos
+estaban encadenados sin detenerse al primer error. Resultado: se subió a la rama del PR el commit `774eaee` con las
+marcas `<<<<<<< HEAD`, `=======` y `>>>>>>> origin/main` dentro de `main.py`. Nadie lo revisó antes del `push`; lo
+detectó la CI, que falló en el paso de `ruff` con `invalid-syntax` (las pruebas ni siquiera llegaron a correr). Se
+corrigió en el commit `1ceea02`, que dejó un solo `import` con todos los routers, y la CI volvió a verde.
+
+La lección no es "el script tenía un error", sino cómo se trabajó: se encadenaron pasos que cambian el repositorio sin
+detenerse al primer fallo y se subió sin verificar. Una revisión de un segundo, `git diff --check` o buscar
+`<<<<<<<` antes del `push`, lo habría evitado. Desde entonces, las instrucciones a los agentes piden revisar
+`git status` y buscar marcas de conflicto después de cada fusión, antes de subir.
+
+**Otro caso, más corto.** Al revisar en el navegador el PR #43 de Luis, el botón "Dar de baja" de Alumnos se veía como un
+bloque rojo sin texto. La clase `.boton-peligro` estaba definida tres veces con estilos distintos (`alumnos.css`: texto
+rojo; `admin.css` e `inscripciones.css`: fondo rojo), y al cargarse todas las hojas quedaba texto rojo sobre fondo rojo.
+`npm run build`, el lint y las pruebas pasaban; el agente no lo vio porque el navegador estaba oculto. Se corrigió en
+`2ef8618` con una clase propia, `.boton-texto-peligro`. La IA verificó lo que podía medir, no lo que se ve.
+
+También hubo un acierto: el orquestador le dijo al agente del backend de inscripciones que las instalaciones deportivas
+eran 4 (cancha, gimnasio, pista y alberca), pero el agente leyó `INSTALACIONES` en `backend/app/core/constantes.py`,
+encontró 6 y usó las reales. Con la lista corta, crear o editar un grupo con los lugares que usa el seed (por ejemplo
+"Cancha de fútbol") habría respondido 422.
+
+**Qué aprendí que no habría aprendido sin la IA.** _Pregunta guía para Carlos (respóndela tú):_ ¿qué entendí de Git,
+de la CI o de la revisión de código gracias a estos errores, que no habría visto si yo hubiera escrito todo a mano?
+
 ## Reglas de seguridad que seguimos
 
 - No pegamos en ningún asistente contraseñas, cadenas de conexión ni llaves de API reales.
