@@ -82,6 +82,23 @@ navegador marca un error de CORS, casi siempre es que esta URL tiene una diagona
 
 ## 5. Comprobar
 
+**La forma rápida: la prueba de humo.** Un script que recorre los flujos principales y dice qué funciona (no hay que
+instalar nada, solo Python 3):
+
+```powershell
+python infra/prueba_humo.py https://TU-SERVICIO.onrender.com
+```
+
+Te pide el correo y la contraseña del administrador y del capturista (la contraseña se escribe sin que se vea y nunca se
+guarda ni se imprime). Comprueba el inicio de sesión de los dos roles, que el capturista recibe 403, las listas y la búsqueda,
+el tablero y el clima, y un flujo completo de escritura (crea un promotor, una actividad, un semestre, dos grupos y una
+inscripción, prueba los rechazos de cruce de horario y de evaluación, y **borra todo al final**). Termina con
+`N de N comprobaciones correctas`. Si algo falla, dice cuál.
+
+También sirve contra tu computadora (`http://localhost:8000`) y, de paso, **despierta el servidor gratuito de Render**.
+
+**A mano:**
+
 - [ ] `/api/health` y `/docs` del backend responden.
 - [ ] Desde el frontend: iniciar sesión con el administrador y con el capturista.
 - [ ] Como capturista, una acción de administrador (por ejemplo `GET /api/usuarios` en `/docs`) responde **403**.
@@ -89,6 +106,8 @@ navegador marca un error de CORS, casi siempre es que esta URL tiene una diagona
 
 ## El día de la demo
 
+- **Corre la prueba de humo** (`python infra/prueba_humo.py URL`) unos 10 minutos antes de tu turno: despierta el servidor y
+  confirma que todo funciona.
 - **Render (plan gratuito) se duerme** tras 15 minutos sin tráfico y tarda 30 a 60 segundos en despertar.
   Abre el frontend y el `/api/health` unos **10 minutos antes** de tu turno.
 - **Plan B obligatorio:** si la nube falla, el sistema se levanta en la laptop con un solo comando
