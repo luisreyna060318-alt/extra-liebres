@@ -21,7 +21,8 @@ export default function Pronostico() {
             </p>
             {datos.aviso_lluvia && (
               <div role="alert" className="alerta alerta-error">
-                Hay alta probabilidad de lluvia: la actividad al aire libre podría verse afectada.
+                <span aria-hidden="true">⚠ </span>
+                Aviso de lluvia: la actividad al aire libre podría verse afectada por la alta probabilidad de lluvia.
               </div>
             )}
           </>

@@ -151,9 +151,15 @@ export default function Grupos() {
                       <td data-etiqueta="Lugar">{g.aula}</td>
                       <td data-etiqueta="Inscritos">{g.inscritos}</td>
                       <td data-etiqueta="Acciones">
-                        <Link to={`/grupos/${g.idgrupo}/editar`} aria-label={`Editar el grupo de ${g.actividad}, ${nombreDia(g.dia)} ${recortarHora(g.horainicio)}`}>
-                          Editar
-                        </Link>
+                        {/* Un solo contenedor: en celular la celda reparte el espacio entre la etiqueta y los enlaces */}
+                        <span className="enlaces-acciones">
+                          <Link to={`/grupos/${g.idgrupo}`} aria-label={`Ver inscritos del grupo de ${g.actividad}, ${nombreDia(g.dia)} ${recortarHora(g.horainicio)}`}>
+                            Ver
+                          </Link>
+                          <Link to={`/grupos/${g.idgrupo}/editar`} aria-label={`Editar el grupo de ${g.actividad}, ${nombreDia(g.dia)} ${recortarHora(g.horainicio)}`}>
+                            Editar
+                          </Link>
+                        </span>
                       </td>
                     </tr>
                   ))}
