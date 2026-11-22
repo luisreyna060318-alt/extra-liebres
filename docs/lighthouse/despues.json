@@ -1,0 +1,164 @@
+[
+ {
+  "ruta": "/login",
+  "modo": "movil",
+  "rendimiento": 100,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/login",
+  "modo": "escritorio",
+  "rendimiento": 100,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/registro",
+  "modo": "movil",
+  "rendimiento": 100,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/registro",
+  "modo": "escritorio",
+  "rendimiento": 100,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/",
+  "modo": "movil",
+  "rendimiento": 90,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/",
+  "modo": "escritorio",
+  "rendimiento": 100,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/alumnos",
+  "modo": "movil",
+  "rendimiento": 93,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/alumnos",
+  "modo": "escritorio",
+  "rendimiento": 100,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/grupos",
+  "modo": "movil",
+  "rendimiento": 90,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/grupos",
+  "modo": "escritorio",
+  "rendimiento": 100,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/grupos/1",
+  "modo": "movil",
+  "rendimiento": 92,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/grupos/1",
+  "modo": "escritorio",
+  "rendimiento": 87,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/consultas",
+  "modo": "movil",
+  "rendimiento": 89,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/consultas",
+  "modo": "escritorio",
+  "rendimiento": 100,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/catalogos",
+  "modo": "movil",
+  "rendimiento": 92,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/catalogos",
+  "modo": "escritorio",
+  "rendimiento": 100,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/usuarios",
+  "modo": "movil",
+  "rendimiento": 91,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ },
+ {
+  "ruta": "/usuarios",
+  "modo": "escritorio",
+  "rendimiento": 100,
+  "accesibilidad": 100,
+  "buenas_practicas": 100,
+  "seo": 100,
+  "auditorias_de_accesibilidad_fallidas": []
+ }
+]
