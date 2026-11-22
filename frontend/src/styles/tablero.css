@@ -1,0 +1,114 @@
+/* Tablero: selector de semestre, pronóstico, indicadores y gráficas (mobile-first) */
+
+/* Selector y pronóstico: apilados en celular, lado a lado desde tablet */
+.tablero-encabezado {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-3);
+  margin-bottom: var(--espacio-3);
+}
+
+/* El pronóstico no debe imponer un ancho mayor al de la pantalla */
+.tablero-encabezado > * {
+  min-width: 0;
+}
+
+/* --- Indicadores (totales): una columna en celular, 2 en tablet y 4 en escritorio --- */
+.indicadores {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-3);
+  margin: 0 0 var(--espacio-3);
+}
+
+.indicador {
+  padding: var(--espacio-3);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-left: 6px solid var(--color-primario);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+}
+
+.indicador dt {
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+.indicador dd {
+  margin: 0;
+}
+
+.indicador-valor {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-primario-oscuro);
+}
+
+.indicador-nota {
+  font-size: 0.875rem;
+  color: var(--color-texto-suave);
+}
+
+/* --- Gráficas: una columna en celular y dos en escritorio --- */
+.graficas {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-3);
+}
+
+.graficas > * {
+  min-width: 0; /* sin esto la gráfica podría ensanchar la rejilla y causar scroll horizontal */
+}
+
+.grafica-descripcion {
+  font-size: 0.875rem;
+}
+
+.grafica-dibujo {
+  width: 100%;
+  min-width: 0;
+}
+
+.grafica-tabla {
+  margin-top: var(--espacio-3);
+}
+
+.grafica-tabla summary {
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: var(--color-primario-oscuro);
+  cursor: pointer;
+}
+
+/* El aviso de lluvia lleva borde grueso y un símbolo, así no depende solo del color */
+.pronostico .alerta-error {
+  border-width: 2px;
+  font-weight: 600;
+}
+
+@media (min-width: 600px) {
+  .tablero-encabezado {
+    grid-template-columns: minmax(12rem, 1fr) 2fr;
+    align-items: start;
+  }
+
+  .indicadores {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .indicadores {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--espacio-4);
+  }
+
+  .graficas {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--espacio-4);
+  }
+}

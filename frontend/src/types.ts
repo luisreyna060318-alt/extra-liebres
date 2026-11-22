@@ -74,6 +74,18 @@ export interface GrupoEntrada {
   aula: string
 }
 
+// --- Tablero (backend: schemas/dashboard.py, ResumenSalida) ---
+export interface ResumenTablero {
+  totales: {
+    alumnos_activos: number // global: no depende del semestre
+    grupos: number
+    inscripciones: number
+  }
+  inscritos_por_actividad: { actividad: string; total: number }[]
+  distribucion_desempenio: { desempenio: string; total: number }[]
+  promedio_calificacion: number | null // null si todavía no hay calificaciones
+}
+
 // --- Clima (backend: schemas/clima.py). Si disponible es false, solo viene mensaje ---
 export interface Clima {
   disponible: boolean
