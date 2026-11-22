@@ -43,9 +43,11 @@ def listar(
 
 
 # Esta ruta va ANTES de "/{nocontrol}", si no FastAPI creería que "opciones" es un número de control
-@router.get("/opciones", response_model=OpcionesAlumno, summary="Carreras y campus existentes")
+@router.get("/opciones", response_model=OpcionesAlumno, summary="Carreras (lista fija) y campus existentes")
 def opciones(db: SesionDB):
-    """Carreras y campus que ya existen en la base de datos; sirve para llenar los filtros."""
+    """Las carreras que se pueden elegir (lista fija) y los campus que ya existen.
+
+    Sirve para llenar los filtros y el formulario."""
     return alumno_service.opciones_alumnos(db)
 
 

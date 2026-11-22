@@ -53,7 +53,7 @@ def test_csv_trae_encabezados_y_todos_los_renglones(client, h, escenario):
                         "Calificación", "Desempeño"]
     assert len(filas) == 1 + 4  # encabezado y los 4 inscritos, sin paginar
     assert filas[1][:5] == [
-        "19110002", "Aguilar García Beto", "Ingeniería Industrial", "Fútbol", "Agosto-Diciembre 2026"
+        "19110002", "Aguilar García Beto", "ING. INDUSTRIAL", "Fútbol", "Agosto-Diciembre 2026"
     ]
 
 

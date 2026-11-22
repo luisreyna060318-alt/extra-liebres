@@ -6,7 +6,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
 
-from app.core.constantes import SEXOS
+from app.core.constantes import CARRERAS, SEXOS
 
 # Textos que se limpian solos (espacios al inicio y al final) y no pueden quedar vacíos
 Texto60 = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=60)]
@@ -21,7 +21,7 @@ class AlumnoDatos(BaseModel):
     apaterno: Texto60 = Field(examples=["López"])
     amaterno: Texto60 | None = Field(default=None, examples=["García"], description="Opcional")
     sexo: str = Field(examples=["F"], description="M o F")
-    carrera: Texto80 = Field(examples=["Ingeniería en Sistemas Computacionales"])
+    carrera: Texto80 = Field(examples=["ING. SISTEMAS COMPUTACIONALES"], description="Una de las carreras de la lista")
     campus: Texto40 = Field(examples=["Campus I"])
 
     @field_validator("amaterno", mode="before")
@@ -39,6 +39,15 @@ class AlumnoDatos(BaseModel):
         if v not in SEXOS:
             raise ValueError(f"El sexo debe ser uno de: {', '.join(SEXOS)}")
         return v
+
+    @field_validator("carrera")
+    @classmethod
+    def carrera_valida(cls, v: str) -> str:
+        # Se compara sin distinguir mayúsculas y se guarda con el nombre oficial: "ing. industrial" -> "ING. INDUSTRIAL"
+        for oficial in CARRERAS:
+            if v.upper() == oficial:
+                return oficial
+        raise ValueError("Elige una carrera de la lista")
 
 
 def normalizar_nocontrol(valor: str) -> str:
@@ -82,7 +91,9 @@ class AlumnoSalida(BaseModel):
 
 
 class OpcionesAlumno(BaseModel):
-    """Valores que ya existen, para llenar los filtros y las listas desplegables de la pantalla."""
+    """Valores para llenar los filtros y las listas desplegables.
+
+    Las carreras son la lista fija; el campus, los que ya existen."""
 
     carreras: list[str]
     campus: list[str]

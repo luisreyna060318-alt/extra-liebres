@@ -20,3 +20,24 @@ INSTALACIONES = (
     "Pista de atletismo",
     "Alberca",
 )
+
+# Carreras del ITCJ que se pueden elegir al capturar un alumno. El formulario y el filtro muestran esta lista y el
+# servidor la exige (422 si la carrera no está). El orden es el de la lista.
+CARRERAS = (
+    "LIC. ADMINISTRACIÓN",
+    "CONTADOR PÚBLICO",
+    "ING. ELECTROMECÁNICA",
+    "ING. MECÁNICA",
+    "ING. SISTEMAS COMPUTACIONALES",
+    "ING. ELECTRÓNICA",
+    "ING. EN TECNOLOGÍAS DE LA INFORMACIÓN Y COMUNICACIONES",
+    "ING. EN GESTIÓN EMPRESARIAL",
+    "ING. ELÉCTRICA",
+    "ING. INDUSTRIAL",
+    "ING. LOGÍSTICA",
+    "ING. MECATRÓNICA",
+    "ING. INDUSTRIAL (EAD)",
+    "ING. SISTEMAS COMPUTACIONALES (EAD)",
+    "ING. EN GESTIÓN EMPRESARIAL (EAD)",
+    "ING. INDUSTRIAL MODALIDAD MIXTA",
+)

@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend"))
 from sqlalchemy import func, select  # noqa: E402
 
 from app.core.config import settings  # noqa: E402
+from app.core.constantes import CARRERAS  # noqa: E402
 from app.core.database import SessionLocal  # noqa: E402
 from app.core.security import hash_password  # noqa: E402
 from app.models import (  # noqa: E402
@@ -42,9 +43,6 @@ APELLIDOS = ["García", "Martínez", "López", "Hernández", "González", "Pére
              "Ramírez", "Flores", "Torres", "Rivera", "Gómez", "Díaz", "Cruz", "Morales", "Reyes", "Ortiz",
              "Gutiérrez", "Chávez", "Ruiz", "Mendoza", "Aguilar", "Castillo", "Vargas", "Medina", "Herrera",
              "Jiménez", "Navarro", "Ramos"]
-CARRERAS = ["Ingeniería en Sistemas Computacionales", "Ingeniería Industrial", "Ingeniería Electrónica",
-            "Ingeniería Eléctrica", "Ingeniería Mecánica", "Ingeniería Química", "Ingeniería Mecatrónica",
-            "Ingeniería en Gestión Empresarial", "Arquitectura", "Ingeniería Civil"]
 CAMPUS = ["Campus I", "Campus II"]
 ACTIVIDADES = [  # (nombre, tipo, al aire libre)
     ("Fútbol", "deportiva", True), ("Básquetbol", "deportiva", True), ("Voleibol", "deportiva", True),
