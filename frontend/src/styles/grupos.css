@@ -1,0 +1,161 @@
+/* Pantallas de grupos: encabezado con botón, filtros, tabla, paginación y formulario con pronóstico */
+
+/* Texto solo para lectores de pantalla (por ejemplo, el título de la tabla) */
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Título de la página y botón de acción en una fila que se parte si no cabe */
+.encabezado-pagina {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-2) var(--espacio-3);
+  margin-bottom: var(--espacio-3);
+}
+
+.encabezado-pagina h1 {
+  margin: 0;
+}
+
+/* --- Filtros: una columna en celular, dos en tablet y cuatro en escritorio --- */
+.filtros {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--espacio-3);
+  min-width: 0; /* los fieldset no se encogen solos: sin esto empujan el ancho de la página */
+  margin: 0 0 var(--espacio-3);
+  padding: var(--espacio-3);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+}
+
+.filtros legend {
+  padding: 0 var(--espacio-1);
+  font-weight: 600;
+}
+
+.filtros-campos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-3);
+  width: 100%;
+}
+
+.filtros .campo select {
+  min-width: 0;
+}
+
+/* --- Paginación --- */
+.paginacion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-2) var(--espacio-3);
+  margin-top: var(--espacio-3);
+}
+
+/* --- Formulario de grupo: el formulario y el pronóstico van en columna (celular) o lado a lado --- */
+.grupo-disposicion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.grupo-disposicion .formulario {
+  max-width: 100%;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2) var(--espacio-3);
+}
+
+.alerta p {
+  margin: var(--espacio-1) 0 0;
+}
+
+.pronostico {
+  align-self: flex-start;
+  width: 100%;
+}
+
+.pronostico p {
+  margin-bottom: var(--espacio-2);
+  color: var(--color-texto);
+}
+
+/* --- Celular (menos de 600 px): cada fila de la tabla se vuelve una tarjeta, sin scroll horizontal --- */
+@media (max-width: 599px) {
+  .tabla-apilable,
+  .tabla-apilable tbody,
+  .tabla-apilable tr,
+  .tabla-apilable td {
+    display: block;
+  }
+
+  /* Los encabezados se ocultan a la vista; cada celda muestra su etiqueta (data-etiqueta) */
+  .tabla-apilable thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .tabla-apilable tr {
+    margin-bottom: var(--espacio-3);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio);
+  }
+
+  .tabla-apilable td {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--espacio-3);
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  .tabla-apilable td::before {
+    content: attr(data-etiqueta);
+    flex-shrink: 0;
+    font-weight: 600;
+    text-align: left;
+  }
+}
+
+@media (min-width: 600px) {
+  .filtros-campos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .filtros-campos {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Formulario a la izquierda y pronóstico a la derecha */
+  .grupo-disposicion {
+    display: grid;
+    grid-template-columns: minmax(0, 48rem) minmax(0, 20rem);
+    align-items: start;
+    gap: var(--espacio-4);
+  }
+
+  /* Dentro del formulario de dos columnas, el aviso, la ayuda y los botones ocupan todo el ancho */
+  .formulario-ancho .ancho-completo {
+    grid-column: 1 / -1;
+  }
+}
