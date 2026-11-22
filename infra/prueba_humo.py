@@ -10,8 +10,10 @@ NUNCA se imprime ni se guarda. También se pueden pasar por variables de entorno
 
 Todo lo que la prueba crea (promotor, actividad, semestre, grupos, una inscripción) se borra al final,
 aunque algo falle.
-El sistema queda igual que estaba. Conviene correrla unos 10 minutos antes de una demostración: además despierta el
-servidor gratuito de Render.
+El sistema queda igual que estaba. Aun así escribe datos de prueba en la base real durante un momento: córrelo
+antes de la demo y no mientras otras personas usan el sistema.
+Solo acepta https:// (o http:// de tu propia computadora): con http:// las contraseñas viajarían sin cifrar.
+Conviene correrla unos 10 minutos antes de una demostración: además despierta el servidor gratuito de Render.
 """
 
 import getpass
@@ -26,6 +28,7 @@ import urllib.request
 TIMEOUT = 120  # Render gratuito tarda de 30 a 60 s en despertar
 resultados: list[bool] = []
 temporales: list[tuple[str, str]] = []  # (descripción, ruta) de lo creado, para limpiarlo al final
+inscripciones_temporales: list[str] = []  # inscripciones creadas: hay que quitarlas antes de borrar los grupos
 
 
 def ok(nombre: str, condicion: bool, detalle: str = "") -> bool:
@@ -75,6 +78,12 @@ def main() -> int:
         print(__doc__)
         return 2
     base = sys.argv[1].rstrip("/")
+    esquema, _, resto = base.partition("://")
+    servidor = resto.split("/")[0].split(":")[0]
+    if esquema == "http" and servidor not in ("localhost", "127.0.0.1", "::1"):
+        # Con http:// las contraseñas viajarían sin cifrar por internet
+        print(f"Por seguridad no se aceptan direcciones http:// que no sean de tu computadora ({base}). Usa https://.")
+        return 2
     if "//localhost" in base:
         # En Windows "localhost" resuelve primero a IPv6 y cada petición tarda ~8 s; 127.0.0.1 es inmediato
         base = base.replace("//localhost", "//127.0.0.1")
@@ -238,6 +247,9 @@ def main() -> int:
         ins = f"/api/grupos/{ga['idgrupo']}/inscripciones"
         c, r = llamar(base, "POST", ins, capturista, {"nocontrol": primero["nocontrol"]})
         ok("inscribe a un alumno existente", c == 201)
+        if c == 201:
+            # Se anota ya, para que la limpieza la quite aunque el script falle más adelante
+            inscripciones_temporales.append(f"{ins}/{primero['nocontrol']}")
         ok(
             "inscribirlo otra vez se rechaza (409)",
             llamar(base, "POST", ins, capturista, {"nocontrol": primero["nocontrol"]})[0] == 409,
@@ -279,6 +291,14 @@ def main() -> int:
     finally:
         # ---------- Limpieza: se borra en orden (grupos primero, luego promotor, actividad y semestre) ----------
         print("\nLimpieza:")
+        # Primero las inscripciones: un grupo con inscritos no se puede borrar (409) y, sin borrar los grupos,
+        # tampoco el promotor, la actividad ni el semestre. Si ya se quitó antes, el 404 se ignora.
+        for ruta in inscripciones_temporales:
+            codigo, _ = llamar(base, "DELETE", ruta + "?confirmar=true", admin)
+            if codigo == 204:
+                ok("se quita la inscripción de prueba que quedó pendiente", True)
+            elif codigo != 404:
+                ok("se quita la inscripción de prueba", False, f"código {codigo}")
         orden = {"grupo": 0, "promotor": 1, "actividad": 2, "semestre": 3}
         for descripcion, ruta in sorted(temporales, key=lambda t: orden[t[0]]):
             codigo, _ = llamar(base, "DELETE", ruta, admin)
