@@ -4,6 +4,7 @@ import RutaPrivada from './components/RutaPrivada.tsx'
 import Alumnos from './pages/Alumnos.tsx'
 import Catalogos from './pages/Catalogos.tsx'
 import Consultas from './pages/Consultas.tsx'
+import GrupoFormulario from './pages/GrupoFormulario.tsx'
 import Grupos from './pages/Grupos.tsx'
 import Login from './pages/Login.tsx'
 import NoEncontrada from './pages/NoEncontrada.tsx'
@@ -25,6 +26,8 @@ export default function App() {
           <Route path="/" element={<Tablero />} />
           <Route path="/alumnos" element={<Alumnos />} />
           <Route path="/grupos" element={<Grupos />} />
+          <Route path="/grupos/nuevo" element={<GrupoFormulario />} />
+          <Route path="/grupos/:id/editar" element={<GrupoFormulario />} />
           <Route path="/consultas" element={<Consultas />} />
         </Route>
 

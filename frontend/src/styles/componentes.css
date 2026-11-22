@@ -23,6 +23,14 @@
   cursor: not-allowed;
 }
 
+/* Un enlace (<a>) que se ve como botón, por ejemplo "Nuevo grupo" */
+a.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
 .boton-secundario {
   color: var(--color-primario-oscuro);
   background: var(--color-superficie);
@@ -85,7 +93,8 @@
   border-radius: var(--radio);
 }
 
-.campo input[aria-invalid='true'] {
+.campo input[aria-invalid='true'],
+.campo select[aria-invalid='true'] {
   border-color: var(--color-error);
 }
 
