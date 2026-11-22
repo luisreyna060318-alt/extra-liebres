@@ -1,0 +1,30 @@
+/* Variables CSS: colores, espacios y tipografía en un solo lugar.
+   Los contrastes de texto sobre fondo cumplen WCAG AA (≥ 4.5:1). */
+:root {
+  /* Colores */
+  --color-primario: #1b4f8f;
+  --color-primario-oscuro: #123a6b;
+  --color-fondo: #f4f6f9;
+  --color-superficie: #ffffff;
+  --color-texto: #1f2933;
+  --color-texto-suave: #52606d;
+  --color-borde: #cbd2d9;
+  --color-error: #b3261e;
+  --color-error-fondo: #fdecea;
+  --color-exito: #1e6b34;
+  --color-exito-fondo: #e6f4ea;
+  --color-foco: #e08a00;
+
+  /* Espacios (escala simple) */
+  --espacio-1: 0.25rem;
+  --espacio-2: 0.5rem;
+  --espacio-3: 1rem;
+  --espacio-4: 1.5rem;
+  --espacio-5: 2rem;
+
+  /* Forma y tipografía */
+  --radio: 0.5rem;
+  --sombra: 0 1px 3px rgb(0 0 0 / 15%);
+  --fuente: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --ancho-maximo: 72rem;
+}

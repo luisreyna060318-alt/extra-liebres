@@ -14,14 +14,20 @@
 |---|---|---|---|
 | Claude Code (app de escritorio de Claude) | Claude Sonnet 5.5 | Luis David Reyna Morisco | Análisis de requisitos, documentos de planeación, estructura del repositorio y, más adelante, código |
 | _(se agregarán otros modelos de Claude si se delegan tareas a subagentes)_ | _pendiente_ | Luis | Se anotará aquí modelo y tarea de cada uno |
-| _(pendiente)_ | _pendiente_ | Carlos Limones Ayala | Carlos declara aquí las herramientas que use, o escribe "ninguna" |
+| Claude Code (app de escritorio de Claude) | Claude Sonnet 5.5 (orquestador) | Carlos Limones Ayala | Recibe las tareas de Carlos, las reparte y delega el trabajo a subagentes |
+| Claude Code, subagentes | Claude Sonnet 5.5 | Carlos | Frontend (base, autenticación, estilos y pantallas) y servicio de clima |
+| Claude Code, subagentes | Claude Opus | Carlos | Grupos (lógica del servidor y formulario dinámico) |
+| Claude Code, subagentes | Claude Haiku | Carlos | Integración continua (CI) con GitHub Actions |
 
 ## 2. Harness y modo de uso
 
 - **Luis:** Claude Code en la app de escritorio de Claude, como **agente que edita archivos y ejecuta
   comandos** (Git, Docker, `gh`, Python, Node) sobre el repositorio local. Cada commit lo aprueba Luis
   antes de hacerse y cada cambio se revisa antes de subirlo.
-- **Carlos:** _pendiente_.
+- **Carlos:** Claude Code en la app de escritorio de Claude, como **agente que edita archivos y ejecuta
+  comandos** (Git, `gh`, Node y Python) sobre el repositorio local. Un agente orquestador (Claude Sonnet 5.5)
+  reparte las tareas a subagentes, cada uno con su modelo (ver sección 1), que trabajan en ramas separadas
+  y abren PRs con la cuenta de Carlos. Carlos revisa cada cambio antes de fusionarlo.
 
 ## 3. Archivos de contexto e instrucciones
 
@@ -41,6 +47,7 @@ Servidores MCP o *skills* adicionales: _pendiente de listar si se usan en el pro
 | 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | Se entregó la propuesta (Tarea 1), el ejemplo de requerimientos del profesor, los requisitos del proyecto final y el manual del curso; se pidió detectar lo que falta, dar opciones de implementación, estructurar prompts y planear los commits de ambos integrantes | `docs/propuesta-v2.md`, `docs/plan-de-trabajo.md`, `docs/prompts.md` | _Pendiente: Luis anota aquí lo que corrigió o decidió al revisar_ |
 | 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | Crear la estructura inicial del monorepo, `.gitignore`, `.env.example` y README, y publicar el repositorio | `.gitignore`, `.env.example`, `README.md`, carpetas base | _Pendiente_ |
 | 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | Copiar la planeación al repositorio y generar `CLAUDE.md` y este documento | `CLAUDE.md`, `AI_USAGE.md`, `docs/` | _Pendiente_ |
+| 2026-11-21 | Carlos | Claude Code (subagente de frontend) / Claude Sonnet 5.5 | Prompt P8: crear la base del frontend (commits C01 a C04 del plan): proyecto Vite + React + TypeScript con react-router, rutas y layout semántico con navegación por rol; estilos globales responsivos (Flexbox y Grid, 2 breakpoints, variables y foco visible); cliente de API con token y manejo de errores, contexto de autenticación, hook `useApi`, componente `Estado` y rutas protegidas; pantallas de login y registro con validación en cliente. Además, completar mis filas de esta declaración. Se pidió respetar los contratos de `/api/auth/*` del backend, no agregar dependencias sin justificar y que el token nunca se imprima | `frontend/` (C01 y C02 en el PR `feature/front-base`; `src/api/`, `AuthContext`, `useApi`, `Estado`, `pages/Login` y `pages/Registro` en el PR `feature/front-auth`), `AI_USAGE.md` | _pendiente: Carlos revisa_ |
 
 _(Se agregan filas con cada prompt importante: fecha, quién, herramienta y modelo, resumen fiel del
 prompt, archivos y qué cambiamos nosotros después.)_
