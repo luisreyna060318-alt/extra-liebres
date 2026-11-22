@@ -8,12 +8,14 @@
   --color-superficie: #ffffff;
   --color-texto: #1f2933;
   --color-texto-suave: #52606d;
-  --color-borde: #cbd2d9;
+  --color-borde: #cbd2d9; /* decorativo: tarjetas, tablas, separadores */
+  --color-borde-campo: #7b8794; /* bordes de campos de formulario: ≥ 3:1 sobre blanco (WCAG 1.4.11) */
   --color-error: #b3261e;
   --color-error-fondo: #fdecea;
   --color-exito: #1e6b34;
   --color-exito-fondo: #e6f4ea;
-  --color-foco: #e08a00;
+  --color-foco: #b45309; /* anillo de foco: ≥ 3:1 sobre blanco y sobre el fondo gris claro (WCAG 1.4.11) */
+  --color-foco-claro: #ffffff; /* anillo de foco sobre el encabezado azul (8:1) */
 
   /* Espacios (escala simple) */
   --espacio-1: 0.25rem;

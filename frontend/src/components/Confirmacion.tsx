@@ -8,13 +8,16 @@ interface Props {
   textoConfirmar: string // por ejemplo "Sí, eliminar"
   enviando: boolean
   peligrosa?: boolean // true pinta el botón en rojo (eliminar, suspender)
+  nivelTitulo?: 2 | 3 // h2 si el panel va justo debajo del h1 (sin h2 antes); h3 si va dentro de una sección con h2
   onConfirmar: () => void
   onCancelar: () => void
 }
 
 // Panel de confirmación dentro de la página (no es un modal): nada se envía hasta pulsar el botón de confirmar.
-export default function Confirmacion({ id, titulo, texto, textoConfirmar, enviando, peligrosa = true, onConfirmar, onCancelar }: Props) {
+export default function Confirmacion({ id, titulo, texto, textoConfirmar, enviando, peligrosa = true, nivelTitulo = 3, onConfirmar, onCancelar }: Props) {
   const refTitulo = useRef<HTMLHeadingElement>(null)
+  // Así los encabezados no se saltan un nivel (h1 → h3), que desorienta a quien navega por encabezados
+  const Titulo = nivelTitulo === 2 ? 'h2' : 'h3'
 
   // Al aparecer, el foco pasa al título para que el teclado y el lector de pantalla lo noten
   useEffect(() => {
@@ -34,9 +37,9 @@ export default function Confirmacion({ id, titulo, texto, textoConfirmar, envian
       aria-describedby={`${id}-texto`}
       onKeyDown={alTeclear}
     >
-      <h3 id={`${id}-titulo`} ref={refTitulo} tabIndex={-1}>
+      <Titulo id={`${id}-titulo`} ref={refTitulo} tabIndex={-1}>
         {titulo}
-      </h3>
+      </Titulo>
       <p id={`${id}-texto`}>{texto}</p>
       <div className="acciones">
         <button type="button" className={peligrosa ? 'boton boton-peligro' : 'boton'} onClick={onConfirmar} disabled={enviando}>

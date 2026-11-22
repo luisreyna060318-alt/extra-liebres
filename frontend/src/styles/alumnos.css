@@ -16,8 +16,9 @@
 }
 
 /* Tres filtros: en celular una columna; en tablet y escritorio, tres columnas */
+/* minmax(0, 1fr): sin el 0, un select con opciones largas ensancha la columna y la página se desborda en 360 px */
 .alumnos-filtros {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 /* --- Acciones de cada fila: enlaces y botones de texto que se acomodan en varias líneas --- */
@@ -110,7 +111,7 @@
   }
 
   .alumnos-filtros {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .datos-alumno dl {

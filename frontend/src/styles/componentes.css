@@ -89,7 +89,7 @@ a.boton {
   font: inherit;
   color: var(--color-texto);
   background: #ffffff;
-  border: 2px solid var(--color-borde);
+  border: 2px solid var(--color-borde-campo);
   border-radius: var(--radio);
 }
 
