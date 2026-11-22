@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 
 from app.core.config import settings
 from app.core.errores import ErrorNegocio
-from app.routers import auth, clima, health, usuarios
+from app.routers import alumnos, auth, clima, health, usuarios
 
 app = FastAPI(
     title="Extra-Liebres API",
@@ -37,4 +37,5 @@ async def manejar_error_de_negocio(request: Request, error: ErrorNegocio) -> JSO
 app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(usuarios.router)
+app.include_router(alumnos.router)
 app.include_router(clima.router)
