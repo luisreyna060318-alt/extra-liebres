@@ -2,3 +2,4 @@
 # Con CRLF el contenedor no puede ejecutarlos ("bad interpreter").
 *.sh text eol=lf
 Dockerfile text eol=lf
+*.conf text eol=lf
