@@ -5,8 +5,8 @@
 > todo el material, incluido el generado por la herramienta. Si no podemos explicar un fragmento en la
 > demo, no cuenta como nuestro.
 >
-> **Estado:** actualizado el 22 de noviembre de 2026 (commits de `main` hasta `8155d67`). Las celdas marcadas
-> como _pendiente_ las completa cada integrante antes de la etiqueta `v1.0.0`.
+> **Estado:** actualizado el 22 de noviembre de 2026 (commits de `main` hasta `c656a3f`). No quedan celdas
+> marcadas como _pendiente_.
 
 ## 1. Herramientas y modelos
 
@@ -41,7 +41,7 @@
 | [`docs/prompts.md`](docs/prompts.md) | Plantillas de prompts estructurados (P1–P13) que usamos y corregimos |
 | [`docs/plan-de-trabajo.md`](docs/plan-de-trabajo.md) | Cronograma, flujo de Git y plan de commits |
 
-Servidores MCP o *skills* adicionales: _pendiente: cada integrante confirma si usó alguno_. Para el reporte técnico se usaron herramientas locales
+Servidores MCP o *skills* adicionales: Luis no usó ninguno para programar el proyecto; probó pantallas con el navegador integrado de la app de Claude. Carlos usó el navegador integrado de la app de Claude (herramientas MCP del navegador) para probar las pantallas y la *skill* `built-in-browser`, además de `gh` y Docker desde la terminal; no se usó ningún otro servidor MCP ni conector para el proyecto. Para el reporte técnico se usaron herramientas locales
 fuera del repositorio (python-docx, PyMuPDF y puppeteer-core en carpetas temporales, Microsoft Word y Edge); no se agregó ninguna dependencia al proyecto.
 En el caso de Carlos, los subagentes de frontend probaron las pantallas en el navegador integrado de la app de
 Claude (lo dicen los PR #36, #39 y #41) y usaron `gh` para abrir los PR.
@@ -50,9 +50,9 @@ Claude (lo dicen los PR #36, #39 y #41) y usaron `gh` para abrir los PR.
 
 | Fecha | Integrante | Herramienta / modelo | Prompt (resumen fiel) | Archivos afectados | Ajustes humanos |
 |---|---|---|---|---|---|
-| 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | Se entregó la propuesta (Tarea 1), el ejemplo de requerimientos del profesor, los requisitos del proyecto final y el manual del curso; se pidió detectar lo que falta, dar opciones de implementación, estructurar prompts y planear los commits de ambos integrantes | `docs/propuesta-v2.md`, `docs/plan-de-trabajo.md`, `docs/prompts.md` | _Pendiente: Luis anota aquí lo que corrigió o decidió al revisar_ |
-| 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | Crear la estructura inicial del monorepo, `.gitignore`, `.env.example` y README, y publicar el repositorio | `.gitignore`, `.env.example`, `README.md`, carpetas base | _Pendiente_ |
-| 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | Copiar la planeación al repositorio y generar `CLAUDE.md` y este documento | `CLAUDE.md`, `AI_USAGE.md`, `docs/` | _Pendiente_ |
+| 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | Se entregó la propuesta (Tarea 1), el ejemplo de requerimientos del profesor, los requisitos del proyecto final y el manual del curso; se pidió detectar lo que falta, dar opciones de implementación, estructurar prompts y planear los commits de ambos integrantes | `docs/propuesta-v2.md`, `docs/plan-de-trabajo.md`, `docs/prompts.md` | Luis replanteó el calendario (la entrega pasa al lunes 23 y el trabajo se concentra en sábado y domingo) y recortó el alcance a dos días: las historias deseables quedan fuera del plan y sin puntos extra. Fijó lo que nunca se recorta: autenticación, CRUD, clima, tablero, Docker, CI y la declaración de IA (`docs/plan-de-trabajo.md`) |
+| 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | Crear la estructura inicial del monorepo, `.gitignore`, `.env.example` y README, y publicar el repositorio | `.gitignore`, `.env.example`, `README.md`, carpetas base | Se decidió que el repositorio fuera público y que solo se subiera `.env.example` (el `.env` real queda en `.gitignore`). El README se completó después con el despliegue y las URLs públicas |
+| 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | Copiar la planeación al repositorio y generar `CLAUDE.md` y este documento | `CLAUDE.md`, `AI_USAGE.md`, `docs/` | Se fijaron las reglas del proyecto: stack que no cambia, código simple que el equipo pueda explicar, sin `passlib` ni `python-jose` y commits con `Co-Authored-By`. Antes de cada commit el agente muestra un resumen y Luis lo aprueba |
 | 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | P1: modelos SQLAlchemy, migración inicial con Alembic y datos semilla ficticios | `backend/app/models/`, `db/migrations/`, `db/seed.py` | Aprobó los commits tras ver el resumen. Se aplicaron los hallazgos confirmados de la revisión independiente (ver fila siguiente) |
 | 2026-11-21 | Luis | Claude Code, subagente de solo lectura / Claude Sonnet 5.5 | Revisión independiente del código base contra la especificación, buscando incoherencias, fallas de seguridad, errores del seed y dependencias riesgosas | (ninguno: solo lectura) | Informó 14 hallazgos. El agente principal los verificó en el código: se aplicaron 11 (clave de producción, números de control ficticios, lugares coherentes, `CHECK` del RFC, entre otros) y 3 se pospusieron |
 | 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | P2: registro, inicio de sesión con JWT y autorización por rol; administración de usuarios | `backend/app/core/security.py`, `deps.py`, `routers/auth.py`, `routers/usuarios.py` | Se comprobó con 3 pruebas de mutación y una prueba de extremo a extremo contra PostgreSQL. Al revisar el diff se detectó y corrigió un commit con saltos de línea de Windows (CRLF) |
@@ -81,7 +81,7 @@ Claude (lo dicen los PR #36, #39 y #41) y usaron `gh` para abrir los PR.
 | 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | PR #49: script de prueba de humo del sistema desplegado | `infra/prueba_humo.py`, `infra/DEPLOY.md` | Se corrigió que la prueba quitara las inscripciones antes de limpiar y que rechazara una URL `http://` ajena (`9f3d311`). Luis la corrió el 22 de noviembre contra producción: 41 de 41 comprobaciones correctas |
 | 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | PR #50: cabeceras de seguridad HTTP en el backend y en Vercel, con una política de contenido (CSP) estricta (OWASP A02) | `backend/app/main.py`, `backend/tests/test_cabeceras.py`, `frontend/vercel.json`, `docs/seguridad.md` | La prueba de cabeceras se verificó con una mutación y la CSP se probó en el navegador en las 8 pantallas y el tablero con gráficas, sin violaciones (ver `docs/seguridad.md`) |
 | 2026-11-22 | Luis | Claude Code / Claude Sonnet 5.5 | Reporte técnico: auditar el borrador contra el repositorio, verificar cifras (pruebas, operaciones, PR, commits y CI), armar las figuras y generar `docs/REPORTE.pdf` (el `.docx` editable no se sube) con el formato de la práctica de Luis; actualizar el tablero de GitHub Projects y esta declaración | `docs/REPORTE.pdf`, `docs/AUTOEVALUACION.md`, `AI_USAGE.md` | Luis aportó las capturas de Vercel, Render y Neon, la fecha de la prueba de humo, el porcentaje de contribución acordado con Carlos y la coevaluación, y revisó el resultado antes de subirlo |
-| 2026-11-22 | Luis | Claude Code / Claude Sonnet 5.5 | Implementar las historias deseables HU-06.2 (búsqueda global: `GET /api/busqueda`, buscador en el encabezado y pantalla `/buscar`) y HU-07.2 (exportar los inscritos a CSV y XML solo para administrador, con botones en Consultas), con pruebas y documentación (PR #52) | `backend/app/{routers,services,schemas}/` (`busqueda`, `export`, `consulta_service`), `backend/tests/{test_busqueda,test_exportar,test_matriz_permisos}.py`, `frontend/src/{api,pages,components,styles}/`, `docs/exportacion.md`, `docs/seguridad.md` | El agente la verificó con 18 pruebas nuevas, 3 pruebas de mutación (quitar la protección de administrador, la neutralización de fórmulas y el filtro de alumnos de baja), la descarga real en el navegador contra Docker y abriendo el CSV en Excel. _pendiente: Luis revisa y anota lo que ajuste_ |
+| 2026-11-22 | Luis | Claude Code / Claude Sonnet 5.5 | Implementar las historias deseables HU-06.2 (búsqueda global: `GET /api/busqueda`, buscador en el encabezado y pantalla `/buscar`) y HU-07.2 (exportar los inscritos a CSV y XML solo para administrador, con botones en Consultas), con pruebas y documentación (PR #52) | `backend/app/{routers,services,schemas}/` (`busqueda`, `export`, `consulta_service`), `backend/tests/{test_busqueda,test_exportar,test_matriz_permisos}.py`, `frontend/src/{api,pages,components,styles}/`, `docs/exportacion.md`, `docs/seguridad.md` | El agente la verificó con 18 pruebas nuevas, 3 pruebas de mutación (quitar la protección de administrador, la neutralización de fórmulas y el filtro de alumnos de baja), la descarga real en el navegador contra Docker y abriendo el CSV en Excel. Luis decidió implementarlas en lugar de cerrarlas como no planificadas, para dejar los 24 issues cerrados, y aprobó los commits después de ver el resumen |
 
 _(Se agregan filas con cada prompt importante: fecha, quién, herramienta y modelo, resumen fiel del
 prompt, archivos y qué cambiamos nosotros después.)_
@@ -97,17 +97,17 @@ Para ver cuáles son: `git log --grep="Co-Authored-By\|Assisted-by"`.
 
 ## 6. Estimación de código generado por IA por carpeta
 
-Medido con el historial de Git (líneas añadidas en commits marcados con `Co-Authored-By` o `Assisted-by`) al 22 de noviembre de 2026, con los commits de `main` hasta `8155d67`:
+Medido con el historial de Git (líneas añadidas en commits marcados con `Co-Authored-By` o `Assisted-by`) al 22 de noviembre de 2026, con los commits de `main` hasta `c656a3f`:
 
 | Carpeta | % con IA | Líneas añadidas | Nota |
 |---|---|---|---|
-| `backend/` | ~100 % | 5 662 | Todo el código lo escribió el asistente; las personas dirigen, revisan, prueban y aprueban cada commit |
-| `frontend/` | ~100 % | 9 377 | Incluye `package-lock.json` (generado por npm) |
+| `backend/` | ~100 % | 6 081 | Todo el código lo escribió el asistente; las personas dirigen, revisan, prueban y aprueban cada commit |
+| `frontend/` | ~100 % | 9 653 | Incluye `package-lock.json` (generado por npm) |
 | `db/` | ~100 % | 560 | Modelos, migración y datos semilla |
-| `infra/` y raíz | ~100 % | 1 142 | Docker, compose, `render.yaml`, CI y configuración (`infra/` 557 y raíz 585) |
-| `docs/` | ~100 % | 3 007 | La planeación fue redactada con IA y revisada por el equipo |
+| `infra/` y raíz | ~100 % | 1 180 | Docker, compose, `render.yaml`, CI y configuración (`infra/` 557 y raíz 623) |
+| `docs/` | ~100 % | 3 153 | La planeación fue redactada con IA y revisada por el equipo |
 
-67 de 67 commits sin fusiones llevan la marca de IA. **Ningún commit se hizo sin asistente.** La contribución humana está en
+75 de 75 commits sin fusiones llevan la marca de IA. **Ningún commit se hizo sin asistente.** La contribución humana está en
 decidir el alcance, dirigir el trabajo, revisar los cambios, probarlos, corregirlos y poder explicarlos en la demo.
 
 ## 7. Reflexión crítica
