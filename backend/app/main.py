@@ -11,6 +11,7 @@ from app.routers import (
     auth,
     clima,
     consultas,
+    dashboard,
     extraescolares,
     grupos,
     health,
@@ -50,6 +51,7 @@ app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(usuarios.router)
 app.include_router(alumnos.router)
+app.include_router(dashboard.router)
 app.include_router(grupos.router)
 app.include_router(inscripciones.router)
 app.include_router(consultas.router)
