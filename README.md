@@ -12,6 +12,18 @@ se migraron y no se pueden consultar. Extra-Liebres es una aplicación web (SPA 
 PostgreSQL) para capturar, consultar y mantener esos registros: alumnos, promotores, actividades, semestres,
 grupos e inscripciones con su desempeño.
 
+## Documentos
+
+| Documento | Qué contiene |
+|---|---|
+| [Reporte técnico (PDF)](docs/REPORTE.pdf) | Fundamentación, planeación, ejecución y evaluación del proyecto |
+| [Autoevaluación](docs/AUTOEVALUACION.md) | Rúbrica del profesor con la evidencia enlazada |
+| [Declaración de uso de IA](AI_USAGE.md) | Herramientas, bitácora de prompts y reflexión crítica |
+| [Seguridad](docs/seguridad.md) | OWASP A01, A02 y A03 y la matriz de permisos de las 43 operaciones |
+| [Accesibilidad y Lighthouse](docs/lighthouse.md) | Puntajes antes y después |
+| [Exportación a CSV y XML](docs/exportacion.md) | Estructura de los archivos exportados |
+| [Propuesta](docs/propuesta-v2.md) y [plan de trabajo](docs/plan-de-trabajo.md) | Historias de usuario, reglas de negocio y cronograma |
+
 ## Integrantes y roles
 
 | Integrante | Responsable de |

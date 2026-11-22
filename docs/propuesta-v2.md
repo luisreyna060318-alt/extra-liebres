@@ -255,7 +255,7 @@ Cambios sobre la Tarea 1:
   `UNIQUE (anio, mesinicio)` en semestre, `sexo` y `tipo` limitados a valores válidos.
 - `carrera` y `campus` quedan como texto/lista fija (no hace falta catálogo propio).
 
-## 7. Endpoints de la API (≥ 12 requeridos; aquí ~38)
+## 7. Endpoints de la API (≥ 12 requeridos; la API final tiene 43 operaciones, ver `seguridad.md`)
 
 | Grupo | Método y ruta | Rol |
 |---|---|---|
