@@ -27,23 +27,24 @@ def _a_salida(inscripcion: AlumnoGrupo) -> InscritoConsulta:
     )
 
 
-def inscritos(
-    db: Session, paginacion: Paginacion, extraescolar: int | None, semestre: int | None
-) -> tuple[list[InscritoConsulta], int]:
-    """Devuelve (renglones de la página, total). Los filtros son opcionales y se combinan con AND."""
+def _filtrada(extraescolar: int | None, semestre: int | None):
+    """Consulta base con los filtros opcionales, que se combinan con AND."""
     consulta = select(AlumnoGrupo).join(AlumnoGrupo.grupo)
     if extraescolar is not None:
         consulta = consulta.where(Grupo.idextraescolar == extraescolar)
     if semestre is not None:
         consulta = consulta.where(Grupo.idsemestre == semestre)
+    return consulta
 
-    total = db.scalar(select(func.count()).select_from(consulta.subquery())) or 0
-    # Semestre más reciente primero; dentro de él, por actividad, grupo y apellidos del alumno
+
+def _con_datos_y_orden(consulta):
+    """Agrega los datos que muestra cada renglón y el orden: semestre más reciente primero; dentro de él,
+    por actividad, grupo y apellidos del alumno."""
     orden = (
         Semestre.anio.desc(), Semestre.mesinicio.desc(), Extraescolar.nombreextra, Grupo.idgrupo,
         Alumno.apaterno, Alumno.amaterno, Alumno.nombre, Alumno.nocontrol,
     )  # fmt: skip
-    pagina = db.scalars(
+    return (
         consulta.join(Grupo.semestre)
         .join(Grupo.extraescolar)
         .join(AlumnoGrupo.alumno)
@@ -54,7 +55,19 @@ def inscritos(
             joinedload(AlumnoGrupo.grupo).joinedload(Grupo.promotor),
         )
         .order_by(*orden)
-        .offset(paginacion.offset)
-        .limit(paginacion.size)
     )
+
+
+def inscritos(
+    db: Session, paginacion: Paginacion, extraescolar: int | None, semestre: int | None
+) -> tuple[list[InscritoConsulta], int]:
+    """Devuelve (renglones de la página, total)."""
+    consulta = _filtrada(extraescolar, semestre)
+    total = db.scalar(select(func.count()).select_from(consulta.subquery())) or 0
+    pagina = db.scalars(_con_datos_y_orden(consulta).offset(paginacion.offset).limit(paginacion.size))
     return [_a_salida(i) for i in pagina], total
+
+
+def todos(db: Session, extraescolar: int | None, semestre: int | None) -> list[InscritoConsulta]:
+    """Todos los renglones, sin paginar: es lo que se exporta (HU-07.2)."""
+    return [_a_salida(i) for i in db.scalars(_con_datos_y_orden(_filtrada(extraescolar, semestre)))]

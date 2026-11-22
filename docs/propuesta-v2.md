@@ -268,9 +268,10 @@ Cambios sobre la Tarea 1:
 | Grupos | `GET` (semestre, extraescolar, promotor, dia, page) · `POST` · `GET /{id}` · `PUT /{id}` · `DELETE /{id}` | sesión |
 | Inscripciones | `GET /api/grupos/{id}/inscritos` · `POST /api/grupos/{id}/inscripciones` · `PUT /api/grupos/{id}/inscripciones/{nocontrol}` (evaluar) · `DELETE …` | sesión |
 | Consultas | `GET /api/consultas/inscritos` (extraescolar, semestre, page) | sesión |
+| Búsqueda | `GET /api/busqueda` (q) (D, entregado) | sesión |
 | Tablero | `GET /api/dashboard/resumen` (semestre) | sesión |
 | Clima | `GET /api/clima` (llama a Open-Meteo) | sesión |
-| Exportar | `GET /api/export/inscritos.csv` · `GET /api/export/inscritos.xml` | administrador (D) |
+| Exportar | `GET /api/export/inscritos.csv` · `GET /api/export/inscritos.xml` (extraescolar, semestre; ver [`exportacion.md`](exportacion.md)) | administrador (D, entregado) |
 | Sistema | `GET /api/health` | público |
 
 Códigos HTTP: 200/201/204 éxito · 400/422 validación · 401 sin sesión · 403 sin permiso · 404 no existe ·
@@ -279,7 +280,7 @@ Códigos HTTP: 200/201/204 éxito · 400/422 validación · 401 sin sesión · 4
 ## 8. Pantallas (rutas de React, ≥ 4 requeridas)
 
 `/login` · `/registro` · `/` (tablero) · `/alumnos` · `/alumnos/nuevo` · `/alumnos/:nocontrol` ·
-`/grupos` · `/grupos/nuevo` · `/grupos/:id` (inscritos y evaluación) · `/consultas` ·
+`/grupos` · `/grupos/nuevo` · `/grupos/:id` (inscritos y evaluación) · `/consultas` · `/buscar` ·
 `/catalogos` (pestañas: promotores, actividades, semestres; solo admin) · `/usuarios` (solo admin)
 
 Toda vista que consulta la API muestra estado de **carga**, **error** y **vacío**.

@@ -21,7 +21,7 @@ PUBLICAS = {
     ("post", "/api/auth/login"),
 }
 
-# Rutas que solo puede usar el administrador (catálogos: escribir; usuarios: todo)
+# Rutas que solo puede usar el administrador (catálogos: escribir; usuarios: todo; exportar)
 SOLO_ADMIN = {
     ("get", "/api/usuarios"),
     ("patch", "/api/usuarios/{usuario_id}"),
@@ -34,6 +34,8 @@ SOLO_ADMIN = {
     ("post", "/api/semestres"),
     ("put", "/api/semestres/{idsemestre}"),
     ("delete", "/api/semestres/{idsemestre}"),
+    ("get", "/api/export/inscritos.csv"),
+    ("get", "/api/export/inscritos.xml"),
 }
 
 
@@ -51,7 +53,7 @@ def llamar(client, metodo, ruta, **extra):
 
 def test_hay_las_rutas_esperadas(client):
     # Si cambia el tamaño de la API a propósito, actualiza este número: es un recordatorio de revisar la matriz
-    assert len(rutas_de_la_api(client)) == 40
+    assert len(rutas_de_la_api(client)) == 43
 
 
 def test_solo_las_rutas_publicas_responden_sin_sesion(client):

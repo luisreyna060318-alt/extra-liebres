@@ -56,6 +56,19 @@
   gap: var(--espacio-2) var(--espacio-3);
 }
 
+/* Buscador global del encabezado: el campo se estira y el botón queda a su lado */
+.buscador-global {
+  display: flex;
+  gap: var(--espacio-2);
+  flex: 1 1 auto;
+  max-width: 24rem;
+}
+
+.buscador-global input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 /* --- Navegación: los enlaces se acomodan en filas con Flexbox --- */
 .navegacion {
   background: var(--color-superficie);

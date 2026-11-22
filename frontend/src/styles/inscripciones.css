@@ -173,3 +173,14 @@
     grid-template-columns: repeat(2, minmax(0, 20rem));
   }
 }
+
+/* Botones para exportar los inscritos (solo administrador) */
+.consulta-exportar {
+  margin: var(--espacio-3) 0;
+}
+
+.consulta-exportar-botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+}
