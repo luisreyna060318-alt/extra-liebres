@@ -126,6 +126,37 @@ export async function peticion<T>(ruta: string, opciones: Opciones = {}): Promis
   return cuerpo as T
 }
 
+// Descarga un archivo de la API (por ejemplo un CSV). Un enlace normal no puede mandar el token en el
+// encabezado Authorization, por eso se pide con fetch y se entrega al navegador como un archivo temporal.
+export async function descargarArchivo(ruta: string, nombreArchivo: string): Promise<void> {
+  const headers: Record<string, string> = {}
+  const token = leerToken()
+  if (token) headers.Authorization = `Bearer ${token}`
+
+  let respuesta: Response
+  try {
+    respuesta = await fetch(`${API_URL}${ruta}`, { headers })
+  } catch {
+    throw new ErrorApi('No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.', 0)
+  }
+
+  if (!respuesta.ok) {
+    const cuerpo: unknown = await respuesta.json().catch(() => null)
+    if (respuesta.status === 401) {
+      borrarToken()
+      alExpirarSesion?.()
+    }
+    throw leerError(respuesta.status, cuerpo)
+  }
+
+  const url = URL.createObjectURL(await respuesta.blob())
+  const enlace = document.createElement('a')
+  enlace.href = url
+  enlace.download = nombreArchivo
+  enlace.click()
+  URL.revokeObjectURL(url)
+}
+
 // Atajos para los métodos más usados
 export const api = {
   get: <T>(ruta: string) => peticion<T>(ruta),

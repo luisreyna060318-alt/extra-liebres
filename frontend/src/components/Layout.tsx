@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { FormEvent } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.tsx'
 
@@ -18,6 +19,14 @@ export default function Layout() {
     document.getElementById('contenido')?.focus()
   }, [pathname])
 
+  // Buscador global (HU-06.2): lleva a /buscar?q=texto, donde se muestran los resultados
+  const [texto, setTexto] = useState('')
+  function buscar(evento: FormEvent) {
+    evento.preventDefault()
+    const q = texto.trim()
+    if (q) navegar(`/buscar?q=${encodeURIComponent(q)}`)
+  }
+
   function cerrarSesion() {
     logout()
     navegar('/login')
@@ -33,6 +42,25 @@ export default function Layout() {
         <Link to="/" className="marca">
           Extra-Liebres
         </Link>
+
+        {usuario && (
+          <form className="buscador-global" role="search" onSubmit={buscar}>
+            <label htmlFor="buscador-global-texto" className="solo-lectores">
+              Buscar alumnos y grupos
+            </label>
+            <input
+              id="buscador-global-texto"
+              type="search"
+              placeholder="Buscar alumnos y grupos"
+              maxLength={60}
+              value={texto}
+              onChange={(e) => setTexto(e.target.value)}
+            />
+            <button type="submit" className="boton boton-secundario">
+              Buscar
+            </button>
+          </form>
+        )}
 
         {usuario && (
           <div className="sesion">

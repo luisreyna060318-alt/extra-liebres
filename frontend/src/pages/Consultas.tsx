@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { cargarCatalogos } from '../api/catalogos.ts'
-import { TAMANO_CONSULTA, consultarInscritos } from '../api/consultas.ts'
+import { TAMANO_CONSULTA, consultarInscritos, exportarInscritos } from '../api/consultas.ts'
 import type { FiltrosConsulta } from '../api/consultas.ts'
 import CampoFormulario from '../components/CampoFormulario.tsx'
 import Estado from '../components/Estado.tsx'
+import { useAuth } from '../context/AuthContext.tsx'
 import { useApi } from '../hooks/useApi.ts'
 import { useTitulo } from '../hooks/useTitulo.ts'
 import { nombreSemestre } from '../utils/grupos.ts'
@@ -19,6 +20,22 @@ export default function Consultas() {
 
   const [filtros, setFiltros] = useState<FiltrosConsulta>(SIN_FILTROS)
   const [pagina, setPagina] = useState(1)
+
+  // Exportar es solo para el administrador (la API también lo exige: un capturista recibiría 403)
+  const esAdmin = useAuth().usuario?.rol === 'administrador'
+  const [exportando, setExportando] = useState(false)
+  const [errorExportar, setErrorExportar] = useState('')
+  async function exportar(formato: 'csv' | 'xml') {
+    setExportando(true)
+    setErrorExportar('')
+    try {
+      await exportarInscritos(formato, filtros)
+    } catch (e) {
+      setErrorExportar(e instanceof Error ? e.message : 'No se pudo exportar. Inténtalo de nuevo.')
+    } finally {
+      setExportando(false)
+    }
+  }
 
   const catalogos = useApi(cargarCatalogos)
   // Cada vez que cambia un filtro o la página se vuelve a consultar al servidor
@@ -76,6 +93,26 @@ export default function Consultas() {
           </button>
         )}
       </fieldset>
+
+      {esAdmin && (
+        <div className="consulta-exportar" role="group" aria-label="Exportar inscritos">
+          <p>Exportar todos los inscritos que cumplen los filtros (no solo esta página):</p>
+          <div className="consulta-exportar-botones">
+            <button type="button" className="boton boton-secundario" disabled={exportando} onClick={() => exportar('csv')}>
+              Exportar CSV<span className="solo-lectores"> (abre en hoja de cálculo)</span>
+            </button>
+            <button type="button" className="boton boton-secundario" disabled={exportando} onClick={() => exportar('xml')}>
+              Exportar XML
+            </button>
+          </div>
+          {exportando && <p role="status">Preparando el archivo…</p>}
+          {errorExportar && (
+            <p role="alert" className="alerta alerta-error">
+              {errorExportar}
+            </p>
+          )}
+        </div>
+      )}
 
       <Estado
         cargando={consulta.cargando}

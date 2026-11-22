@@ -1,0 +1,18 @@
+/* Resultados de la búsqueda global. Se importa desde Busqueda.tsx. Las clases llevan el prefijo "busqueda-"
+   para no chocar con las de otras pantallas. */
+.busqueda-lista {
+  margin: 0 0 var(--espacio-3);
+  padding: 0;
+  list-style: none;
+}
+
+.busqueda-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-1) var(--espacio-3);
+  padding: var(--espacio-2) 0;
+  border-bottom: 1px solid var(--color-borde);
+  overflow-wrap: anywhere;
+}

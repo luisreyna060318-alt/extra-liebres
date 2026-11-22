@@ -4,6 +4,7 @@ import RutaPrivada from './components/RutaPrivada.tsx'
 import AlumnoFormulario from './pages/AlumnoFormulario.tsx'
 import AlumnoHistorial from './pages/AlumnoHistorial.tsx'
 import Alumnos from './pages/Alumnos.tsx'
+import Busqueda from './pages/Busqueda.tsx'
 import Catalogos from './pages/Catalogos.tsx'
 import Consultas from './pages/Consultas.tsx'
 import GrupoDetalle from './pages/GrupoDetalle.tsx'
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/grupos/:id" element={<GrupoDetalle />} />
           <Route path="/grupos/:id/editar" element={<GrupoFormulario />} />
           <Route path="/consultas" element={<Consultas />} />
+          <Route path="/buscar" element={<Busqueda />} />
         </Route>
 
         {/* Solo administrador (la API también lo valida en el servidor) */}

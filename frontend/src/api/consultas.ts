@@ -1,7 +1,7 @@
 // Llamada a la consulta transversal de inscritos (HU-06.1).
 // El contrato sale del backend (routers/consultas.py y schemas/consulta.py).
 import type { Pagina } from '../types.ts'
-import { api } from './cliente.ts'
+import { api, descargarArchivo } from './cliente.ts'
 
 // Un renglón de la consulta (InscritoConsulta)
 export interface InscritoConsulta {
@@ -32,4 +32,13 @@ export function consultarInscritos(filtros: FiltrosConsulta, pagina: number): Pr
   if (filtros.extraescolar) parametros.set('extraescolar', filtros.extraescolar)
   if (filtros.semestre) parametros.set('semestre', filtros.semestre)
   return api.get<Pagina<InscritoConsulta>>(`/api/consultas/inscritos?${parametros.toString()}`)
+}
+
+// GET /api/export/inscritos.csv|xml?extraescolar=&semestre= (solo administrador; trae todos los renglones, sin paginar)
+export function exportarInscritos(formato: 'csv' | 'xml', filtros: FiltrosConsulta): Promise<void> {
+  const parametros = new URLSearchParams()
+  if (filtros.extraescolar) parametros.set('extraescolar', filtros.extraescolar)
+  if (filtros.semestre) parametros.set('semestre', filtros.semestre)
+  const consulta = parametros.toString()
+  return descargarArchivo(`/api/export/inscritos.${formato}${consulta ? `?${consulta}` : ''}`, `inscritos.${formato}`)
 }
