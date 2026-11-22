@@ -98,10 +98,16 @@ def actualizar_alumno(db: Session, nocontrol: str, datos: AlumnoActualizar) -> A
     return alumno
 
 
-def dar_de_baja(db: Session, nocontrol: str) -> None:
-    """Baja lógica (RN-02): el alumno queda inactivo pero NO se borra, para conservar su historial."""
+def eliminar_alumno(db: Session, nocontrol: str) -> None:
+    """Elimina de verdad, pero solo si no está inscrito en ningún grupo. Si lo está, hay que darlo de baja (PUT)."""
     alumno = _obtener(db, nocontrol)
-    alumno.activo = False
+    cuenta = select(func.count()).select_from(AlumnoGrupo).where(AlumnoGrupo.nocontrol == alumno.nocontrol)
+    inscripciones = db.scalar(cuenta) or 0
+    if inscripciones:
+        raise Conflicto(
+            f"No se puede eliminar: el alumno tiene {inscripciones} inscripción(es). Dalo de baja en su lugar"
+        )
+    db.delete(alumno)
     db.commit()
 
 

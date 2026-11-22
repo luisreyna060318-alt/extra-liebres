@@ -122,8 +122,8 @@ def sembrar_alumnos(db) -> None:
     if not tabla_vacia(db, Alumno):
         return
     for numero in range(1, 201):
-        # Prefijo 99: claramente ficticio (no es un número de control real) y todos distintos
-        nocontrol = f"99{numero:06d}"
+        # 8 dígitos, todos distintos y por debajo del máximo (26999999): 26000001, 26000002, ...
+        nocontrol = f"26{numero:06d}"
         sexo = random.choice(["M", "F"])
         nombres = NOMBRES_H if sexo == "M" else NOMBRES_M
         db.add(Alumno(

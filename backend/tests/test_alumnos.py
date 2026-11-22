@@ -56,10 +56,25 @@ def test_hu_02_1_alta_correcta_devuelve_201_y_el_alumno_activo(client, h):
     assert r.json() == {**ALUMNO, "activo": True}
 
 
-def test_hu_02_1_el_numero_de_control_se_guarda_en_mayusculas_y_sin_espacios(client, h):
-    r = client.post("/api/alumnos", json={**ALUMNO, "nocontrol": " b19110001 "}, headers=h)
+def test_hu_02_1_el_numero_de_control_se_guarda_sin_espacios(client, h):
+    r = client.post("/api/alumnos", json={**ALUMNO, "nocontrol": " 22111443 "}, headers=h)
     assert r.status_code == 201
-    assert r.json()["nocontrol"] == "B19110001"
+    assert r.json()["nocontrol"] == "22111443"
+
+
+@pytest.mark.parametrize("valido", ["22111443", "26999999", "00000001"])
+def test_hu_02_1_acepta_numeros_de_control_de_8_digitos_hasta_el_maximo(client, h, valido):
+    assert client.post("/api/alumnos", json={**ALUMNO, "nocontrol": valido}, headers=h).status_code == 201
+
+
+@pytest.mark.parametrize(
+    "invalido",
+    ["1911000", "191100011", "B1911000", "1911000A", "2711 0001", "27000000", "99000001", "26999999.0"],
+)
+def test_hu_02_1_rechaza_numeros_de_control_que_no_son_de_8_digitos_o_pasan_del_maximo(client, db, h, invalido):
+    r = client.post("/api/alumnos", json={**ALUMNO, "nocontrol": invalido}, headers=h)
+    assert r.status_code == 422
+    assert db.query(Alumno).count() == 0
 
 
 def test_hu_02_1_numero_de_control_duplicado_da_409(client, h):
@@ -69,9 +84,9 @@ def test_hu_02_1_numero_de_control_duplicado_da_409(client, h):
     assert "número de control" in r.json()["detail"]
 
 
-def test_hu_02_1_duplicado_tambien_se_detecta_con_otra_escritura_del_mismo_numero(client, h):
-    client.post("/api/alumnos", json={**ALUMNO, "nocontrol": "B19110001"}, headers=h)
-    r = client.post("/api/alumnos", json={**ALUMNO, "nocontrol": "b19110001"}, headers=h)
+def test_hu_02_1_duplicado_tambien_se_detecta_con_espacios_alrededor(client, h):
+    client.post("/api/alumnos", json={**ALUMNO, "nocontrol": "19110001"}, headers=h)
+    r = client.post("/api/alumnos", json={**ALUMNO, "nocontrol": " 19110001 "}, headers=h)
     assert r.status_code == 409
 
 
@@ -81,6 +96,7 @@ def test_hu_02_1_duplicado_tambien_se_detecta_con_otra_escritura_del_mismo_numer
         {"nocontrol": "123"},  # muy corto
         {"nocontrol": "1911 0001"},  # con espacio
         {"nocontrol": "19110001; DROP TABLE alumno"},  # caracteres no permitidos
+        {"nocontrol": "B1911000"},  # con letra
         {"nombre": ""},
         {"nombre": "   "},
         {"apaterno": ""},
@@ -257,22 +273,51 @@ def test_hu_02_3_editar_un_alumno_inexistente_da_404(client, h):
     assert client.put("/api/alumnos/00000000", json=cuerpo, headers=h).status_code == 404
 
 
-def test_hu_02_3_baja_logica_no_borra_al_alumno_ni_su_historial(client, db, h, varios, crear_grupo, inscribir):
-    inscribir(db.get(Alumno, "19110001"), crear_grupo(), 90, "Notable")
+def cuerpo_de(alumno, **cambio):
+    """Datos para el PUT de un alumno (la edición pide todos los campos)."""
+    datos = {"nombre": alumno.nombre, "apaterno": alumno.apaterno, "sexo": alumno.sexo, "carrera": alumno.carrera,
+             "campus": alumno.campus}
+    return {**datos, **cambio}
 
-    r = client.delete("/api/alumnos/19110001", headers=h)
-    assert r.status_code == 204 and r.content == b""
+
+def test_hu_02_3_baja_logica_con_put_no_borra_al_alumno_ni_su_historial(client, db, h, varios, crear_grupo, inscribir):
+    ana = db.get(Alumno, "19110001")
+    inscribir(ana, crear_grupo(), 90, "Notable")
+
+    r = client.put("/api/alumnos/19110001", json=cuerpo_de(ana, activo=False), headers=h)
+    assert r.status_code == 200 and r.json()["activo"] is False
 
     assert db.get(Alumno, "19110001") is not None  # la fila sigue existiendo
-    assert db.get(Alumno, "19110001").activo is False
     assert "19110001" not in numeros(client.get("/api/alumnos", headers=h))  # ya no sale por defecto
     assert "19110001" in numeros(client.get("/api/alumnos?estado=bajas", headers=h))
     assert len(client.get("/api/alumnos/19110001/historial", headers=h).json()) == 1  # historial intacto
 
 
-def test_hu_02_3_dar_de_baja_dos_veces_o_a_un_inexistente(client, h, varios):
-    assert client.delete("/api/alumnos/19110001", headers=h).status_code == 204
-    assert client.delete("/api/alumnos/19110001", headers=h).status_code == 204
+def test_hu_02_3_eliminar_sin_inscripciones_borra_al_alumno(client, db, h, varios):
+    r = client.delete("/api/alumnos/19110001", headers=h)
+    assert r.status_code == 204 and r.content == b""
+    assert db.get(Alumno, "19110001") is None  # se borró de verdad
+    assert client.get("/api/alumnos/19110001", headers=h).status_code == 404
+
+
+def test_hu_02_3_eliminar_con_inscripciones_da_409_sugiere_la_baja_y_conserva_al_alumno(
+    client, db, h, varios, crear_grupo, inscribir
+):
+    inscribir(db.get(Alumno, "19110001"), crear_grupo(), 90, "Notable")
+    r = client.delete("/api/alumnos/19110001", headers=h)
+    assert r.status_code == 409
+    assert r.json()["detail"] == "No se puede eliminar: el alumno tiene 1 inscripción(es). Dalo de baja en su lugar"
+    assert db.get(Alumno, "19110001") is not None
+    assert len(client.get("/api/alumnos/19110001/historial", headers=h).json()) == 1
+
+
+def test_hu_02_3_un_alumno_dado_de_baja_sin_inscripciones_tambien_se_puede_eliminar(client, db, h, varios):
+    # 19110004 está de baja en el escenario y no tiene inscripciones
+    assert client.delete("/api/alumnos/19110004", headers=h).status_code == 204
+    assert db.get(Alumno, "19110004") is None
+
+
+def test_hu_02_3_eliminar_a_un_inexistente_da_404(client, h, varios):
     assert client.delete("/api/alumnos/00000000", headers=h).status_code == 404
 
 

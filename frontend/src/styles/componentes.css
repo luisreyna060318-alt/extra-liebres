@@ -81,6 +81,7 @@ a.boton:hover {
   display: flex;
   flex-direction: column;
   gap: var(--espacio-1);
+  min-width: 0;
 }
 
 .campo label {
@@ -185,7 +186,9 @@ a.boton:hover {
   .formulario-ancho {
     max-width: 48rem;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    /* minmax(0, 1fr): sin el 0, una lista con opciones largas (como Carrera) ensanchaba la columna y el formulario
+       se salía de la tarjeta */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--espacio-3) var(--espacio-4);
   }
 }

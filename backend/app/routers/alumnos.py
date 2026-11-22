@@ -71,19 +71,21 @@ def obtener(nocontrol: str, db: SesionDB):
 def actualizar(nocontrol: str, datos: AlumnoActualizar, db: SesionDB):
     """Reemplaza los datos del alumno. El número de control no cambia.
 
-    Con `activo=true` se reactiva a un alumno dado de baja."""
+    Con `activo=false` se da de baja (baja lógica: su historial se conserva) y con `activo=true` se reactiva."""
     return alumno_service.actualizar_alumno(db, nocontrol, datos)
 
 
 @router.delete(
     "/{nocontrol}",
     status_code=status.HTTP_204_NO_CONTENT,
-    summary="Dar de baja a un alumno",
-    responses=NO_EXISTE,
+    summary="Eliminar a un alumno",
+    responses={**NO_EXISTE, 409: {"description": "Tiene inscripciones: hay que darlo de baja"}},
 )
-def dar_de_baja(nocontrol: str, db: SesionDB):
-    """**Baja lógica**: el alumno queda inactivo pero no se borra, así su historial se conserva."""
-    alumno_service.dar_de_baja(db, nocontrol)
+def eliminar(nocontrol: str, db: SesionDB):
+    """Elimina al alumno **solo si no está inscrito en ningún grupo** (si lo está, responde 409).
+
+    Para conservar su historial se le da de baja con `PUT` y `activo=false`."""
+    alumno_service.eliminar_alumno(db, nocontrol)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 

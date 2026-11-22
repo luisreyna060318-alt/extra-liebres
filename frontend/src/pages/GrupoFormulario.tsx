@@ -244,6 +244,7 @@ function Formulario({ id, catalogos, grupo }: PropsFormulario) {
           tipo="time"
           valor={datos.horatermino}
           onCambio={(v) => cambiar('horatermino', v)}
+          ayuda="Debe durar al menos 1 hora."
           error={errores.horatermino}
         />
 

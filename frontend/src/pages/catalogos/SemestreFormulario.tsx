@@ -4,7 +4,7 @@ import { actualizarSemestre, crearSemestre } from '../../api/admin.ts'
 import { ErrorApi } from '../../api/cliente.ts'
 import CampoFormulario from '../../components/CampoFormulario.tsx'
 import type { SemestreAdmin } from '../../tiposAdmin.ts'
-import { OPCIONES_MES, SEMESTRE_VACIO, textoError, validarSemestre } from '../../utils/admin.ts'
+import { OPCIONES_ANIO, OPCIONES_PERIODO, SEMESTRE_VACIO, textoError, validarSemestre } from '../../utils/admin.ts'
 import type { DatosSemestre, ErroresSemestre } from '../../utils/admin.ts'
 
 interface Props {
@@ -14,13 +14,13 @@ interface Props {
 }
 
 // Orden de los campos en pantalla: sirve para mandar el foco al primero que tenga error
-const ORDEN_CAMPOS: (keyof DatosSemestre)[] = ['anio', 'mesinicio', 'mestermino']
+const ORDEN_CAMPOS: (keyof DatosSemestre)[] = ['anio', 'periodo']
 
 // Formulario de semestre (HU-03.3)
 export default function SemestreFormulario({ semestre, onGuardado, onCancelar }: Props) {
   const [datos, setDatos] = useState<DatosSemestre>(() =>
     semestre
-      ? { anio: String(semestre.anio), mesinicio: String(semestre.mesinicio), mestermino: String(semestre.mestermino) }
+      ? { anio: String(semestre.anio), periodo: `${semestre.mesinicio}-${semestre.mestermino}` }
       : SEMESTRE_VACIO,
   )
   const [errores, setErrores] = useState<ErroresSemestre>({})
@@ -50,8 +50,9 @@ export default function SemestreFormulario({ semestre, onGuardado, onCancelar }:
       return
     }
 
-    // Los campos entregan texto; la API espera números
-    const cuerpo = { anio: Number(datos.anio), mesinicio: Number(datos.mesinicio), mestermino: Number(datos.mestermino) }
+    // El periodo "1-6" se separa en mes de inicio y mes de término; la API espera números
+    const [mesinicio, mestermino] = datos.periodo.split('-').map(Number)
+    const cuerpo = { anio: Number(datos.anio), mesinicio, mestermino }
 
     setEnviando(true)
     try {
@@ -66,7 +67,8 @@ export default function SemestreFormulario({ semestre, onGuardado, onCancelar }:
       if (e instanceof ErrorApi && e.status === 422) {
         const delServidor: ErroresSemestre = {}
         for (const [campo, mensaje] of Object.entries(e.campos)) {
-          if (campo in SEMESTRE_VACIO) delServidor[campo as keyof DatosSemestre] = mensaje
+          if (campo === 'anio') delServidor.anio = mensaje
+          else delServidor.periodo = mensaje // mesinicio, mestermino o el periodo completo
         }
         setErrores(delServidor)
       }
@@ -86,29 +88,21 @@ export default function SemestreFormulario({ semestre, onGuardado, onCancelar }:
         <CampoFormulario
           id="semestre-anio"
           etiqueta="Año"
+          tipo="select"
           valor={datos.anio}
           onCambio={(v) => cambiar('anio', v)}
-          maxLength={4}
-          ayuda="Entre 2000 y 2100."
+          opciones={OPCIONES_ANIO}
+          ayuda="De 2000 a 2027."
           error={errores.anio}
         />
         <CampoFormulario
-          id="semestre-mesinicio"
-          etiqueta="Mes de inicio"
+          id="semestre-periodo"
+          etiqueta="Periodo"
           tipo="select"
-          valor={datos.mesinicio}
-          onCambio={(v) => cambiar('mesinicio', v)}
-          opciones={OPCIONES_MES}
-          error={errores.mesinicio}
-        />
-        <CampoFormulario
-          id="semestre-mestermino"
-          etiqueta="Mes de término"
-          tipo="select"
-          valor={datos.mestermino}
-          onCambio={(v) => cambiar('mestermino', v)}
-          opciones={OPCIONES_MES}
-          error={errores.mestermino}
+          valor={datos.periodo}
+          onCambio={(v) => cambiar('periodo', v)}
+          opciones={OPCIONES_PERIODO}
+          error={errores.periodo}
         />
 
         {aviso && (

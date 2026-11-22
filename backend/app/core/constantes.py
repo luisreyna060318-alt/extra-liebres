@@ -41,3 +41,14 @@ CARRERAS = (
     "ING. EN GESTIÓN EMPRESARIAL (EAD)",
     "ING. INDUSTRIAL MODALIDAD MIXTA",
 )
+
+# Número de control: exactamente 8 dígitos (solo números) y, de momento, nunca mayor a este valor.
+NOCONTROL_MAXIMO = 26999999
+
+# Semestres: años permitidos de momento y los únicos dos periodos (enero-junio y agosto-diciembre).
+ANIO_SEMESTRE_MINIMO = 2000
+ANIO_SEMESTRE_MAXIMO = 2027
+PERIODOS_SEMESTRE = ((1, 6), (8, 12))
+
+# Un grupo debe durar al menos 1 hora
+DURACION_MINIMA_GRUPO_MINUTOS = 60

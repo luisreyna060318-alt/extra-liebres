@@ -5,7 +5,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator, model_validator
 
-from app.core.constantes import DIAS
+from app.core.constantes import DIAS, DURACION_MINIMA_GRUPO_MINUTOS
 
 Texto60 = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=60)]
 
@@ -44,6 +44,10 @@ class GrupoDatos(BaseModel):
         # RN-03: la hora de término debe ser posterior a la de inicio (si no, FastAPI responde 422)
         if self.horatermino <= self.horainicio:
             raise ValueError("La hora de término debe ser posterior a la hora de inicio")
+        fin = self.horatermino.hour * 60 + self.horatermino.minute
+        inicio = self.horainicio.hour * 60 + self.horainicio.minute
+        if fin - inicio < DURACION_MINIMA_GRUPO_MINUTOS:
+            raise ValueError("La actividad debe durar al menos 1 hora")
         return self
 
 

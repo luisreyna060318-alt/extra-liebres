@@ -90,6 +90,7 @@ Como administrador, quiero ver las cuentas y cambiar roles, para dar permisos y 
 Como capturista, quiero registrar un alumno, para guardar su historial.
 - CA1 Dado que capturo número de control, nombre, apellidos, sexo, carrera y campus, cuando guardo, entonces el alumno queda registrado.
 - CA2 Dado que el número de control ya existe, cuando guardo, entonces se rechaza con un mensaje claro (409).
+- CA2b Dado que el número de control no tiene exactamente 8 dígitos (solo números) o es mayor a 26999999, cuando guardo, entonces se rechaza (422) y el campo no deja escribir letras ni más de 8 dígitos.
 - CA3 Dado que falta un dato obligatorio, cuando guardo, entonces se indica qué corregir, tanto en pantalla como en el servidor.
 
 **HU-02.2 Buscar y listar alumnos · I · Capturista, administrador**
@@ -123,7 +124,7 @@ Como capturista, quiero ver qué actividades cursó un alumno y cuándo, para at
 - CA3 Dado que la lista es larga, cuando la consulto, entonces puedo buscar por nombre y paginar.
 
 **HU-03.3 Administrar semestres · I · Administrador**
-- CA1 Dado que soy administrador, cuando creo un semestre (año, mes de inicio, mes de término), entonces queda disponible al crear grupos.
+- CA1 Dado que soy administrador, cuando creo un semestre (año de 2000 a 2027 y periodo), entonces queda disponible al crear grupos. Solo hay dos periodos: enero-junio y agosto-diciembre.
 - CA2 Dado que ya existe un semestre con el mismo año y mes de inicio, cuando guardo, entonces se rechaza.
 - CA3 Dado que un semestre tiene grupos, cuando intento eliminarlo, entonces el sistema lo impide.
 
@@ -133,6 +134,7 @@ Como capturista, quiero ver qué actividades cursó un alumno y cuándo, para at
 Como capturista, quiero crear un grupo asignando actividad, semestre, promotor, día, horario y lugar, sin cruces.
 - CA1 Dado que capturo todos los datos y no hay conflictos, cuando guardo, entonces el grupo se crea.
 - CA2 Dado que la hora de término no es posterior a la de inicio, cuando guardo, entonces se rechaza.
+- CA2b Dado que la actividad dura menos de 1 hora, cuando guardo, entonces se rechaza (422).
 - CA3 Dado que el promotor ya tiene un grupo ese día, en ese semestre y con horario traslapado, cuando guardo, entonces se rechaza indicando el grupo en conflicto (409).
 - CA4 Dado que el aula ya está ocupada ese día, en ese semestre y con horario traslapado, cuando guardo, entonces se rechaza indicando el grupo en conflicto (409).
 
@@ -204,8 +206,8 @@ Como capturista, quiero ver el clima de Ciudad Juárez, para saber si una activi
 
 | ID | Regla |
 |---|---|
-| RN-01 | El **número de control** es el identificador del alumno: texto único (conservar ceros/letras), nunca numérico. El **RFC** identifica al promotor. |
-| RN-02 | Un alumno **nunca se borra**: se da de baja (inactivo). Su historial se conserva. |
+| RN-01 | El **número de control** es el identificador del alumno: texto único de exactamente 8 dígitos (conserva los ceros del inicio) y, de momento, no mayor a 26999999. El **RFC** identifica al promotor. |
+| RN-02 | Un alumno **solo se elimina si no está inscrito en ningún grupo** (si lo está, 409). Para conservar su historial se da de baja (inactivo). |
 | RN-03 | **No se permiten cruces**: un promotor o un aula no pueden tener dos grupos con horario traslapado el mismo día y semestre. Hora de inicio < hora de término. |
 | RN-04 | Un alumno no puede inscribirse dos veces al mismo grupo, ni estando de baja. |
 | RN-05 | Calificación entera de 0 a 100. El **desempeño lo calcula el servidor** (el usuario no lo captura): Excelente 95–100, Notable 85–94, Bueno 75–84, Suficiente 70–74, Insuficiente < 70 (escala del TecNM). ⚠️ Confirmar con el profesor que este es el criterio que quiere. |
@@ -261,7 +263,7 @@ Cambios sobre la Tarea 1:
 |---|---|---|
 | Auth | `POST /api/auth/register` · `POST /api/auth/login` · `GET /api/auth/me` | público / público / sesión |
 | Usuarios | `GET /api/usuarios` · `PATCH /api/usuarios/{id}` | administrador |
-| Alumnos | `GET /api/alumnos` (q, carrera, campus, activo, page, size) · `POST` · `GET /{nocontrol}` · `PUT /{nocontrol}` · `DELETE /{nocontrol}` (baja lógica) · `GET /{nocontrol}/historial` | sesión |
+| Alumnos | `GET /api/alumnos` (q, carrera, campus, activo, page, size) · `POST` · `GET /{nocontrol}` · `PUT /{nocontrol}` · `DELETE /{nocontrol}` (solo si no tiene inscripciones; la baja lógica es `PUT` con `activo=false`) · `GET /{nocontrol}/historial` | sesión |
 | Promotores | `GET` · `POST` · `PUT /{rfc}` · `DELETE /{rfc}` | GET sesión; resto administrador |
 | Extraescolares | `GET` · `POST` · `PUT /{id}` · `DELETE /{id}` | GET sesión; resto administrador |
 | Semestres | `GET` · `POST` · `PUT /{id}` · `DELETE /{id}` | GET sesión; resto administrador |

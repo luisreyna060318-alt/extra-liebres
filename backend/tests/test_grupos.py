@@ -144,6 +144,18 @@ def test_fin_menor_o_igual_que_inicio_422(client, h, catalogos, fin):
     assert "posterior" in r.text
 
 
+@pytest.mark.parametrize("fin", ["08:30", "08:59", "08:01"])
+def test_menos_de_una_hora_422(client, h, catalogos, fin):
+    r = crear(client, h, catalogos, horainicio="08:00", horatermino=fin)
+    assert r.status_code == 422
+    assert "al menos 1 hora" in r.text
+
+
+@pytest.mark.parametrize("fin", ["09:00", "09:01", "10:30"])
+def test_una_hora_o_mas_201(client, h, catalogos, fin):
+    assert crear(client, h, catalogos, horainicio="08:00", horatermino=fin).status_code == 201
+
+
 def test_dia_invalido_422(client, h, catalogos):
     assert crear(client, h, catalogos, dia="domingo").status_code == 422
 

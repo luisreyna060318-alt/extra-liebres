@@ -41,6 +41,12 @@ export function nombreDia(valor: string): string {
 }
 
 // La API manda "08:00:00"; los campos de hora y la tabla usan "08:00"
+// Minutos desde la medianoche de una hora "HH:MM"
+function minutos(hora: string): number {
+  const [h, m] = hora.split(':').map(Number)
+  return h * 60 + m
+}
+
 export function recortarHora(hora: string): string {
   return hora.slice(0, 5)
 }
@@ -89,6 +95,8 @@ export function validarGrupo(datos: DatosGrupo, actividad: Actividad | undefined
   // Las horas "HH:MM" se pueden comparar como texto (regla RN-03: el fin debe ser posterior al inicio)
   if (datos.horainicio && datos.horatermino && datos.horatermino <= datos.horainicio) {
     errores.horatermino = 'La hora de término debe ser posterior a la de inicio.'
+  } else if (datos.horainicio && datos.horatermino && minutos(datos.horatermino) - minutos(datos.horainicio) < 60) {
+    errores.horatermino = 'La actividad debe durar al menos 1 hora.'
   }
 
   // El lugar depende de la actividad: sin actividad elegida todavía no se puede revisar
