@@ -40,11 +40,13 @@ export default function Layout() {
 
       <header className="encabezado">
         <Link to="/" className="marca">
+          {/* El logo es decorativo: el nombre de la aplicación ya está escrito al lado */}
+          <img src="/logo.png" alt="" width="44" height="44" className="marca-logo" />
           Extra-Liebres
         </Link>
 
         {usuario && (
-          <form className="buscador-global" role="search" onSubmit={buscar}>
+          <form className="buscador-global" role="search" aria-label="Buscar en todo el sistema" onSubmit={buscar}>
             <label htmlFor="buscador-global-texto" className="solo-lectores">
               Buscar alumnos y grupos
             </label>

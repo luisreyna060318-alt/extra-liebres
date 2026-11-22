@@ -31,8 +31,8 @@ a.boton {
   text-decoration: none;
 }
 
-/* Al pasar el cursor, los enlaces cambian a un azul oscuro (base.css). En un enlace-botón ese es también el color del
-   fondo en hover y el texto desaparecía, así que se conserva el texto blanco. */
+/* Al pasar el cursor, los enlaces cambian a un rojo oscuro (base.css). Un enlace-botón tiene fondo oscuro, y con el rojo
+   encima el texto perdía contraste, así que se conserva el texto blanco. */
 a.boton:hover {
   color: #ffffff;
 }

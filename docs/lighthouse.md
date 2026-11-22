@@ -74,7 +74,7 @@ contraste del anillo de foco recorriendo la página con Tab.
 
 | Hallazgo | Antes | Después |
 |---|---|---|
-| Anillo de foco naranja `#e08a00` sobre fondos claros (WCAG 1.4.11 pide 3:1) | 2.49:1 sobre el fondo gris y 2.69:1 sobre blanco | 4.64:1 sobre el fondo gris y 5.02:1 sobre blanco (`#b45309`); en el encabezado azul, anillo blanco de 8.2:1 |
+| Anillo de foco naranja `#e08a00` sobre fondos claros (WCAG 1.4.11 pide 3:1) | 2.49:1 sobre el fondo gris y 2.69:1 sobre blanco | 4.64:1 sobre el fondo gris y 5.02:1 sobre blanco (`#b45309`); en el encabezado rojo del logo, anillo blanco de 5.88:1 |
 | Bordes de campos de formulario `#cbd2d9` sobre blanco (WCAG 1.4.11) | 1.53:1 | 3.66:1 (`#7b8794`) |
 | Encabezados saltaban de nivel (h1 → h3) en `/usuarios` al abrir la confirmación (axe `heading-order`) | 1 violación en 1280 y 360 px | 0 violaciones |
 | `/alumnos` se desbordaba 14 px a la derecha en 360 px por los selects de Carrera y Campus (reflujo, WCAG 1.4.10) | desbordamiento de 14 px | sin desbordamiento en ninguna de las 9 pantallas |
@@ -96,6 +96,18 @@ axe-core 4.14.1 (reglas WCAG 2.0, 2.1 y 2.2 A y AA más buenas prácticas), con 
 `/buscar` con resultados, sin coincidencias y con un texto muy corto, y `/consultas`: **0 violaciones y 0 px de desbordamiento
 horizontal** en las 8 combinaciones. **No se volvió a correr Lighthouse** en esas pantallas, así que su puntaje de
 rendimiento no está medido.
+
+## Identidad visual (22 de noviembre)
+
+Los colores de la aplicación salen del logo (`frontend/src/styles/variables.css`): rojo `#c8102e` (el del logo, `#e01030`, se
+oscureció un poco para que el texto blanco pase 4.5:1), grafito `#2b2e36` para los botones y blanco. Contrastes calculados con
+la fórmula de WCAG: blanco sobre el rojo del encabezado 5.88:1, blanco sobre el grafito de los botones 13.58:1, enlaces
+`#a50e26` sobre blanco 7.8:1 y sobre el fondo gris 7.11:1. Después del cambio, con axe-core 4.14.1 (mismas reglas que arriba) en
+13 pantallas y a 1280 y 360 px: **0 violaciones y 0 px de desbordamiento horizontal** en las 26 combinaciones. Además se pasó el
+cursor sobre 156 botones y pestañas: **0** con el texto por debajo de 3:1. Axe también reportó que había dos formularios
+`role="search"` sin nombre en `/alumnos` y `/grupos/1` (`landmark-unique`); cada uno ya tiene su `aria-label`. El logo es el
+icono de la pestaña (`favicon-32.png`, `favicon-192.png`, `apple-touch-icon.png`) y va en el encabezado con `alt=""`, porque el
+nombre de la aplicación ya está escrito al lado. **No se volvió a correr Lighthouse** después de este cambio.
 
 ## Lo que no se pudo medir y límites
 

@@ -2,9 +2,15 @@
    Los contrastes de texto sobre fondo cumplen WCAG AA (≥ 4.5:1). */
 :root {
   /* Colores */
-  --color-primario: #1b4f8f;
-  --color-primario-oscuro: #123a6b;
-  --color-fondo: #f4f6f9;
+  /* Colores del logo de Extra-Liebres: rojo, grafito (el contorno) y blanco. El rojo del logo (#e01030) se oscurece
+     un poco para que el texto blanco encima tenga más de 4.5:1. */
+  --color-marca: #c8102e; /* encabezado, pestaña activa y acentos (blanco encima: 5.9:1) */
+  --color-marca-oscuro: #9e0b24;
+  --color-primario: #2b2e36; /* botones: grafito (blanco encima: 13:1) */
+  --color-primario-oscuro: #14161b;
+  --color-enlace: #a50e26; /* enlaces (sobre blanco: 7.8:1) */
+  --color-enlace-hover: #7d0a1c;
+  --color-fondo: #f5f4f4;
   --color-superficie: #ffffff;
   --color-texto: #1f2933;
   --color-texto-suave: #52606d;
@@ -15,7 +21,7 @@
   --color-exito: #1e6b34;
   --color-exito-fondo: #e6f4ea;
   --color-foco: #b45309; /* anillo de foco: ≥ 3:1 sobre blanco y sobre el fondo gris claro (WCAG 1.4.11) */
-  --color-foco-claro: #ffffff; /* anillo de foco sobre el encabezado azul (8:1) */
+  --color-foco-claro: #ffffff; /* anillo de foco sobre el encabezado rojo (5.9:1) */
 
   /* Espacios (escala simple) */
   --espacio-1: 0.25rem;

@@ -30,8 +30,8 @@
 /* La pestaña elegida se distingue por el color y el borde, no solo por el color */
 .pestana[aria-selected='true'] {
   color: #ffffff;
-  background: var(--color-primario);
-  border-color: var(--color-primario);
+  background: var(--color-marca);
+  border-color: var(--color-marca);
 }
 
 .panel-pestana[hidden] {
