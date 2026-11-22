@@ -50,11 +50,13 @@
   cursor: not-allowed;
 }
 
-.boton-peligro {
+/* Enlace-botón en rojo (texto rojo, sin fondo). Se llama distinto a ".boton-peligro" (botón con fondo rojo,
+   en admin.css e inscripciones.css): con el mismo nombre se pisaban y el texto quedaba rojo sobre fondo rojo. */
+.boton-texto-peligro {
   color: var(--color-error);
 }
 
-.boton-peligro:hover {
+.boton-texto-peligro:hover {
   color: var(--color-error);
 }
 

@@ -283,7 +283,7 @@ export default function Alumnos() {
                             {a.activo ? (
                               <button
                                 type="button"
-                                className="boton-texto boton-peligro"
+                                className="boton-texto boton-texto-peligro"
                                 disabled={procesando === a.nocontrol}
                                 onClick={() => setPorBajar(a)}
                                 aria-label={`Dar de baja a ${nombre}`}
