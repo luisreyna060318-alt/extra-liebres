@@ -30,7 +30,7 @@ app = FastAPI(
         "Instituto Tecnológico de Ciudad Juárez. Proyecto final de Programación Web.\n\n"
         "Para probar las rutas protegidas: inicia sesión en `/api/auth/login`, o usa el botón **Authorize**."
     ),
-    version="0.2.0",
+    version="1.0.0",
 )
 
 # CORS: el navegador solo deja que el frontend (y nadie más) llame a la API. Nunca se usa "*".

@@ -19,7 +19,7 @@ el servidor responde `401` (sin sesión) o `403` (sin permiso) y no cambia ning�
 - El token JWT solo lleva el id y la expiración (`sub`, `exp`). Se rechazan tokens manipulados, vencidos, firmados con
   otra clave y con algoritmo `none`.
 
-### Matriz de permisos de toda la API (43 rutas)
+### Matriz de permisos de toda la API (43 operaciones)
 
 Públicas: **3** · Con sesión (ambos roles): **27** · Solo administrador: **13**
 
@@ -85,7 +85,7 @@ y el CI se pone en rojo. Se verificó rompiendo la protección a propósito de t
 ### Pruebas que respaldan A01
 | Qué se comprueba | Dónde |
 |---|---|
-| Matriz de las 43 rutas (401 sin sesión, 403 al capturista) | `backend/tests/test_matriz_permisos.py` |
+| Matriz de las 43 operaciones (401 sin sesión, 403 al capturista) | `backend/tests/test_matriz_permisos.py` |
 | Capturista no puede listar usuarios ni cambiar roles (403) y no cambia ningún dato | `backend/tests/test_usuarios.py` |
 | El cambio de rol y la suspensión se aplican en la siguiente petición | `backend/tests/test_usuarios.py`, `test_auth.py` |
 | No se puede dejar el sistema sin administradores | `backend/tests/test_usuarios.py` |
@@ -134,3 +134,5 @@ Cosas que decidimos no hacer en esta entrega y que un sistema real debería tene
 8. **El frontend de `docker compose` (nginx) no lleva estas cabeceras ni la CSP**: solo aplican en Vercel y en el backend.
 9. **Datos personales:** los datos de ejemplo son ficticios (los números de control empiezan con `99`) y los registros reales
    de alumnos no se suben al repositorio ni a un asistente de IA (RN-07).
+10. **La exportación no deja registro de quién exportó.** Solo el administrador puede exportar (`/api/export/...`) y el archivo trae
+    nombres y calificaciones, pero el sistema no tiene bitácora de auditoría. Con datos reales habría que registrarlo.

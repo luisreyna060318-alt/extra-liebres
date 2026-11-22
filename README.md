@@ -28,8 +28,8 @@ grupos e inscripciones con su desempeño.
 
 | Integrante | Responsable de |
 |---|---|
-| Luis David Reyna Morisco | Cuentas y acceso, alumnos, catálogos, base de datos e infraestructura |
-| Carlos Limones Ayala | Grupos, inscripciones, tablero, servicio de clima, CI y diseño |
+| Luis David Reyna Morisco | Cuentas y acceso, alumnos, catálogos, base de datos, infraestructura del backend, pantallas de alumnos, catálogos y usuarios, búsqueda global y exportación |
+| Carlos Limones Ayala | Grupos, inscripciones, tablero, servicio de clima, CI, frontend e infraestructura del frontend |
 
 ## URL pública
 

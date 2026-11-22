@@ -89,6 +89,14 @@ accesibles de los botones de cada fila (contienen el texto visible), `<dialog>` 
 con `role="tablist"`/`tab`/`tabpanel`, gráficas con descripción y tabla equivalente. Axe no dejó ninguna comprobación
 "por revisar" en contraste.
 
+## Pantallas agregadas después de la medición (22 de noviembre)
+
+Después de la medición se agregaron la búsqueda global (`/buscar`) y los botones de exportar en `/consultas` (PR #52). Con
+axe-core 4.14.1 (reglas WCAG 2.0, 2.1 y 2.2 A y AA más buenas prácticas), con el administrador y a 1280 y 360 px, se revisó
+`/buscar` con resultados, sin coincidencias y con un texto muy corto, y `/consultas`: **0 violaciones y 0 px de desbordamiento
+horizontal** en las 8 combinaciones. **No se volvió a correr Lighthouse** en esas pantallas, así que su puntaje de
+rendimiento no está medido.
+
 ## Lo que no se pudo medir y límites
 
 - **Lector de pantalla**: no se probó con NVDA, JAWS ni VoiceOver; la lectura real (por ejemplo cómo se anuncia el foco

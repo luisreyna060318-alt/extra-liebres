@@ -340,7 +340,9 @@ def svg_a_png(svg: Path, png: Path) -> None:
     ancho = int(re.search(r'<svg[^>]*\swidth="(\d+)"', texto).group(1))
     alto = int(re.search(r'<svg[^>]*\sheight="(\d+)"', texto).group(1))
     png.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory() as perfil:  # perfil temporal: no choca con un navegador ya abierto
+    # perfil temporal: no choca con un navegador ya abierto. En Windows Edge puede dejar archivos en uso al cerrar
+    # y borrar la carpeta fallaba al final, aunque la imagen ya estuviera guardada (por eso se ignoran esos errores)
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as perfil:
         subprocess.run(
             [
                 buscar_navegador(),
