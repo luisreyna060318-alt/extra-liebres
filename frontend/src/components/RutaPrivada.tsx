@@ -7,8 +7,17 @@ interface Props {
 
 // Protege un grupo de rutas. Ocultar enlaces no es seguridad: el servidor vuelve a validar el rol.
 export default function RutaPrivada({ soloAdmin = false }: Props) {
-  const { usuario } = useAuth()
+  const { usuario, cargando } = useAuth()
   const ubicacion = useLocation()
+
+  // Aún se está comprobando el token guardado: no se redirige todavía
+  if (cargando) {
+    return (
+      <div className="estado" role="status">
+        <p>Cargando…</p>
+      </div>
+    )
+  }
 
   // Sin sesión: a /login, recordando a dónde quería ir
   if (!usuario) {

@@ -1,10 +1,16 @@
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.tsx'
 
 // Estructura semántica común: header, nav, main y footer
 export default function Layout() {
-  const { usuario, cerrarSesion } = useAuth()
+  const { usuario, logout } = useAuth()
+  const navegar = useNavigate()
   const esAdmin = usuario?.rol === 'administrador'
+
+  function cerrarSesion() {
+    logout()
+    navegar('/login')
+  }
 
   return (
     <div className="app">
