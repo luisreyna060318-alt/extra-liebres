@@ -132,7 +132,7 @@ Cosas que decidimos no hacer en esta entrega y que un sistema real debería tene
 7. **La CSP fija la URL de la API de producción** (`connect-src`): si la API cambia de dirección hay que editar
    `frontend/vercel.json`.
 8. **El frontend de `docker compose` (nginx) no lleva estas cabeceras ni la CSP**: solo aplican en Vercel y en el backend.
-9. **Datos personales:** los datos de ejemplo son ficticios (los números de control empiezan con `99`) y los registros reales
+9. **Datos personales:** los datos de ejemplo son ficticios (sus números de control son de 8 dígitos y empiezan con `26`; el máximo permitido es `26999999`) y los registros reales
    de alumnos no se suben al repositorio ni a un asistente de IA (RN-07).
 10. **La exportación no deja registro de quién exportó.** Solo el administrador puede exportar (`/api/export/...`) y el archivo trae
     nombres y calificaciones, pero el sistema no tiene bitácora de auditoría. Con datos reales habría que registrarlo.

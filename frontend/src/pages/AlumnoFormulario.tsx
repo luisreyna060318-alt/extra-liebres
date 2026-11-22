@@ -143,13 +143,15 @@ function Formulario({ nocontrol, alumno, opciones }: PropsFormulario) {
         id="nocontrol"
         etiqueta="Número de control"
         valor={datos.nocontrol}
-        onCambio={(v) => cambiar('nocontrol', v.toUpperCase())}
+        onCambio={(v) => cambiar('nocontrol', v.replace(/\D/g, ''))}
         error={errores.nocontrol}
-        ayuda={editando ? 'El número de control no se puede cambiar.' : '7 a 10 letras o números, sin espacios.'}
+        ayuda={editando ? 'El número de control no se puede cambiar.' : '8 dígitos, solo números, hasta 26999999.'}
         soloLectura={editando}
+        maxLength={8}
+        inputMode="numeric"
       />
 
-      <CampoFormulario id="nombre" etiqueta="Nombre" valor={datos.nombre} onCambio={(v) => cambiar('nombre', v)} error={errores.nombre} maxLength={60} />
+      <CampoFormulario id="nombre" etiqueta="Nombre(s)" valor={datos.nombre} onCambio={(v) => cambiar('nombre', v)} error={errores.nombre} maxLength={60} />
 
       <CampoFormulario
         id="apaterno"
@@ -229,11 +231,23 @@ interface PropsCampoConLista {
   sugerencias?: string[] // opciones del <datalist>
   soloLectura?: boolean
   maxLength?: number
+  inputMode?: 'numeric' // teclado numérico en el celular
 }
 
 // Campo de texto con etiqueta, error y (opcional) lista de sugerencias.
 // CampoFormulario no admite <datalist> ni solo lectura, por eso este campo vive aquí.
-function CampoConLista({ id, etiqueta, valor, onCambio, error, ayuda, sugerencias, soloLectura = false, maxLength }: PropsCampoConLista) {
+function CampoConLista({
+  id,
+  etiqueta,
+  valor,
+  onCambio,
+  error,
+  ayuda,
+  sugerencias,
+  soloLectura = false,
+  maxLength,
+  inputMode,
+}: PropsCampoConLista) {
   const idError = `${id}-error`
   const idAyuda = `${id}-ayuda`
   const idLista = `${id}-lista`
@@ -247,6 +261,7 @@ function CampoConLista({ id, etiqueta, valor, onCambio, error, ayuda, sugerencia
         type="text"
         value={valor}
         maxLength={maxLength}
+        inputMode={inputMode}
         readOnly={soloLectura}
         list={sugerencias ? idLista : undefined}
         autoComplete="off"

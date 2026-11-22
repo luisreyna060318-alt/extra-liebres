@@ -52,8 +52,9 @@ export function actualizarAlumno(nocontrol: string, datos: AlumnoEntrada): Promi
   return api.put<Alumno>(`/api/alumnos/${encodeURIComponent(nocontrol)}`, datos)
 }
 
-// DELETE /api/alumnos/{nocontrol} (204): baja lógica, el alumno no se borra
-export function darDeBajaAlumno(nocontrol: string): Promise<void> {
+// DELETE /api/alumnos/{nocontrol} (204): elimina de verdad, pero solo si no tiene inscripciones (si las tiene, 409).
+// La baja lógica (el alumno se conserva) es un PUT con activo=false.
+export function eliminarAlumno(nocontrol: string): Promise<void> {
   return api.delete<void>(`/api/alumnos/${encodeURIComponent(nocontrol)}`)
 }
 

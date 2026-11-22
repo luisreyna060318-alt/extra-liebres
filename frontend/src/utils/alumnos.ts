@@ -51,8 +51,11 @@ export const ALUMNO_VACIO: DatosAlumno = {
 
 // Quita espacios de los lados y pasa a mayúsculas: "b19110001 " y "B19110001" son el mismo número
 export function normalizarNocontrol(valor: string): string {
-  return valor.trim().toUpperCase()
+  return valor.trim()
 }
+
+// El número de control tiene exactamente 8 dígitos y, de momento, no puede ser mayor a este valor (RN-01)
+export const NOCONTROL_MAXIMO = 26999999
 
 // Revisa un texto obligatorio con largo máximo; devuelve el mensaje o '' si está bien
 function validarTexto(valor: string, nombre: string, maximo: number): string {
@@ -71,13 +74,14 @@ export function validarAlumno(datos: DatosAlumno, editando: boolean): ErroresAlu
     const nocontrol = normalizarNocontrol(datos.nocontrol)
     if (!nocontrol) {
       errores.nocontrol = 'Escribe el número de control.'
-    } else if (!/^[A-Z0-9]{7,10}$/.test(nocontrol)) {
-      // Es texto, no número: puede empezar con ceros o con una letra (RN-01)
-      errores.nocontrol = 'Debe tener de 7 a 10 letras o números, sin espacios.'
+    } else if (!/^\d{8}$/.test(nocontrol)) {
+      errores.nocontrol = 'Debe tener exactamente 8 dígitos, solo números.'
+    } else if (Number(nocontrol) > NOCONTROL_MAXIMO) {
+      errores.nocontrol = `No puede ser mayor a ${NOCONTROL_MAXIMO}.`
     }
   }
 
-  const nombre = validarTexto(datos.nombre, 'el nombre', 60)
+  const nombre = validarTexto(datos.nombre, 'el nombre o los nombres', 60)
   if (nombre) errores.nombre = nombre
   const apaterno = validarTexto(datos.apaterno, 'el apellido paterno', 60)
   if (apaterno) errores.apaterno = apaterno

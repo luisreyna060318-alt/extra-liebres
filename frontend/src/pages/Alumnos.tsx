@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
-import { TAMANO_PAGINA, actualizarAlumno, darDeBajaAlumno, listarAlumnos, obtenerOpciones } from '../api/alumnos.ts'
+import { TAMANO_PAGINA, actualizarAlumno, eliminarAlumno, listarAlumnos, obtenerOpciones } from '../api/alumnos.ts'
 import type { FiltrosAlumnos } from '../api/alumnos.ts'
 import CampoFormulario from '../components/CampoFormulario.tsx'
 import Estado from '../components/Estado.tsx'
@@ -68,15 +68,16 @@ export default function Alumnos() {
 
   const [aviso, setAviso] = useState(mensajeInicial) // confirmación de la última acción
   const [errorAccion, setErrorAccion] = useState('') // error de la última acción
-  const [porBajar, setPorBajar] = useState<Alumno | null>(null) // alumno que espera confirmación de baja
+  // Alumno y acción (dar de baja o eliminar) que esperan confirmación
+  const [porConfirmar, setPorConfirmar] = useState<{ alumno: Alumno; accion: 'baja' | 'eliminar' } | null>(null)
   const [procesando, setProcesando] = useState('') // nocontrol del alumno con una acción en curso
 
   const dialogo = useRef<HTMLDialogElement>(null)
 
   // El cuadro de confirmación se abre como diálogo modal (el foco queda dentro y Esc lo cierra)
   useEffect(() => {
-    if (porBajar && !dialogo.current?.open) dialogo.current?.showModal()
-  }, [porBajar])
+    if (porConfirmar && !dialogo.current?.open) dialogo.current?.showModal()
+  }, [porConfirmar])
 
   const opciones = useApi(obtenerOpciones)
   const filtros: FiltrosAlumnos = { q, carrera, campus, estado }
@@ -107,26 +108,45 @@ export default function Alumnos() {
     setAviso(mensaje) // va al final porque aplicarFiltros borra el aviso
   }
 
-  function cancelarBaja() {
+  function cancelarConfirmacion() {
     dialogo.current?.close()
     // Se limpia el estado aquí mismo y no solo con el evento "close" del <dialog>: así, aunque ese evento
-    // tarde o no llegue, el siguiente clic en "Dar de baja" vuelve a abrir el diálogo.
-    setPorBajar(null)
+    // tarde o no llegue, el siguiente clic vuelve a abrir el diálogo.
+    setPorConfirmar(null)
   }
 
-  async function confirmarBaja() {
-    if (!porBajar) return
-    const alumno = porBajar
+  // PUT pide todos los datos del alumno; se reenvían los mismos y solo cambia activo
+  function datosConEstado(alumno: Alumno, activo: boolean) {
+    return {
+      nombre: alumno.nombre,
+      apaterno: alumno.apaterno,
+      ...(alumno.amaterno ? { amaterno: alumno.amaterno } : {}),
+      sexo: alumno.sexo,
+      carrera: alumno.carrera,
+      campus: alumno.campus,
+      activo,
+    }
+  }
+
+  async function confirmar() {
+    if (!porConfirmar) return
+    const { alumno, accion } = porConfirmar
     dialogo.current?.close()
-    setPorBajar(null)
+    setPorConfirmar(null)
     setErrorAccion('')
     setProcesando(alumno.nocontrol)
     try {
-      await darDeBajaAlumno(alumno.nocontrol) // DELETE: baja lógica, el alumno no se borra
-      terminarAccion(`Se dio de baja a ${nombreCompleto(alumno)}.`)
+      if (accion === 'baja') {
+        await actualizarAlumno(alumno.nocontrol, datosConEstado(alumno, false)) // baja lógica: el alumno no se borra
+        terminarAccion(`Se dio de baja a ${nombreCompleto(alumno)}.`)
+      } else {
+        await eliminarAlumno(alumno.nocontrol) // DELETE: solo si no tiene inscripciones (si las tiene, el servidor responde 409)
+        terminarAccion(`Se eliminó a ${nombreCompleto(alumno)}.`)
+      }
     } catch (e) {
       setAviso('')
-      setErrorAccion(e instanceof Error ? e.message : 'No se pudo dar de baja al alumno.')
+      const alternativa = accion === 'baja' ? 'No se pudo dar de baja al alumno.' : 'No se pudo eliminar al alumno.'
+      setErrorAccion(e instanceof Error ? e.message : alternativa)
     } finally {
       setProcesando('')
     }
@@ -136,16 +156,7 @@ export default function Alumnos() {
     setErrorAccion('')
     setProcesando(alumno.nocontrol)
     try {
-      // PUT pide todos los datos del alumno; se reenvían los mismos y solo cambia activo
-      await actualizarAlumno(alumno.nocontrol, {
-        nombre: alumno.nombre,
-        apaterno: alumno.apaterno,
-        ...(alumno.amaterno ? { amaterno: alumno.amaterno } : {}),
-        sexo: alumno.sexo,
-        carrera: alumno.carrera,
-        campus: alumno.campus,
-        activo: true,
-      })
+      await actualizarAlumno(alumno.nocontrol, datosConEstado(alumno, true))
       terminarAccion(`Se reactivó a ${nombreCompleto(alumno)}.`)
     } catch (e) {
       setAviso('')
@@ -285,7 +296,7 @@ export default function Alumnos() {
                                 type="button"
                                 className="boton-texto boton-texto-peligro"
                                 disabled={procesando === a.nocontrol}
-                                onClick={() => setPorBajar(a)}
+                                onClick={() => setPorConfirmar({ alumno: a, accion: 'baja' })}
                                 aria-label={`Dar de baja a ${nombre}`}
                               >
                                 Dar de baja
@@ -301,6 +312,15 @@ export default function Alumnos() {
                                 Reactivar
                               </button>
                             )}
+                            <button
+                              type="button"
+                              className="boton-texto boton-texto-peligro"
+                              disabled={procesando === a.nocontrol}
+                              onClick={() => setPorConfirmar({ alumno: a, accion: 'eliminar' })}
+                              aria-label={`Eliminar a ${nombre}`}
+                            >
+                              Eliminar
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -325,18 +345,28 @@ export default function Alumnos() {
         )}
       </Estado>
 
-      {/* Confirmación explícita antes de la baja: nada se envía hasta pulsar "Sí, dar de baja" */}
-      {porBajar && (
-        <dialog ref={dialogo} className="dialogo" aria-labelledby="titulo-baja" onClose={() => setPorBajar(null)}>
-          <h2 id="titulo-baja">¿Dar de baja al alumno?</h2>
+      {/* Confirmación explícita: nada se envía hasta pulsar el botón de confirmar */}
+      {porConfirmar && (
+        <dialog ref={dialogo} className="dialogo" aria-labelledby="titulo-confirmacion" onClose={() => setPorConfirmar(null)}>
+          <h2 id="titulo-confirmacion">{porConfirmar.accion === 'baja' ? '¿Dar de baja al alumno?' : '¿Eliminar al alumno?'}</h2>
           <p>
-            Vas a dar de baja a <strong>{nombreCompleto(porBajar)}</strong> ({porBajar.nocontrol}). No se borra: podrás reactivarlo después.
+            {porConfirmar.accion === 'baja' ? (
+              <>
+                Vas a dar de baja a <strong>{nombreCompleto(porConfirmar.alumno)}</strong> ({porConfirmar.alumno.nocontrol}). No se
+                borra: podrás reactivarlo después.
+              </>
+            ) : (
+              <>
+                Vas a eliminar a <strong>{nombreCompleto(porConfirmar.alumno)}</strong> ({porConfirmar.alumno.nocontrol}). Se borra
+                para siempre y solo se puede si no está inscrito en ningún grupo; si lo está, dalo de baja.
+              </>
+            )}
           </p>
           <div className="acciones">
-            <button type="button" className="boton boton-peligro-solido" onClick={confirmarBaja}>
-              Sí, dar de baja
+            <button type="button" className="boton boton-peligro-solido" onClick={confirmar}>
+              {porConfirmar.accion === 'baja' ? 'Sí, dar de baja' : 'Sí, eliminar'}
             </button>
-            <button type="button" className="boton boton-secundario" onClick={cancelarBaja}>
+            <button type="button" className="boton boton-secundario" onClick={cancelarConfirmacion}>
               Cancelar
             </button>
           </div>

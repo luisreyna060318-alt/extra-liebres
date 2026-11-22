@@ -244,7 +244,8 @@ def test_hu_03_1_eliminar_con_grupos_da_409_sugiere_desactivar_y_conserva_el_reg
     crear_grupo(rfc="AAAA000101AAA")
     r = client.delete("/api/promotores/AAAA000101AAA", headers=h_admin)
     assert r.status_code == 409
-    assert "activo=false" in r.json()["detail"]
+    assert r.json()["detail"].endswith("Desactívalo en su lugar")
+    assert "PUT" not in r.json()["detail"]
     assert db.get(Promotor, "AAAA000101AAA") is not None  # sigue existiendo
     # y la alternativa que se sugiere sí funciona
     cuerpo = {"nombre": "Pedro", "apaterno": "Ruiz", "amaterno": "Soto", "activo": False}

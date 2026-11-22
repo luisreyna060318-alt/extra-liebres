@@ -66,7 +66,12 @@ def test_hu_03_3_alta_correcta_devuelve_201(client, h_admin):
     "cambio",
     [
         {"anio": 1999},
-        {"anio": 2101},
+        {"anio": 2028},
+        {"mesinicio": 2, "mestermino": 6},  # el periodo de enero termina en junio
+        {"mesinicio": 1, "mestermino": 12},
+        {"mesinicio": 8, "mestermino": 6},
+        {"mesinicio": 9, "mestermino": 12},
+        {"mesinicio": 6, "mestermino": 1},
         {"mesinicio": 0},
         {"mesinicio": 13},
         {"mestermino": 0},
@@ -80,8 +85,8 @@ def test_hu_03_3_datos_invalidos_dan_422_y_no_guardan_nada(client, db, h_admin, 
 
 
 def test_hu_03_3_los_limites_validos_se_aceptan(client, h_admin):
-    assert crear(client, h_admin, anio=2000, mesinicio=1, mestermino=12).status_code == 201
-    assert crear(client, h_admin, anio=2100, mesinicio=12, mestermino=1).status_code == 201
+    assert crear(client, h_admin, anio=2000, mesinicio=1, mestermino=6).status_code == 201
+    assert crear(client, h_admin, anio=2027, mesinicio=8, mestermino=12).status_code == 201
 
 
 def test_hu_03_3_faltan_campos_obligatorios_da_422(client, h_admin):
@@ -90,9 +95,9 @@ def test_hu_03_3_faltan_campos_obligatorios_da_422(client, h_admin):
 
 def test_hu_03_3_editar_cambia_los_datos(client, h_admin):
     idsem = crear(client, h_admin).json()["idsemestre"]
-    r = client.put(f"/api/semestres/{idsem}", json={"anio": 2026, "mesinicio": 1, "mestermino": 5}, headers=h_admin)
-    assert r.status_code == 200 and r.json()["mestermino"] == 5
-    assert client.get(f"/api/semestres/{idsem}", headers=h_admin).json()["mestermino"] == 5
+    r = client.put(f"/api/semestres/{idsem}", json={"anio": 2025, "mesinicio": 8, "mestermino": 12}, headers=h_admin)
+    assert r.status_code == 200 and (r.json()["anio"], r.json()["mesinicio"], r.json()["mestermino"]) == (2025, 8, 12)
+    assert client.get(f"/api/semestres/{idsem}", headers=h_admin).json()["mestermino"] == 12
 
 
 def test_hu_03_3_editar_valida_igual_que_crear(client, h_admin):
@@ -105,7 +110,7 @@ def test_hu_03_3_editar_valida_igual_que_crear(client, h_admin):
 
 def test_hu_03_3_mismo_anio_y_mes_de_inicio_da_409(client, db, h_admin):
     crear(client, h_admin)
-    r = crear(client, h_admin, mestermino=7)  # cambia el mes de término, pero (anio, mesinicio) es el mismo
+    r = crear(client, h_admin)  # el mismo año y el mismo mes de inicio
     assert r.status_code == 409
     assert "año" in r.json()["detail"]
     assert db.query(Semestre).count() == 1
@@ -120,7 +125,8 @@ def test_hu_03_3_mismo_mes_de_otro_anio_o_otro_mes_del_mismo_anio_si_se_permite(
 def test_hu_03_3_editar_puede_conservar_su_combinacion_pero_no_la_de_otro(client, h_admin):
     uno = crear(client, h_admin).json()["idsemestre"]
     crear(client, h_admin, mesinicio=8, mestermino=12)
-    assert client.put(f"/api/semestres/{uno}", json={**SEMESTRE, "mestermino": 5}, headers=h_admin).status_code == 200
+    # Conservar su propia combinación está permitido
+    assert client.put(f"/api/semestres/{uno}", json=SEMESTRE, headers=h_admin).status_code == 200
     r = client.put(f"/api/semestres/{uno}", json={**SEMESTRE, "mesinicio": 8, "mestermino": 12}, headers=h_admin)
     assert r.status_code == 409
 

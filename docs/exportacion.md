@@ -23,7 +23,7 @@ actividad, grupo y apellidos.
 
 | Campo (XML) | Título (CSV) | Ejemplo |
 |---|---|---|
-| `nocontrol` | No. de control | 99000046 |
+| `nocontrol` | No. de control | 26000046 |
 | `alumno` | Alumno | Díaz Gutiérrez Mariana |
 | `carrera` | Carrera | ING. MECATRÓNICA |
 | `actividad` | Actividad | Ajedrez |
@@ -48,7 +48,7 @@ XML bien formado en UTF-8, con un elemento `<inscrito>` por renglón y el total 
 <?xml version='1.0' encoding='utf-8'?>
 <inscritos total="2">
   <inscrito>
-    <nocontrol>99000046</nocontrol>
+    <nocontrol>26000046</nocontrol>
     <alumno>Díaz Gutiérrez Mariana</alumno>
     <carrera>ING. MECATRÓNICA</carrera>
     <actividad>Ajedrez</actividad>
@@ -59,7 +59,7 @@ XML bien formado en UTF-8, con un elemento `<inscrito>` por renglón y el total 
     <desempenio>Bueno</desempenio>
   </inscrito>
   <inscrito>
-    <nocontrol>99000047</nocontrol>
+    <nocontrol>26000047</nocontrol>
     <alumno>Pérez Soto Luis</alumno>
     <carrera>ING. INDUSTRIAL</carrera>
     <actividad>Ajedrez</actividad>

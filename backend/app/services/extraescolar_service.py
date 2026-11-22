@@ -94,7 +94,7 @@ def eliminar_actividad(db: Session, idextraescolar: int) -> None:
     if grupos:
         raise Conflicto(
             f"No se puede eliminar: la actividad tiene {grupos} grupo(s). "
-            "Desactívala en su lugar (PUT con activo=false)"
+            "Desactívala en su lugar"
         )
     db.delete(actividad)
     db.commit()

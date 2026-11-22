@@ -87,7 +87,7 @@ def eliminar_promotor(db: Session, rfc: str) -> None:
     if grupos:
         raise Conflicto(
             f"No se puede eliminar: el promotor tiene {grupos} grupo(s). "
-            "Desactívalo en su lugar (PUT con activo=false)"
+            "Desactívalo en su lugar"
         )
     db.delete(promotor)
     db.commit()

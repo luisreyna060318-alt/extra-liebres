@@ -6,7 +6,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
 
-from app.core.constantes import CARRERAS, SEXOS
+from app.core.constantes import CARRERAS, NOCONTROL_MAXIMO, SEXOS
 
 # Textos que se limpian solos (espacios al inicio y al final) y no pueden quedar vacíos
 Texto60 = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=60)]
@@ -51,20 +51,22 @@ class AlumnoDatos(BaseModel):
 
 
 def normalizar_nocontrol(valor: str) -> str:
-    """Quita espacios y pone mayúsculas: 'b19110001 ' y 'B19110001' son el mismo número de control."""
-    return valor.strip().upper()
+    """Quita los espacios al inicio y al final: ' 19110001 ' y '19110001' son el mismo número de control."""
+    return valor.strip()
 
 
 class AlumnoCrear(AlumnoDatos):
-    nocontrol: str = Field(examples=["19110001"], description="7 a 10 letras o números, sin espacios")
+    nocontrol: str = Field(examples=["22111443"], description="Exactamente 8 dígitos, solo números, hasta 26999999")
 
     @field_validator("nocontrol")
     @classmethod
     def nocontrol_valido(cls, v: str) -> str:
         v = normalizar_nocontrol(v)
-        # Es texto, no número: puede empezar con ceros o con una letra (RN-01)
-        if not re.fullmatch(r"[A-Z0-9]{7,10}", v):
-            raise ValueError("El número de control debe tener de 7 a 10 letras o números, sin espacios")
+        # Se guarda como texto (puede empezar con ceros), pero debe ser de 8 dígitos y no pasar del máximo (RN-01)
+        if not re.fullmatch(r"[0-9]{8}", v):
+            raise ValueError("El número de control debe tener exactamente 8 dígitos, solo números")
+        if int(v) > NOCONTROL_MAXIMO:
+            raise ValueError(f"El número de control no puede ser mayor a {NOCONTROL_MAXIMO}")
         return v
 
 

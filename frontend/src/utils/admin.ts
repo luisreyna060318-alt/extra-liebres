@@ -128,24 +128,30 @@ export function validarActividad(datos: DatosActividad): ErroresActividad {
 
 export interface DatosSemestre {
   anio: string
-  mesinicio: string
-  mestermino: string
+  periodo: string // "1-6" (enero-junio) o "8-12" (agosto-diciembre)
 }
 
 export type ErroresSemestre = Partial<Record<keyof DatosSemestre, string>>
 
-export const SEMESTRE_VACIO: DatosSemestre = { anio: '', mesinicio: '', mestermino: '' }
+export const SEMESTRE_VACIO: DatosSemestre = { anio: '', periodo: '' }
+
+// Años permitidos de momento: del 2000 al 2027 (el más reciente primero)
+export const ANIO_SEMESTRE_MINIMO = 2000
+export const ANIO_SEMESTRE_MAXIMO = 2027
+export const OPCIONES_ANIO = Array.from({ length: ANIO_SEMESTRE_MAXIMO - ANIO_SEMESTRE_MINIMO + 1 }, (_, i) => {
+  const anio = String(ANIO_SEMESTRE_MAXIMO - i)
+  return { valor: anio, etiqueta: anio }
+})
+
+// Solo hay dos periodos: si empieza en enero termina en junio y si empieza en agosto termina en diciembre
+export const OPCIONES_PERIODO = [
+  { valor: '1-6', etiqueta: 'Enero-Junio' },
+  { valor: '8-12', etiqueta: 'Agosto-Diciembre' },
+]
 
 export function validarSemestre(datos: DatosSemestre): ErroresSemestre {
   const errores: ErroresSemestre = {}
-
-  const anio = datos.anio.trim()
-  if (!anio) errores.anio = 'Escribe el año.'
-  else if (!/^\d{4}$/.test(anio) || Number(anio) < 2000 || Number(anio) > 2100) {
-    errores.anio = 'El año debe ser un número entre 2000 y 2100.'
-  }
-  if (!datos.mesinicio) errores.mesinicio = 'Elige el mes de inicio.'
-  if (!datos.mestermino) errores.mestermino = 'Elige el mes de término.'
-
+  if (!datos.anio) errores.anio = 'Elige el año.'
+  if (!datos.periodo) errores.periodo = 'Elige el periodo.'
   return errores
 }
