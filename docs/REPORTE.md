@@ -1,5 +1,8 @@
 # Reporte técnico · Extra-Liebres
 
+> **Este archivo es el borrador inicial y está desactualizado** (por ejemplo, habla de un despliegue pendiente).
+> **La versión vigente es [`REPORTE.pdf`](REPORTE.pdf).**
+
 > **Borrador.** Lo preparó el agente de documentación de Carlos (Claude Code, Claude Opus 5.5) con datos que se pueden
 > comprobar en el repositorio. Luis y Carlos lo revisan, completan lo marcado como _pendiente_ y lo ajustan con sus
 > palabras antes de la entrega.

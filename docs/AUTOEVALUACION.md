@@ -31,8 +31,8 @@ Los criterios 1 a 10 son de equipo y valen 92 puntos; la demo (8) se califica po
 1. **Planeación y arquitectura (Notable).** Propuesta, historias con criterios de aceptación, reglas de negocio y diagramas completos. No llega a Excelente porque el tablero de Projects se actualizó hasta el 22 de noviembre y no durante todo el proyecto.
 2. **HTML, CSS y responsividad (Excelente).** HTML semántico, `label` en formularios, CSS externo con Flexbox y Grid, accesibilidad 100 en Lighthouse y 0 violaciones con axe-core. No se probó con lector de pantalla.
 3. **Frontend en React (Notable).** 15 rutas, estados de carga, error y vacío, validación y formulario dinámico. Sin pruebas automáticas del frontend.
-4. **Backend en FastAPI (Excelente).** 40 operaciones por capas, esquemas separados de entrada y salida, códigos HTTP correctos y 327 pruebas.
-5. **Base de datos (Excelente).** Siete tablas con relaciones 1:N y N:M, restricciones, migración reproducible y datos semilla.
+4. **Backend en FastAPI (Excelente).** 40 operaciones por capas, esquemas separados de entrada y salida, códigos HTTP correctos y 327 pruebas. Faltan las historias deseables HU-06.2 (búsqueda global) y HU-07.2 (exportar), que siguen abiertas.
+5. **Base de datos (Excelente).** Siete tablas con relaciones 1:N y N:M, restricciones, migración reproducible y datos semilla. Las pruebas automáticas del CI usan SQLite en memoria, no PostgreSQL; la migración se probó en PostgreSQL con Docker y en Neon.
 6. **Seguridad e interoperabilidad (Notable).** Evidencia fuerte (matriz de permisos probada, cabeceras y CSP, sin secretos en el historial). Siguen abiertas, y declaradas, el límite de intentos de inicio de sesión, el token en `localStorage` y `/docs` público.
 7. **Contenedores y despliegue (Excelente).** `docker compose up` desde cero y despliegue público en Vercel, Render y Neon. El plan gratuito de Render apaga el servicio por inactividad.
 8. **Calidad y DevOps (Notable).** CI en verde y flujo de PR con revisión cruzada, pero con commits concentrados en una sola noche.
