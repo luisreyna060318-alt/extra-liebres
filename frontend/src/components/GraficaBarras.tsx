@@ -23,6 +23,10 @@ function recortar(texto: string): string {
   return texto.length > 20 ? `${texto.slice(0, 19)}…` : texto
 }
 
+// Eje numérico con un poco de espacio arriba de la barra más alta: así el número escrito sobre ella no queda pegado
+// al borde ni se corta (antes el eje terminaba justo en la barra más alta)
+const ESPACIO_ARRIBA: [number, (maximo: number) => number] = [0, (maximo) => Math.ceil(maximo * 1.15)]
+
 // Gráfica de barras con título, texto alternativo y la misma información en una tabla desplegable.
 // El dibujo es solo visual (aria-hidden): con lector de pantalla se lee la descripción y la tabla.
 export default function GraficaBarras({
@@ -47,23 +51,23 @@ export default function GraficaBarras({
           <BarChart
             data={datos}
             layout={horizontal ? 'vertical' : 'horizontal'}
-            margin={{ top: 16, right: 32, bottom: 8, left: 0 }}
+            margin={{ top: 28, right: 40, bottom: 8, left: 0 }}
             accessibilityLayer={false}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#cbd2d9" horizontal={!horizontal} vertical={horizontal} />
             {horizontal ? (
               <>
-                <XAxis type="number" allowDecimals={false} stroke="#52606d" />
+                <XAxis type="number" allowDecimals={false} stroke="#52606d" domain={ESPACIO_ARRIBA} />
                 <YAxis type="category" dataKey="nombre" width={130} tickFormatter={recortar} stroke="#52606d" />
               </>
             ) : (
               <>
                 <XAxis type="category" dataKey="nombre" stroke="#52606d" />
-                <YAxis type="number" allowDecimals={false} stroke="#52606d" />
+                <YAxis type="number" allowDecimals={false} stroke="#52606d" domain={ESPACIO_ARRIBA} />
               </>
             )}
             {/* El número va escrito sobre cada barra: no hay que adivinarlo por el color o la altura */}
-            <Bar dataKey="total" fill="#1b4f8f" isAnimationActive={false}>
+            <Bar dataKey="total" fill="#c8102e" isAnimationActive={false}>
               <LabelList dataKey="total" position={horizontal ? 'right' : 'top'} fill="#1f2933" />
             </Bar>
           </BarChart>

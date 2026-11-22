@@ -36,7 +36,7 @@ function Buscador({ inicial, onBuscar }: PropsBuscador) {
   }
 
   return (
-    <form className="busqueda" role="search" onSubmit={enviar}>
+    <form className="busqueda" role="search" aria-label="Filtrar alumnos" onSubmit={enviar}>
       <CampoFormulario
         id="filtro-q"
         etiqueta="Nombre o número de control"

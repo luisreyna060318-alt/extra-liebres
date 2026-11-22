@@ -70,7 +70,7 @@ export default function InscribirAlumno({ idgrupo, yaInscritos, onInscrito }: Pr
     <section className="tarjeta-seccion" aria-labelledby="titulo-inscribir">
       <h2 id="titulo-inscribir">Inscribir alumno</h2>
 
-      <form className="buscador" onSubmit={buscar} noValidate role="search">
+      <form className="buscador" onSubmit={buscar} noValidate role="search" aria-label="Buscar alumno para inscribir">
         <CampoFormulario
           id="buscar-alumno"
           etiqueta="Buscar alumno activo"

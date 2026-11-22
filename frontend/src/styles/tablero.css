@@ -25,7 +25,7 @@
   padding: var(--espacio-3);
   background: var(--color-superficie);
   border: 1px solid var(--color-borde);
-  border-left: 6px solid var(--color-primario);
+  border-left: 6px solid var(--color-marca);
   border-radius: var(--radio);
   box-shadow: var(--sombra);
 }

@@ -35,7 +35,7 @@
   min-height: 2.75rem;
   padding: 0 var(--espacio-1);
   font: inherit;
-  color: var(--color-primario);
+  color: var(--color-enlace);
   text-decoration: underline;
   background: none;
   border: 0;
@@ -43,7 +43,7 @@
 }
 
 .boton-texto:hover {
-  color: var(--color-primario-oscuro);
+  color: var(--color-enlace-hover);
 }
 
 .boton-texto:disabled {
