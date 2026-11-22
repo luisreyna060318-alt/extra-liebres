@@ -1,0 +1,204 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1280" viewBox="0 0 2000 1280" font-family="Segoe UI, Arial, sans-serif">
+<title>Modelo entidad-relación de Extra-Liebres</title>
+<desc>Siete tablas de PostgreSQL con sus columnas, llaves y restricciones, generadas desde la migración de Alembic.</desc>
+<style>
+      .tabla { fill: #ffffff; stroke: #1f2937; stroke-width: 2.5; }
+      .cab { fill: #dbeafe; stroke: #1f2937; stroke-width: 2.5; }
+      .notas { fill: #f9fafb; stroke: #6b7280; stroke-width: 1.5; stroke-dasharray: 6 4; }
+      .sep { stroke: #9ca3af; stroke-width: 1.5; }
+      .rel { stroke: #1f2937; stroke-width: 2.5; fill: none; }
+      .titulo { font-size: 36px; font-weight: 700; fill: #111827; }
+      .sub { font-size: 19px; fill: #374151; }
+      .nombre { font-size: 24px; font-weight: 700; fill: #111827; font-family: Consolas, 'Courier New', monospace; }
+      .nombre2 { font-size: 20px; font-weight: 700; fill: #111827; }
+      .col { font-size: 18px; fill: #111827; font-family: Consolas, 'Courier New', monospace; }
+      .pk { font-weight: 700; }
+      .marca { font-size: 14px; font-weight: 700; fill: #1d4ed8; }
+      .tipo { font-size: 17px; fill: #4b5563; font-family: Consolas, 'Courier New', monospace; }
+      .nulo { font-size: 14px; fill: #92400e; font-weight: 700; }
+      .restr { font-size: 14px; fill: #7c2d12; font-family: Consolas, 'Courier New', monospace; }
+      .etq { font-size: 15px; fill: #111827; font-family: Consolas, 'Courier New', monospace; }
+      .card { font-size: 22px; font-weight: 700; fill: #b91c1c; }
+      .nm { font-size: 19px; font-weight: 700; fill: #6d28d9; }
+      .nm2 { font-size: 16px; fill: #6d28d9; }
+      .nota { font-size: 16px; fill: #1f2937; }
+    </style>
+<rect width="2000" height="1280" fill="#ffffff"/>
+<text class="titulo" x="40" y="55">Extra-Liebres · Modelo entidad-relación</text>
+<text class="sub" x="40" y="90">PostgreSQL · 7 tablas · generado desde db/migrations/versions/20261121_0001_esquema_inicial.py</text>
+<path class="rel" d="M300,378 V437 H810 V520"/>
+<text class="etq" x="555" y="427" text-anchor="middle">rfcpromotor</text>
+<text class="card" x="314" y="402" text-anchor="start">1</text>
+<text class="card" x="824" y="510" text-anchor="start">N</text>
+<path class="rel" d="M980,378 V520"/>
+<text class="etq" x="992" y="478" text-anchor="start">idextraescolar</text>
+<text class="card" x="966" y="402" text-anchor="end">1</text>
+<text class="card" x="966" y="510" text-anchor="end">N</text>
+<path class="rel" d="M1660,392 V437 H1150 V520"/>
+<text class="etq" x="1405" y="427" text-anchor="middle">idsemestre</text>
+<text class="card" x="1674" y="416" text-anchor="start">1</text>
+<text class="card" x="1164" y="510" text-anchor="start">N</text>
+<path class="rel" d="M1220,610 H1420"/>
+<text class="etq" x="1320" y="598" text-anchor="middle">idgrupo</text>
+<text class="card" x="1236" y="600" text-anchor="start">1</text>
+<text class="card" x="1404" y="600" text-anchor="end">N</text>
+<text class="etq" x="1320" y="634" text-anchor="middle">→ grupo.idgrupo</text>
+<path class="rel" d="M1660,782 V900"/>
+<text class="etq" x="1674" y="846" text-anchor="start">nocontrol → alumno.nocontrol</text>
+<text class="card" x="1646" y="810" text-anchor="end">N</text>
+<text class="card" x="1646" y="890" text-anchor="end">1</text>
+<text class="nm" x="1600" y="827" text-anchor="end">Relación N:M</text>
+<text class="nm2" x="1600" y="849" text-anchor="end">alumno ↔ grupo, resuelta</text>
+<text class="nm2" x="1600" y="871" text-anchor="end">por la tabla alumno_grupo</text>
+<rect class="tabla" x="60" y="130" width="480" height="248" rx="10"/>
+<path class="cab" d="M60,180 V140 Q60,130 70,130 H530 Q540,130 540,140 V180 Z"/>
+<text class="nombre" x="76" y="163">promotor</text>
+<text class="marca" x="74" y="201">PK</text>
+<text class="col pk" x="140" y="201">rfc</text>
+<text class="tipo" x="338" y="201">VARCHAR(13)</text>
+<text class="col" x="140" y="231">nombre</text>
+<text class="tipo" x="338" y="231">VARCHAR(60)</text>
+<text class="col" x="140" y="261">apaterno</text>
+<text class="tipo" x="338" y="261">VARCHAR(60)</text>
+<text class="col" x="140" y="291">amaterno</text>
+<text class="tipo" x="338" y="291">VARCHAR(60)</text>
+<text class="nulo" x="526" y="291" text-anchor="end">NULL</text>
+<text class="col" x="140" y="321">activo</text>
+<text class="tipo" x="338" y="321">BOOLEAN</text>
+<line class="sep" x1="60" y1="334" x2="540" y2="334"/>
+<text class="restr" xml:space="preserve" x="74" y="360">CHECK length(rfc) BETWEEN 12 AND 13</text>
+<rect class="tabla" x="740" y="130" width="480" height="248" rx="10"/>
+<path class="cab" d="M740,180 V140 Q740,130 750,130 H1210 Q1220,130 1220,140 V180 Z"/>
+<text class="nombre" x="756" y="163">extraescolar</text>
+<text class="marca" x="754" y="201">PK</text>
+<text class="col pk" x="820" y="201">idextraescolar</text>
+<text class="tipo" x="1018" y="201">INTEGER</text>
+<text class="marca" x="754" y="231">UQ</text>
+<text class="col" x="820" y="231">nombreextra</text>
+<text class="tipo" x="1018" y="231">VARCHAR(80)</text>
+<text class="col" x="820" y="261">tipo</text>
+<text class="tipo" x="1018" y="261">VARCHAR(20)</text>
+<text class="col" x="820" y="291">al_aire_libre</text>
+<text class="tipo" x="1018" y="291">BOOLEAN</text>
+<text class="col" x="820" y="321">activo</text>
+<text class="tipo" x="1018" y="321">BOOLEAN</text>
+<line class="sep" x1="740" y1="334" x2="1220" y2="334"/>
+<text class="restr" xml:space="preserve" x="754" y="360">CHECK tipo IN ('deportiva', 'cultural', 'civica')</text>
+<rect class="tabla" x="1420" y="130" width="480" height="262" rx="10"/>
+<path class="cab" d="M1420,180 V140 Q1420,130 1430,130 H1890 Q1900,130 1900,140 V180 Z"/>
+<text class="nombre" x="1436" y="163">semestre</text>
+<text class="marca" x="1434" y="201">PK</text>
+<text class="col pk" x="1500" y="201">idsemestre</text>
+<text class="tipo" x="1698" y="201">INTEGER</text>
+<text class="col" x="1500" y="231">mesinicio</text>
+<text class="tipo" x="1698" y="231">INTEGER</text>
+<text class="col" x="1500" y="261">mestermino</text>
+<text class="tipo" x="1698" y="261">INTEGER</text>
+<text class="col" x="1500" y="291">anio</text>
+<text class="tipo" x="1698" y="291">INTEGER</text>
+<line class="sep" x1="1420" y1="304" x2="1900" y2="304"/>
+<text class="restr" xml:space="preserve" x="1434" y="330">CHECK mesinicio BETWEEN 1 AND 12</text>
+<text class="restr" xml:space="preserve" x="1434" y="352">CHECK mestermino BETWEEN 1 AND 12</text>
+<text class="restr" xml:space="preserve" x="1434" y="374">UNIQUE (anio, mesinicio)</text>
+<rect class="tabla" x="60" y="520" width="540" height="308" rx="10"/>
+<path class="cab" d="M60,570 V530 Q60,520 70,520 H590 Q600,520 600,530 V570 Z"/>
+<text class="nombre" x="76" y="553">usuario</text>
+<text class="marca" x="74" y="591">PK</text>
+<text class="col pk" x="140" y="591">id</text>
+<text class="tipo" x="373" y="591">INTEGER</text>
+<text class="col" x="140" y="621">nombre</text>
+<text class="tipo" x="373" y="621">VARCHAR(100)</text>
+<text class="marca" x="74" y="651">UQ</text>
+<text class="col" x="140" y="651">correo</text>
+<text class="tipo" x="373" y="651">VARCHAR(120)</text>
+<text class="col" x="140" y="681">password_hash</text>
+<text class="tipo" x="373" y="681">VARCHAR(255)</text>
+<text class="col" x="140" y="711">rol</text>
+<text class="tipo" x="373" y="711">VARCHAR(20)</text>
+<text class="col" x="140" y="741">activo</text>
+<text class="tipo" x="373" y="741">BOOLEAN</text>
+<text class="col" x="140" y="771">creado_en</text>
+<text class="tipo" x="373" y="771">TIMESTAMPTZ</text>
+<line class="sep" x1="60" y1="784" x2="600" y2="784"/>
+<text class="restr" xml:space="preserve" x="74" y="810">CHECK rol IN ('administrador', 'capturista')</text>
+<rect class="tabla" x="740" y="520" width="480" height="382" rx="10"/>
+<path class="cab" d="M740,570 V530 Q740,520 750,520 H1210 Q1220,520 1220,530 V570 Z"/>
+<text class="nombre" x="756" y="553">grupo</text>
+<text class="marca" x="754" y="591">PK</text>
+<text class="col pk" x="820" y="591">idgrupo</text>
+<text class="tipo" x="1018" y="591">INTEGER</text>
+<text class="col" x="820" y="621">dia</text>
+<text class="tipo" x="1018" y="621">VARCHAR(10)</text>
+<text class="col" x="820" y="651">horainicio</text>
+<text class="tipo" x="1018" y="651">TIME</text>
+<text class="col" x="820" y="681">horatermino</text>
+<text class="tipo" x="1018" y="681">TIME</text>
+<text class="col" x="820" y="711">aula</text>
+<text class="tipo" x="1018" y="711">VARCHAR(60)</text>
+<text class="marca" x="754" y="741">FK</text>
+<text class="col" x="820" y="741">idsemestre</text>
+<text class="tipo" x="1018" y="741">INTEGER</text>
+<text class="marca" x="754" y="771">FK</text>
+<text class="col" x="820" y="771">idextraescolar</text>
+<text class="tipo" x="1018" y="771">INTEGER</text>
+<text class="marca" x="754" y="801">FK</text>
+<text class="col" x="820" y="801">rfcpromotor</text>
+<text class="tipo" x="1018" y="801">VARCHAR(13)</text>
+<line class="sep" x1="740" y1="814" x2="1220" y2="814"/>
+<text class="restr" xml:space="preserve" x="754" y="840">CHECK dia IN ('lunes', 'martes', 'miercoles', 'jueves',</text>
+<text class="restr" xml:space="preserve" x="754" y="862">    'viernes', 'sabado')</text>
+<text class="restr" xml:space="preserve" x="754" y="884">CHECK horainicio &lt; horatermino</text>
+<rect class="tabla" x="1420" y="520" width="480" height="262" rx="10"/>
+<path class="cab" d="M1420,570 V530 Q1420,520 1430,520 H1890 Q1900,520 1900,530 V570 Z"/>
+<text class="nombre" x="1436" y="553">alumno_grupo</text>
+<text class="marca" x="1434" y="591">PK FK</text>
+<text class="col pk" x="1500" y="591">nocontrol</text>
+<text class="tipo" x="1698" y="591">VARCHAR(15)</text>
+<text class="marca" x="1434" y="621">PK FK</text>
+<text class="col pk" x="1500" y="621">idgrupo</text>
+<text class="tipo" x="1698" y="621">INTEGER</text>
+<text class="col" x="1500" y="651">calificacion</text>
+<text class="tipo" x="1698" y="651">INTEGER</text>
+<text class="nulo" x="1886" y="651" text-anchor="end">NULL</text>
+<text class="col" x="1500" y="681">desempenio</text>
+<text class="tipo" x="1698" y="681">VARCHAR(15)</text>
+<text class="nulo" x="1886" y="681" text-anchor="end">NULL</text>
+<line class="sep" x1="1420" y1="694" x2="1900" y2="694"/>
+<text class="restr" xml:space="preserve" x="1434" y="720">CHECK desempenio IN ('Excelente', 'Notable', 'Bueno',</text>
+<text class="restr" xml:space="preserve" x="1434" y="742">    'Suficiente', 'Insuficiente')</text>
+<text class="restr" xml:space="preserve" x="1434" y="764">CHECK calificacion BETWEEN 0 AND 100</text>
+<rect class="tabla" x="1420" y="900" width="480" height="338" rx="10"/>
+<path class="cab" d="M1420,950 V910 Q1420,900 1430,900 H1890 Q1900,900 1900,910 V950 Z"/>
+<text class="nombre" x="1436" y="933">alumno</text>
+<text class="marca" x="1434" y="971">PK</text>
+<text class="col pk" x="1500" y="971">nocontrol</text>
+<text class="tipo" x="1698" y="971">VARCHAR(15)</text>
+<text class="col" x="1500" y="1001">nombre</text>
+<text class="tipo" x="1698" y="1001">VARCHAR(60)</text>
+<text class="col" x="1500" y="1031">apaterno</text>
+<text class="tipo" x="1698" y="1031">VARCHAR(60)</text>
+<text class="col" x="1500" y="1061">amaterno</text>
+<text class="tipo" x="1698" y="1061">VARCHAR(60)</text>
+<text class="nulo" x="1886" y="1061" text-anchor="end">NULL</text>
+<text class="col" x="1500" y="1091">sexo</text>
+<text class="tipo" x="1698" y="1091">VARCHAR(1)</text>
+<text class="col" x="1500" y="1121">carrera</text>
+<text class="tipo" x="1698" y="1121">VARCHAR(80)</text>
+<text class="col" x="1500" y="1151">campus</text>
+<text class="tipo" x="1698" y="1151">VARCHAR(40)</text>
+<text class="col" x="1500" y="1181">activo</text>
+<text class="tipo" x="1698" y="1181">BOOLEAN</text>
+<line class="sep" x1="1420" y1="1194" x2="1900" y2="1194"/>
+<text class="restr" xml:space="preserve" x="1434" y="1220">CHECK sexo IN ('M', 'F')</text>
+<rect class="notas" x="740" y="920" width="560" height="272" rx="10"/>
+<text class="nombre2" x="756" y="954">Cómo leer el diagrama</text>
+<text class="nota" x="756" y="984">PK llave primaria · FK llave foránea · UQ valor único</text>
+<text class="nota" x="756" y="1008">Las columnas sin la marca NULL son obligatorias (NOT NULL).</text>
+<text class="nota" x="756" y="1032">1 —— N  relación uno a muchos: la N es la tabla que tiene la FK.</text>
+<text class="nota" x="756" y="1056">Todas las FK usan ON DELETE RESTRICT: no se puede borrar</text>
+<text class="nota" x="756" y="1080">un catálogo, alumno ni grupo que ya tenga registros (RN-08).</text>
+<text class="nota" x="756" y="1104">alumno_grupo: su PK es compuesta (nocontrol, idgrupo), así un</text>
+<text class="nota" x="756" y="1128">alumno no se inscribe dos veces al mismo grupo.</text>
+<text class="nota" x="756" y="1152">usuario no se relaciona con las demás tablas: son las cuentas</text>
+<text class="nota" x="756" y="1176">de acceso (correo único, rol administrador o capturista).</text>
+</svg>
