@@ -9,9 +9,11 @@ from app.core.errores import ErrorNegocio
 from app.routers import (
     alumnos,
     auth,
+    busqueda,
     clima,
     consultas,
     dashboard,
+    export,
     extraescolares,
     grupos,
     health,
@@ -70,6 +72,8 @@ app.include_router(dashboard.router)
 app.include_router(grupos.router)
 app.include_router(inscripciones.router)
 app.include_router(consultas.router)
+app.include_router(busqueda.router)
+app.include_router(export.router)
 app.include_router(promotores.router)
 app.include_router(extraescolares.router)
 app.include_router(semestres.router)
