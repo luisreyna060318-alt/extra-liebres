@@ -47,6 +47,10 @@ o `docker compose down`. Para empezar de cero (borra los datos): `docker compose
 > El frontend se agrega a este comando cuando su Dockerfile esté en el repositorio. Mientras tanto se corre con
 > `npm run dev` dentro de `frontend/`. Si quieres desarrollar el backend sin Docker, mira `backend/README.md`.
 
+**Si `docker compose up` falla con "port is already allocated" (o "address already in use") en el 5432**, ya tienes
+un PostgreSQL instalado en tu computadora. Agrega a tu `.env` la línea `DB_HOST_PORT=5433` (o cualquier puerto libre)
+y vuelve a correr el comando. Solo cambia el puerto por el que tú miras la base; el backend no se ve afectado.
+
 Para publicarlo en internet (Neon + Render + Vercel) sigue `infra/DEPLOY.md`.
 
 ## Usuarios de prueba
