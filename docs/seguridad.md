@@ -14,12 +14,14 @@ el servidor responde `401` (sin sesión) o `403` (sin permiso) y no cambia ning�
   suspende una cuenta, el cambio se aplica en la siguiente acción de esa persona aunque conserve su token.
 - Un usuario nuevo **siempre nace como capturista**. El campo `rol` que se mande al registrarse se ignora.
 - No se puede quitar el rol ni suspender al **último administrador activo** (`409`).
+- La **exportación** de inscritos (`/api/export/...`) es solo del administrador. En el CSV, un texto que empieza con `=`, `+`, `-` o `@`
+  se escribe con una comilla al inicio para que la hoja de cálculo no lo ejecute como fórmula (`backend/tests/test_exportar.py`).
 - El token JWT solo lleva el id y la expiración (`sub`, `exp`). Se rechazan tokens manipulados, vencidos, firmados con
   otra clave y con algoritmo `none`.
 
-### Matriz de permisos de toda la API (40 rutas)
+### Matriz de permisos de toda la API (43 rutas)
 
-Públicas: **3** · Con sesión (ambos roles): **26** · Solo administrador: **11**
+Públicas: **3** · Con sesión (ambos roles): **27** · Solo administrador: **13**
 
 | Método | Ruta | Quién puede |
 |---|---|---|
@@ -33,9 +35,12 @@ Públicas: **3** · Con sesión (ambos roles): **26** · Solo administrador: **1
 | POST | `/api/auth/login` | Público (no exige sesión) |
 | GET | `/api/auth/me` | Administrador o capturista |
 | POST | `/api/auth/register` | Público (no exige sesión) |
+| GET | `/api/busqueda` | Administrador o capturista |
 | GET | `/api/clima` | Administrador o capturista |
 | GET | `/api/consultas/inscritos` | Administrador o capturista |
 | GET | `/api/dashboard/resumen` | Administrador o capturista |
+| GET | `/api/export/inscritos.csv` | Solo administrador |
+| GET | `/api/export/inscritos.xml` | Solo administrador |
 | GET | `/api/extraescolares` | Administrador o capturista |
 | POST | `/api/extraescolares` | Solo administrador |
 | DELETE | `/api/extraescolares/{idextraescolar}` | Solo administrador |
@@ -80,7 +85,7 @@ y el CI se pone en rojo. Se verificó rompiendo la protección a propósito de t
 ### Pruebas que respaldan A01
 | Qué se comprueba | Dónde |
 |---|---|
-| Matriz de las 40 rutas (401 sin sesión, 403 al capturista) | `backend/tests/test_matriz_permisos.py` |
+| Matriz de las 43 rutas (401 sin sesión, 403 al capturista) | `backend/tests/test_matriz_permisos.py` |
 | Capturista no puede listar usuarios ni cambiar roles (403) y no cambia ningún dato | `backend/tests/test_usuarios.py` |
 | El cambio de rol y la suspensión se aplican en la siguiente petición | `backend/tests/test_usuarios.py`, `test_auth.py` |
 | No se puede dejar el sistema sin administradores | `backend/tests/test_usuarios.py` |
