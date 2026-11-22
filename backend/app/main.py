@@ -47,6 +47,21 @@ async def manejar_error_de_negocio(request: Request, error: ErrorNegocio) -> JSO
     return JSONResponse(status_code=error.status_code, content={"detail": error.mensaje}, headers=headers)
 
 
+@app.middleware("http")
+async def cabeceras_de_seguridad(request: Request, call_next):
+    """Agrega a TODAS las respuestas las cabeceras de seguridad que el navegador respeta (OWASP A02)."""
+    respuesta = await call_next(request)
+    respuesta.headers["X-Content-Type-Options"] = "nosniff"  # el navegador no "adivina" el tipo de un archivo
+    respuesta.headers["X-Frame-Options"] = "DENY"  # nadie puede incrustar la API dentro de otra página
+    respuesta.headers["Referrer-Policy"] = "no-referrer"  # no se filtra de qué página venimos
+    if request.url.path.startswith("/api"):
+        respuesta.headers["Cache-Control"] = "no-store"  # son datos personales: que nadie los guarde en caché
+    if settings.entorno == "produccion":
+        # Solo por HTTPS en producción: el navegador recuerda que este sitio nunca debe usar http://
+        respuesta.headers["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains"
+    return respuesta
+
+
 app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(usuarios.router)
