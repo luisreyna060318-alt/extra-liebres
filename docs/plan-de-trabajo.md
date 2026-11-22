@@ -75,6 +75,9 @@ recorte: pruebas del frontend → reporte más corto (≈ 8–10 páginas) → h
 historial detallado del alumno. **Nunca** se recorta auth, CRUD, clima, tablero, Docker, CI ni
 `AI_USAGE.md`.
 
+> **Actualización (22-nov):** al final sí se implementaron las cuatro historias deseables (HU-04.4, HU-05.3, HU-06.2
+> y HU-07.2); ver `REPORTE.pdf`. Este plan se conserva tal como se escribió.
+
 > **Aviso:** el domingo en la noche concentra reporte, autoevaluación, `AI_USAGE.md`, Lighthouse y la
 > etiqueta; es la parte más cargada. Conviene ir **llenando `AI_USAGE.md` y la bitácora mientras se programa**
 > (no al final) y terminar el despliegue el domingo a más tardar a media tarde.

@@ -21,8 +21,8 @@
 | 10 | Reporte técnico | 5 | Notable | 90 % | 4.5 | `docs/REPORTE.pdf` (este reporte, con 7 figuras y referencias en APA 7) |
 | 11a | Demo y defensa: Luis David Reyna Morisco | 8 | — | — | — | Se llena después de la demo |
 | 11b | Demo y defensa: Carlos Limones Ayala | 8 | — | — | — | Se llena después de la demo |
-| Extra | Puntos extra | +5 | — | — | 0.0 | Ninguno |
-| **Total** | Criterios 1 a 10 | 92 | | | **86.7** | Más los puntos de la demo (hasta 8 por persona) |
+| Extra | Puntos extra | +5 | — | — | — | Se declara el **intercambio de datos en XML**: los inscritos se exportan en XML bien formado, además de JSON ([exportacion.md](exportacion.md) · [test_exportar.py](../backend/tests/test_exportar.py) · PR [#52](https://github.com/luisreyna060318-alt/extra-liebres/pull/52)). Los puntos los define el profesor |
+| **Total** | Criterios 1 a 10 | 92 | | | **86.7** | Más los puntos de la demo (hasta 8 por persona) y los extra que defina el profesor |
 
 Los criterios 1 a 10 son de equipo y valen 92 puntos; la demo (8) se califica por persona.
 
