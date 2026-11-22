@@ -1,0 +1,175 @@
+/* Detalle de grupo (inscritos y evaluación) y consultas. Se importa desde GrupoDetalle.tsx y Consultas.tsx.
+   Usa las piezas de componentes.css y grupos.css (tabla apilable, filtros, paginación). */
+
+/* Cada bloque de la pantalla (inscritos, inscribir) va en su propia tarjeta */
+.tarjeta-seccion {
+  margin-top: var(--espacio-4);
+  padding: var(--espacio-3);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+}
+
+.tarjeta-seccion h2 {
+  margin-top: 0;
+}
+
+/* --- Datos del grupo: una columna en celular, dos en tablet y tres en escritorio --- */
+.datos-grupo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-2) var(--espacio-4);
+  margin: 0;
+  padding: var(--espacio-3);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+}
+
+.datos-grupo dt {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}
+
+.datos-grupo dd {
+  margin: 0;
+}
+
+/* --- Botones pequeños dentro de la tabla (siguen siendo de 2.25rem de alto para tocarlos fácil) --- */
+.boton-chico {
+  min-height: 2.25rem;
+  padding: var(--espacio-1) var(--espacio-3);
+}
+
+.boton-peligro {
+  background: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.boton-peligro:hover {
+  background: #8c1d17;
+  border-color: #8c1d17;
+}
+
+/* --- Captura de calificación: campo + botón en una fila; el error abajo --- */
+.form-calificacion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-2);
+}
+
+.campo-calificacion {
+  width: 5.5rem;
+  min-height: 2.25rem;
+  padding: var(--espacio-1) var(--espacio-2);
+  font: inherit;
+  border: 2px solid var(--color-borde);
+  border-radius: var(--radio);
+}
+
+.campo-calificacion[aria-invalid='true'] {
+  border-color: var(--color-error);
+}
+
+.form-calificacion .campo-error {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.mensaje-fila {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--color-exito);
+}
+
+.etiqueta-baja {
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+/* Pregunta "¿Quitarlo de todos modos?" dentro de la fila */
+.confirmacion {
+  padding: var(--espacio-2);
+  color: var(--color-error);
+  background: var(--color-error-fondo);
+  border: 1px solid currentcolor;
+  border-radius: var(--radio);
+}
+
+.confirmacion p {
+  margin: 0 0 var(--espacio-2);
+}
+
+/* --- Buscador de alumnos para inscribir --- */
+.buscador {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  margin-bottom: var(--espacio-3);
+}
+
+.buscador .boton {
+  align-self: flex-start;
+}
+
+.lista-resultados {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resultado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-2);
+  padding: var(--espacio-2) 0;
+  border-bottom: 1px solid var(--color-borde);
+  overflow-wrap: anywhere;
+}
+
+/* En celular la tabla apilada alinea a la derecha; el formulario de calificación también */
+@media (max-width: 599px) {
+  .tabla-apilable .form-calificacion {
+    justify-content: flex-end;
+  }
+
+  .tabla-apilable .confirmacion {
+    text-align: left;
+  }
+}
+
+@media (min-width: 600px) {
+  .datos-grupo {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* El campo de búsqueda y el botón en una fila */
+  .buscador {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .buscador .campo {
+    flex: 1;
+  }
+
+  /* Alinea el botón con el campo (debajo de la etiqueta) */
+  .buscador .boton {
+    margin-top: 1.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .datos-grupo {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* La consulta solo tiene dos filtros: no hace falta repartirlos en cuatro columnas */
+  .filtros-dos {
+    grid-template-columns: repeat(2, minmax(0, 20rem));
+  }
+}
