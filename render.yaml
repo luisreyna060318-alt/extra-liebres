@@ -28,5 +28,9 @@ services:
         sync: false
       - key: SEED_CAPTURISTA_PASSWORD
         sync: false
+      - key: SEED_LECTOR_CORREO
+        sync: false                      # opcional: si falta, el seed omite la cuenta lector
+      - key: SEED_LECTOR_PASSWORD
+        sync: false
       - key: CLIMA_UMBRAL_LLUVIA
         value: "50"
