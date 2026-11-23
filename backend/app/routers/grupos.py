@@ -19,6 +19,8 @@ router = APIRouter(
 )
 
 SOLO_PERSONAL = Depends(require_role(*ROLES_DE_PERSONAL))
+# Se documenta en /docs el 403 que responde SOLO_PERSONAL cuando la persona es lector
+PERMISO = {403: {"description": "Los lectores no pueden crear, editar ni eliminar grupos"}}
 NO_EXISTE = {404: {"description": "El grupo no existe"}}
 CRUCE = {409: {"description": "Cruce de horario con otro grupo del mismo promotor o lugar"}}
 # 422 de negocio (además de los de Pydantic): actividad deportiva con un lugar fuera de la lista de instalaciones
@@ -45,7 +47,7 @@ def listar(
     status_code=status.HTTP_201_CREATED,
     summary="Crear un grupo",
     dependencies=[SOLO_PERSONAL],
-    responses={404: {"description": "El semestre, la actividad o el promotor no existe"}, **CRUCE, **LUGAR},
+    responses={**PERMISO, 404: {"description": "El semestre, la actividad o el promotor no existe"}, **CRUCE, **LUGAR},
 )
 def crear(datos: GrupoCrear, db: SesionDB):
     """Crea el grupo si no se cruza con otro del mismo promotor o lugar (mismo semestre y día)."""
@@ -62,7 +64,7 @@ def obtener(idgrupo: int, db: SesionDB):
     response_model=GrupoSalida,
     summary="Editar un grupo",
     dependencies=[SOLO_PERSONAL],
-    responses={**NO_EXISTE, **CRUCE, **LUGAR},
+    responses={**PERMISO, **NO_EXISTE, **CRUCE, **LUGAR},
 )
 def actualizar(idgrupo: int, datos: GrupoActualizar, db: SesionDB):
     """Reemplaza los datos del grupo y vuelve a validar los cruces (sin compararlo consigo mismo)."""
@@ -74,7 +76,7 @@ def actualizar(idgrupo: int, datos: GrupoActualizar, db: SesionDB):
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Eliminar un grupo",
     dependencies=[SOLO_PERSONAL],
-    responses={**NO_EXISTE, 409: {"description": "El grupo tiene alumnos inscritos"}},
+    responses={**PERMISO, **NO_EXISTE, 409: {"description": "El grupo tiene alumnos inscritos"}},
 )
 def eliminar(idgrupo: int, db: SesionDB):
     """Solo se puede eliminar un grupo **sin alumnos inscritos**."""

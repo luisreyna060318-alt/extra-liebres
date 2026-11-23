@@ -11,7 +11,9 @@ if TYPE_CHECKING:
 
 
 class Alumno(Base):
-    """Alumno que cursó (o cursa) actividades extraescolares. Nunca se borra: se da de baja (RN-02)."""
+    """Alumno que cursó (o cursa) actividades extraescolares.
+
+    Normalmente se da de baja (RN-02); solo se elimina si no tiene inscripciones."""
 
     __tablename__ = "alumno"
 
