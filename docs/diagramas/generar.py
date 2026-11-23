@@ -96,7 +96,7 @@ def leer_tabla(elementos) -> dict:
         elif tipo == "ForeignKeyConstraint":
             columnas = valor(e.args[0])
             destinos = valor(e.args[1])
-            for col, destino in zip(columnas, destinos):
+            for col, destino in zip(columnas, destinos, strict=True):
                 tabla["fks"][col] = destino  # por ejemplo "promotor.rfc"
         elif tipo == "CheckConstraint":
             opciones = {k.arg: k.value for k in e.keywords}
