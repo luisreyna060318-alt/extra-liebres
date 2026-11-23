@@ -48,6 +48,8 @@ class Settings(BaseSettings):
     seed_admin_password: str | None = None
     seed_capturista_correo: str | None = None
     seed_capturista_password: str | None = None
+    seed_lector_correo: str | None = None
+    seed_lector_password: str | None = None
 
     @model_validator(mode="after")
     def _validar_produccion(self) -> "Settings":

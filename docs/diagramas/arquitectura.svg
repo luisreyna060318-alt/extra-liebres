@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1400" viewBox="0 0 2000 1400" font-family="Segoe UI, Arial, sans-serif">
   <title>Arquitectura de Extra-Liebres</title>
-  <desc>Navegador, frontend React, API FastAPI con capas, PostgreSQL, Open-Meteo, entornos local y en la nube, e integración continua.</desc>
+  <desc>Navegador, frontend React, API FastAPI con capas, PostgreSQL, Open-Meteo con respaldo en wttr.in, entornos local y en la nube, e integración continua.</desc>
   <defs>
     <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" fill="#374151"/>
@@ -32,7 +32,7 @@
   <!-- ===== Usuario y navegador ===== -->
   <rect class="caja" x="40" y="150" width="260" height="100" rx="12"/>
   <text class="h" x="60" y="185">Usuario</text>
-  <text class="d" x="60" y="213">administrador o capturista</text>
+  <text class="d" x="60" y="213">administrador, capturista o lector</text>
   <line class="linea" x1="170" y1="250" x2="170" y2="300" marker-end="url(#flecha)"/>
   <text class="etq" x="182" y="281">HTTP(S)</text>
 
@@ -97,7 +97,7 @@
   <rect class="interna" x="960" y="551" width="520" height="86" rx="8"/>
   <text class="dn" x="974" y="575">3. services/ · lógica de negocio</text>
   <text class="d" x="974" y="599">Reglas RN-xx, cruces de horario, desempeño</text>
-  <text class="d" x="974" y="621">clima.py: cliente de Open-Meteo con caché</text>
+  <text class="d" x="974" y="621">clima.py: Open-Meteo (respaldo wttr.in) con caché</text>
   <line class="linea" x1="1220" y1="637" x2="1220" y2="657" marker-end="url(#flecha)"/>
 
   <rect class="interna" x="960" y="659" width="520" height="86" rx="8"/>
@@ -135,10 +135,11 @@
   <!-- ===== Open-Meteo ===== -->
   <rect class="externa" x="1660" y="420" width="310" height="170" rx="12"/>
   <text class="h" x="1680" y="455">Open-Meteo · API externa</text>
-  <text class="d" x="1680" y="484">api.open-meteo.com/v1/forecast</text>
-  <text class="d" x="1680" y="507">Pública, sin llave. Solo la llama</text>
-  <text class="d" x="1680" y="528">el backend (httpx, máximo 5 s,</text>
-  <text class="d" x="1680" y="549">caché en memoria de 1 hora)</text>
+  <text class="d" x="1680" y="482">api.open-meteo.com/v1/forecast</text>
+  <text class="dn" x="1680" y="503">Si falla, respaldo en wttr.in</text>
+  <text class="d" x="1680" y="524">Públicas, sin llave. Solo las llama</text>
+  <text class="d" x="1680" y="545">el backend (httpx, máximo 5 s,</text>
+  <text class="d" x="1680" y="566">caché 1 h y copia de hasta 6 h)</text>
   <line class="linea" x1="1480" y1="575" x2="1660" y2="575" marker-end="url(#flecha)"/>
   <text class="etq" x="1570" y="564" text-anchor="middle">HTTPS GET</text>
 

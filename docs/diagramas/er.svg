@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1280" viewBox="0 0 2000 1280" font-family="Segoe UI, Arial, sans-serif">
 <title>Modelo entidad-relación de Extra-Liebres</title>
-<desc>Siete tablas de PostgreSQL con sus columnas, llaves y restricciones, generadas desde la migración de Alembic.</desc>
+<desc>Siete tablas de PostgreSQL con sus columnas, llaves y restricciones, generadas desde las migraciones de Alembic.</desc>
 <style>
       .tabla { fill: #ffffff; stroke: #1f2937; stroke-width: 2.5; }
       .cab { fill: #dbeafe; stroke: #1f2937; stroke-width: 2.5; }
@@ -25,7 +25,7 @@
     </style>
 <rect width="2000" height="1280" fill="#ffffff"/>
 <text class="titulo" x="40" y="55">Extra-Liebres · Modelo entidad-relación</text>
-<text class="sub" x="40" y="90">PostgreSQL · 7 tablas · generado desde db/migrations/versions/20261121_0001_esquema_inicial.py</text>
+<text class="sub" x="40" y="90">PostgreSQL · 7 tablas · generado desde las migraciones de db/migrations/versions/ (0001 a 0004)</text>
 <path class="rel" d="M300,378 V437 H810 V520"/>
 <text class="etq" x="555" y="427" text-anchor="middle">rfcpromotor</text>
 <text class="card" x="314" y="402" text-anchor="start">1</text>
@@ -120,7 +120,7 @@
 <text class="col" x="140" y="771">creado_en</text>
 <text class="tipo" x="373" y="771">TIMESTAMPTZ</text>
 <line class="sep" x1="60" y1="784" x2="600" y2="784"/>
-<text class="restr" xml:space="preserve" x="74" y="810">CHECK rol IN ('administrador', 'capturista')</text>
+<text class="restr" xml:space="preserve" x="74" y="810">CHECK rol IN ('administrador', 'capturista', 'lector')</text>
 <rect class="tabla" x="740" y="520" width="480" height="382" rx="10"/>
 <path class="cab" d="M740,570 V530 Q740,520 750,520 H1210 Q1220,520 1220,530 V570 Z"/>
 <text class="nombre" x="756" y="553">grupo</text>
@@ -200,5 +200,5 @@
 <text class="nota" x="756" y="1104">alumno_grupo: su PK es compuesta (nocontrol, idgrupo), así un</text>
 <text class="nota" x="756" y="1128">alumno no se inscribe dos veces al mismo grupo.</text>
 <text class="nota" x="756" y="1152">usuario no se relaciona con las demás tablas: son las cuentas</text>
-<text class="nota" x="756" y="1176">de acceso (correo único, rol administrador o capturista).</text>
+<text class="nota" x="756" y="1176">de acceso (correo único, rol administrador, capturista o lector).</text>
 </svg>

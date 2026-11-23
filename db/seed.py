@@ -83,6 +83,7 @@ def sembrar_usuarios(db) -> None:
     pruebas = [
         ("Administrador de prueba", settings.seed_admin_correo, settings.seed_admin_password, "administrador"),
         ("Capturista de prueba", settings.seed_capturista_correo, settings.seed_capturista_password, "capturista"),
+        ("Lector de prueba", settings.seed_lector_correo, settings.seed_lector_password, "lector"),
     ]
     for nombre, correo, password, rol in pruebas:
         if not correo or not password:

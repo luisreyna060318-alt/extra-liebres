@@ -6,7 +6,7 @@ from app.core.deps import SesionDB, get_current_user
 from app.schemas.dashboard import ResumenSalida
 from app.services import dashboard_service
 
-# Sesión requerida (administrador o capturista): 401 si no hay
+# Sesión requerida (cualquier rol, también el lector): 401 si no hay
 router = APIRouter(
     prefix="/api/dashboard",
     tags=["Tablero"],

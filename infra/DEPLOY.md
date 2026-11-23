@@ -37,6 +37,7 @@ Render pide los valores que no se pueden guardar en Git:
 | `CORS_ORIGINS` | La URL del frontend en Vercel, sin diagonal final (si aún no la tienes, pon una provisional y corrígela en el paso 4) |
 | `SEED_ADMIN_CORREO` / `SEED_ADMIN_PASSWORD` | Cuenta de administrador de la demo y **una clave tuya** (8 o más caracteres, con letras y números) |
 | `SEED_CAPTURISTA_CORREO` / `SEED_CAPTURISTA_PASSWORD` | Cuenta de capturista de la demo |
+| `SEED_LECTOR_CORREO` / `SEED_LECTOR_PASSWORD` | Cuenta de lector de la demo (opcional: si faltan, el seed la omite; también se puede crear desde el registro) |
 
 `SECRET_KEY` la genera Render sola. Con `ENTORNO=produccion`, el backend **se niega a arrancar** si la
 clave es corta o es la del ejemplo, y el seed se niega a crear usuarios con las claves de ejemplo.
@@ -55,7 +56,7 @@ clave es corta o es la del ejemplo, y el seed se niega a crear usuarios con las 
 | Docker Command y Pre-Deploy Command | **vacíos**: el arranque del contenedor ya aplica las migraciones |
 
 Variables de entorno: `ENTORNO=produccion`, `SEED_ON_START=true`, `CLIMA_UMBRAL_LLUVIA=50`, `CORS_ORIGINS`, `DATABASE_URL`,
-`SEED_ADMIN_CORREO`, `SEED_ADMIN_PASSWORD`, `SEED_CAPTURISTA_CORREO`, `SEED_CAPTURISTA_PASSWORD` (como en la tabla de
+`SEED_ADMIN_CORREO`, `SEED_ADMIN_PASSWORD`, `SEED_CAPTURISTA_CORREO`, `SEED_CAPTURISTA_PASSWORD`, `SEED_LECTOR_CORREO`, `SEED_LECTOR_PASSWORD` (como en la tabla de
 arriba) y `SECRET_KEY`, que se obtiene con el botón **Generate** de Render.
 
 **Con la opción A o con la B**, espera a que el servicio diga **Live**. Prueba `https://TU-SERVICIO.onrender.com/api/health` (debe
