@@ -5,8 +5,8 @@
 > todo el material, incluido el generado por la herramienta. Si no podemos explicar un fragmento en la
 > demo, no cuenta como nuestro.
 >
-> **Estado:** actualizado el 22 de noviembre de 2026 (commits de `main` hasta `c656a3f`). No quedan celdas
-> marcadas como _pendiente_.
+> **Estado:** actualizado el 22 de noviembre de 2026. Las cifras de Git se midieron con los commits de `main` hasta
+> `7f2c49e` (PR #63); después solo entró el PR de la revisión final (sección 4). No quedan celdas marcadas como _pendiente_.
 
 ## 1. Herramientas y modelos
 
@@ -18,6 +18,7 @@
 | Claude Code, subagentes | Claude Sonnet 5.5 | Carlos | Frontend base y autenticación, servicio de clima, backend del tablero, frontend de grupos, frontend del tablero, infraestructura del frontend, diagramas y backlog |
 | Claude Code, subagentes | Claude Opus 5.5 | Carlos | Grupos del backend (cruces de horario y lugar); inscripciones, consulta de inscritos y validación del lugar por tipo de actividad; frontend del detalle de grupo y de la consulta; agente de documentación (esta bitácora y el borrador del reporte) |
 | Claude Code, subagentes | Claude Haiku 5.5 | Carlos | Integración continua (CI) con GitHub Actions |
+| Claude Code (app de escritorio de Claude), orquestador con subagentes de solo lectura | Claude Opus 5.5 (orquestador y subagentes de backend y de documentación) y Claude Sonnet 5.5 (subagentes de frontend y de infraestructura) | Luis | Revisión final del repositorio contra los requisitos del proyecto y correcciones de documentación |
 
 ## 2. Harness y modo de uso
 
@@ -72,7 +73,7 @@ Claude (lo dicen los PR #36, #39 y #41) y usaron `gh` para abrir los PR.
 | 2026-11-21 | Carlos | Claude Code (subagente de infraestructura del frontend) / Claude Sonnet 5.5 | PR #40 (C15): Dockerfile y nginx del frontend, `vercel.json`, servicio en compose, `DB_HOST_PORT`, job de CI que construye imágenes, docs de despliegue | `frontend/{Dockerfile, nginx.conf, .dockerignore, vercel.json}`, `infra/docker-compose.yml`, `.github/workflows/ci.yml`, `infra/DEPLOY.md`, `README.md`, `.env.example`, `.gitattributes` | Se aceptó la estructura de dos etapas con nginx-unprivileged; se verificó con `docker compose up --build -d --wait` y `curl` (46 s en frío, 19 s con caché). Vercel no se probó en ese PR; el despliegue se hizo después (PR #48). |
 | 2026-11-21 | Carlos | Claude Code (subagente de detalle de grupo y consultas) / Claude Opus 5.5 | PR #41 (C14): implementar el detalle de grupo `/grupos/:id` (datos, inscritos, inscribir con buscador y 409, evaluar 0–100 con el desempeño calculado por el servidor, quitar con confirmación `confirmar=true`) y la consulta `/consultas` con filtros y paginación; accesible y responsive desde 360 px; probar contra el backend real en Docker | `frontend/src/App.tsx`, `frontend/src/pages/{GrupoDetalle,Consultas,Grupos}.tsx`, `frontend/src/components/{FilaInscrito,InscribirAlumno}.tsx`, `frontend/src/api/{inscripciones,consultas}.ts`, `frontend/src/utils/inscripciones.ts`, `frontend/src/styles/{inscripciones,grupos}.css` | Se fusionó sin commits extra. Su `inscripciones.css` define `.boton-peligro` con fondo rojo, lo que más tarde chocó con `alumnos.css` (ver la fila siguiente). |
 | 2026-11-21 | Carlos | Claude Code (orquestador) / Claude Sonnet 5.5 | Revisión del PR #43 de Luis en el navegador: el botón "Dar de baja" de Alumnos se veía como un bloque rojo sin texto | `frontend/src/pages/Alumnos.tsx`, `frontend/src/styles/alumnos.css` (commit `2ef8618`) | La causa era `.boton-peligro` definida tres veces con estilos distintos; el enlace de Alumnos pasó a `.boton-texto-peligro`. Build, lint y pruebas pasaban antes del arreglo (ver reflexión). |
-| 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | PR #42: revisión de seguridad con el OWASP Top 10:2025 (A01, A02 y A03), matriz de permisos de las 40 rutas generada por una prueba automática y `AI_USAGE.md` al día | `docs/seguridad.md`, `backend/tests/test_matriz_permisos.py`, `AI_USAGE.md` | Se verificó rompiendo la protección a propósito de tres maneras distintas (pruebas de mutación) |
+| 2026-11-21 | Luis | Claude Code / Claude Sonnet 5.5 | PR #42: revisión de seguridad con el OWASP Top 10:2025 (A01, A02 y A03), matriz de permisos de las 40 rutas que había entonces (hoy son 43) generada por una prueba automática y `AI_USAGE.md` al día | `docs/seguridad.md`, `backend/tests/test_matriz_permisos.py`, `AI_USAGE.md` | Se verificó rompiendo la protección a propósito de tres maneras distintas (pruebas de mutación) |
 | 2026-11-21 | Carlos | Claude Code (subagente de diagramas) / Claude Sonnet 5.5 | PR #44: diagrama de arquitectura, modelo entidad-relación generado desde la migración y borrador de la autoevaluación | `docs/arquitectura.png`, `db/er.png`, `docs/diagramas/`, `docs/AUTOEVALUACION.md` | Se fusionó sin commits extra. |
 | 2026-11-21 | Carlos | Claude Code (agente de documentación) / Claude Opus 5.5 | PR #45: bitácora de IA y reflexión crítica de Carlos, y borrador del reporte técnico | `AI_USAGE.md`, `docs/REPORTE.md` | Se fusionó sin commits extra. |
 | 2026-11-21 | Carlos | Claude Code (subagente de accesibilidad) / Claude Sonnet 5.5 | PR #46: correcciones de accesibilidad y reporte de Lighthouse con puntajes antes y después, más comprobaciones con axe-core | `docs/lighthouse.md`, `docs/lighthouse/`, `frontend/public/robots.txt`, `frontend/src/components/{Confirmacion,Layout}.tsx` y estilos | El reporte aclara que las diferencias de rendimiento son ruido de la medición y que no se presume una mejora. |
@@ -87,9 +88,7 @@ Claude (lo dicen los PR #36, #39 y #41) y usaron `gh` para abrir los PR.
 | 2026-11-22 | Luis | Claude Code / Claude Sonnet 5.5 | Ajustes del registro que pidió Luis al probar las pantallas: número de control de exactamente 8 dígitos y hasta 26999999 (con migración de los datos existentes), etiqueta Nombre(s), eliminar alumnos solo si no tienen inscripciones (la baja pasa a ser un PUT), mensajes de eliminar sin el detalle técnico, semestres de 2000 a 2027 con solo dos periodos, grupos de al menos 1 hora y arreglo del diseño del formulario de alumnos | `backend/app/{core/constantes,schemas,services,routers}/`, `db/seed.py`, `db/migrations/versions/20261122_0003_nocontrol_8_digitos.py`, `frontend/src/{pages,utils,api,styles}/`, pruebas y `docs/` | Luis dio las reglas exactas y aclaró que son 8 dígitos (no 7). El agente probó la migración contra PostgreSQL en Docker (201 alumnos y 633 inscripciones conservados, 0 huérfanas, llave foránea restaurada), 26 pruebas nuevas y el recorrido en el navegador de cada cambio. Luis lo probó en producción y confirmó que se ve bien. |
 | 2026-11-22 | Luis | Claude Code / Claude Sonnet 5.5 | Dar identidad visual a la aplicación con los colores y el logo del equipo (rojo, grafito y blanco), poner el logo como icono de la pestaña y en el encabezado, y corregir que la gráfica de barras cortaba el número de la barra más alta | `frontend/src/styles/`, `frontend/src/components/{Layout,GraficaBarras}.tsx`, `frontend/index.html`, `frontend/public/` | Luis aportó el logo y pidió que los colores combinaran con él sin perder contraste. El agente oscureció el rojo del logo para que el texto blanco pase 4.5:1, midió los contrastes, corrió axe en 13 pantallas a 1280 y 360 px (0 violaciones) y la prueba de cursor encima de 156 botones (0 con texto ilegible), y comprobó con medidas en el navegador que el número de la barra más alta ya queda dentro de la gráfica. Luis lo probó en producción (22-nov-2026) y confirmó que se ve bien y funciona. |
 | 2026-11-22 | Luis | Claude Code / Claude Sonnet 5.5 | Que las cuentas creadas desde el registro sean de solo lectura (nuevo rol lector que solo ve el tablero y las listas de grupos y catálogos), que los enlaces de acciones de las tablas (Ver, Editar, Ver historial) dejen de ser rojos y arreglar que el pronóstico saliera como no disponible en producción (Luis revisó los logs de Render: Open-Meteo respondía `429 Too Many Requests`) | `backend/app/{core,models,routers,services,schemas}/`, `db/migrations/versions/20261122_0004_rol_lector.py`, `backend/tests/`, `frontend/src/{App,components,pages,styles}/` y `docs/` | Luis pidió el rol de lector y, al preguntarle, eligió que solo vea el tablero y las listas (sin datos de alumnos). El agente probó la migración en PostgreSQL (subir, bajar y volver a subir), 39 pruebas nuevas (413 en total) y el recorrido en el navegador con una cuenta recién registrada. Para el clima, el agente agregó un servicio de respaldo (wttr.in), la última copia de hasta 6 horas y una espera de 1 minuto tras fallar, y probó el respaldo contra un 429 real (httpbin) y contra wttr.in real. Luis lo probó en producción (22-nov-2026) y confirmó que se ve bien y funciona. |
-
-_(Se agregan filas con cada prompt importante: fecha, quién, herramienta y modelo, resumen fiel del
-prompt, archivos y qué cambiamos nosotros después.)_
+| 2026-11-22 | Luis | Claude Code, orquestador y 4 subagentes de solo lectura en paralelo / Claude Opus 5.5 y Claude Sonnet 5.5 | Revisar a fondo el repositorio contra el documento del proyecto final: comprobar lo que se pide contra lo que hay y que la documentación sea coherente con el código, sin proponer mejoras que no hagan falta salvo riesgos para la aplicación desplegada; sin commits ni PR hasta que Luis lo apruebe. Después, aplicar las correcciones que Luis eligió | Revisión: ninguno (solo lectura; se corrieron pytest, ruff, Alembic en un PostgreSQL temporal, lint y build del frontend, `docker compose up` en un clon limpio y peticiones GET a producción). Correcciones: `README.md`, `AI_USAGE.md`, `docs/AUTOEVALUACION.md`, `docs/REPORTE.pdf`, `docs/propuesta-v2.md`, `docs/arquitectura.png`, `db/er.png`, `docs/diagramas/`, `db/seed.py`, `backend/app/core/config.py`, `.env.example`, `render.yaml`, `infra/`, comentarios en `backend/app/` | Luis revisó los hallazgos y decidió: la reflexión de Carlos ya era la final (solo se quitó la marca de borrador), las capturas del PDF bastan, agregar la cuenta de prueba lector, actualizar las cifras, los diagramas y la tabla de endpoints, y que Luis y Carlos revisaran después de fusionados los PR que habían entrado sin revisión. Luis aportó capturas nuevas de Vercel, Render, Neon y la CI para las Figuras 6 y 7 del reporte y pidió ajustar su reflexión a lo que realmente pasó (dos días, no una tarde-noche) |
 
 ## 5. Marcado en commits
 
@@ -102,17 +101,17 @@ Para ver cuáles son: `git log --grep="Co-Authored-By\|Assisted-by"`.
 
 ## 6. Estimación de código generado por IA por carpeta
 
-Medido con el historial de Git (líneas añadidas en commits marcados con `Co-Authored-By` o `Assisted-by`) al 22 de noviembre de 2026, con los commits de `main` hasta `c656a3f`:
+Medido con el historial de Git (líneas añadidas en commits marcados con `Co-Authored-By` o `Assisted-by`) al 22 de noviembre de 2026, con los commits de `main` hasta `7f2c49e`:
 
 | Carpeta | % con IA | Líneas añadidas | Nota |
 |---|---|---|---|
-| `backend/` | ~100 % | 6 081 | Todo el código lo escribió el asistente; las personas dirigen, revisan, prueban y aprueban cada commit |
-| `frontend/` | ~100 % | 9 653 | Incluye `package-lock.json` (generado por npm) |
-| `db/` | ~100 % | 560 | Modelos, migración y datos semilla |
-| `infra/` y raíz | ~100 % | 1 180 | Docker, compose, `render.yaml`, CI y configuración (`infra/` 557 y raíz 623) |
-| `docs/` | ~100 % | 3 153 | La planeación fue redactada con IA y revisada por el equipo |
+| `backend/` | ~100 % | 6 678 | Todo el código lo escribió el asistente; las personas dirigen, revisan, prueban y aprueban cada commit |
+| `frontend/` | ~100 % | 9 997 | Incluye `package-lock.json` (generado por npm) |
+| `db/` | ~100 % | 694 | Modelos, 4 migraciones y datos semilla |
+| `infra/` y raíz | ~100 % | 1 225 | Docker, compose, `render.yaml`, CI y configuración (`infra/` 558 y raíz 667) |
+| `docs/` | ~100 % | 3 250 | La planeación fue redactada con IA y revisada por el equipo |
 
-75 de 75 commits sin fusiones llevan la marca de IA. **Ningún commit se hizo sin asistente.** La contribución humana está en
+86 de 86 commits sin fusiones llevan la marca de IA (los de la revisión final también). **Ningún commit se hizo sin asistente.** La contribución humana está en
 decidir el alcance, dirigir el trabajo, revisar los cambios, probarlos, corregirlos y poder explicarlos en la demo.
 
 ## 7. Reflexión crítica
@@ -136,8 +135,6 @@ reportes de otros agentes es parte del trabajo. Y que podemos explicar el códig
 lo escribimos nosotros.
 
 ### Reflexión de Carlos
-
-> **Borrador: Carlos lo reescribe con sus palabras.**
 
 **Un error que la IA introdujo y cómo lo detectamos.** Para fusionar `main` en la rama del tablero (PR #34), el
 orquestador usó un script que resolvía los conflictos de `backend/app/main.py`. El script no supo manejar el `import`
@@ -163,8 +160,8 @@ eran 4 (cancha, gimnasio, pista y alberca), pero el agente leyó `INSTALACIONES`
 encontró 6 y usó las reales. Con la lista corta, crear o editar un grupo con los lugares que usa el seed (por ejemplo
 "Cancha de fútbol") habría respondido 422.
 
-**Qué aprendí que no habría aprendido sin la IA.** _Pregunta guía para Carlos (respóndela tú):_ ¿qué entendí de Git,
-de la CI o de la revisión de código gracias a estos errores, que no habría visto si yo hubiera escrito todo a mano?
+**Qué aprendí que no habría aprendido sin la IA.** Aprendí a revisar `git status` y a buscar marcas de conflicto antes de
+subir, y a tratar la CI como la última red de seguridad, no como la primera revisión.
 
 ## Reglas de seguridad que seguimos
 

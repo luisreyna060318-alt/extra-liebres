@@ -30,3 +30,7 @@ Thumbs.db
 *.sqlite3
 *.db
 pgdata/
+
+# Fuente editable del reporte: solo se sube el PDF (docs/REPORTE.pdf)
+docs/REPORTE.docx
+~$*

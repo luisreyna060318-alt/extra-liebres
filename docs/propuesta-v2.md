@@ -262,22 +262,27 @@ Cambios sobre la Tarea 1:
 
 ## 7. Endpoints de la API (≥ 12 requeridos; la API final tiene 43 operaciones, ver `seguridad.md`)
 
-| Grupo | Método y ruta | Rol |
-|---|---|---|
-| Auth | `POST /api/auth/register` · `POST /api/auth/login` · `GET /api/auth/me` | público / público / sesión |
-| Usuarios | `GET /api/usuarios` · `PATCH /api/usuarios/{id}` | administrador |
-| Alumnos | `GET /api/alumnos` (q, carrera, campus, activo, page, size) · `POST` · `GET /{nocontrol}` · `PUT /{nocontrol}` · `DELETE /{nocontrol}` (solo si no tiene inscripciones; la baja lógica es `PUT` con `activo=false`) · `GET /{nocontrol}/historial` | sesión |
-| Promotores | `GET` · `POST` · `PUT /{rfc}` · `DELETE /{rfc}` | GET sesión; resto administrador |
-| Extraescolares | `GET` · `POST` · `PUT /{id}` · `DELETE /{id}` | GET sesión; resto administrador |
-| Semestres | `GET` · `POST` · `PUT /{id}` · `DELETE /{id}` | GET sesión; resto administrador |
-| Grupos | `GET` (semestre, extraescolar, promotor, dia, page) · `POST` · `GET /{id}` · `PUT /{id}` · `DELETE /{id}` | sesión |
-| Inscripciones | `GET /api/grupos/{id}/inscritos` · `POST /api/grupos/{id}/inscripciones` · `PUT /api/grupos/{id}/inscripciones/{nocontrol}` (evaluar) · `DELETE …` | sesión |
-| Consultas | `GET /api/consultas/inscritos` (extraescolar, semestre, page) | sesión |
-| Búsqueda | `GET /api/busqueda` (q) (D, entregado) | sesión |
-| Tablero | `GET /api/dashboard/resumen` (semestre) | sesión |
-| Clima | `GET /api/clima` (llama a Open-Meteo) | sesión |
-| Exportar | `GET /api/export/inscritos.csv` · `GET /api/export/inscritos.xml` (extraescolar, semestre; ver [`exportacion.md`](exportacion.md)) | administrador (D, entregado) |
-| Sistema | `GET /api/health` | público |
+Roles: **sesión** = cualquier rol con sesión, incluido el lector · **personal** = administrador o capturista (el lector
+recibe 403) · **administrador** = solo administrador. La matriz completa, generada por la prueba de permisos, está en
+[`seguridad.md`](seguridad.md).
+
+| Grupo | Método y ruta | Rol | Operaciones |
+|---|---|---|---:|
+| Auth | `POST /api/auth/register` · `POST /api/auth/login` · `GET /api/auth/me` | público / público / sesión | 3 |
+| Usuarios | `GET /api/usuarios` · `PATCH /api/usuarios/{id}` | administrador | 2 |
+| Alumnos | `GET /api/alumnos` (q, carrera, campus, estado=activos\|bajas\|todos, page, size) · `POST` · `GET /opciones` (listas de carreras y campus para los filtros) · `GET /{nocontrol}` · `PUT /{nocontrol}` (la baja lógica es `PUT` con `activo=false`) · `DELETE /{nocontrol}` (solo si no tiene inscripciones) · `GET /{nocontrol}/historial` | personal | 7 |
+| Promotores | `GET` (q, estado) · `GET /{rfc}` · `POST` · `PUT /{rfc}` · `DELETE /{rfc}` | GET sesión; resto administrador | 5 |
+| Extraescolares | `GET` · `GET /{id}` · `POST` · `PUT /{id}` · `DELETE /{id}` | GET sesión; resto administrador | 5 |
+| Semestres | `GET` · `GET /{id}` · `POST` · `PUT /{id}` · `DELETE /{id}` | GET sesión; resto administrador | 5 |
+| Grupos | `GET` (semestre, extraescolar, promotor, dia, page) · `GET /{id}` · `POST` · `PUT /{id}` · `DELETE /{id}` | GET sesión; resto personal | 5 |
+| Inscripciones | `GET /api/grupos/{id}/inscritos` · `POST /api/grupos/{id}/inscripciones` · `PUT /api/grupos/{id}/inscripciones/{nocontrol}` (evaluar) · `DELETE …` | personal | 4 |
+| Consultas | `GET /api/consultas/inscritos` (extraescolar, semestre, page) | personal | 1 |
+| Búsqueda | `GET /api/busqueda` (q) (D, entregado) | personal | 1 |
+| Tablero | `GET /api/dashboard/resumen` (semestre) | sesión | 1 |
+| Clima | `GET /api/clima` (Open-Meteo, con respaldo en wttr.in) | sesión | 1 |
+| Exportar | `GET /api/export/inscritos.csv` · `GET /api/export/inscritos.xml` (extraescolar, semestre; ver [`exportacion.md`](exportacion.md)) | administrador (D, entregado) | 2 |
+| Sistema | `GET /api/health` | público | 1 |
+| **Total** | | | **43** |
 
 Códigos HTTP: 200/201/204 éxito · 400/422 validación · 401 sin sesión · 403 sin permiso · 404 no existe ·
 409 conflicto (duplicado, cruce de horario, registro referenciado).
