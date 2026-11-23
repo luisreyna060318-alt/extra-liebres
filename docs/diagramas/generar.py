@@ -57,26 +57,29 @@ def tipo_sql(nodo) -> str:
 
 
 def leer_tablas() -> dict:
-    """Devuelve {tabla: {columnas, pk, fks, checks, uniques}} a partir de las llamadas op.create_table(...)."""
+    """Devuelve {tabla: {columnas, pk, fks, checks, uniques}} a partir de las llamadas op.create_table(...).
+
+    De las migraciones posteriores también aplica op.create_check_constraint (por ejemplo, la 0004 cambia el CHECK
+    del rol para agregar "lector"). Solo se lee la función upgrade(), no downgrade(). Los demás ALTER no se dibujan."""
     archivos = sorted(MIGRACIONES.glob("*.py"))
-    if len(archivos) > 1:
-        print("Aviso: hay varias migraciones; solo se leen las llamadas create_table (no los ALTER).")
     tablas = {}
     for archivo in archivos:
         arbol = ast.parse(archivo.read_text(encoding="utf-8"))
-        for nodo in ast.walk(arbol):
-            es_create = (
-                isinstance(nodo, ast.Call)
-                and isinstance(nodo.func, ast.Attribute)
-                and nodo.func.attr == "create_table"
-            )
-            if es_create:
+        upgrade = next(n for n in arbol.body if isinstance(n, ast.FunctionDef) and n.name == "upgrade")
+        for nodo in ast.walk(upgrade):
+            if not (isinstance(nodo, ast.Call) and isinstance(nodo.func, ast.Attribute)):
+                continue
+            if nodo.func.attr == "create_table":
                 tablas[valor(nodo.args[0])] = leer_tabla(nodo.args[1:])
+            elif nodo.func.attr == "create_check_constraint":
+                # Mismo nombre = reemplaza al CHECK anterior (la migración hace drop_constraint y luego create)
+                nombre, tabla, expresion = (valor(a) for a in nodo.args[:3])
+                tablas[tabla]["checks"][nombre] = expresion
     return tablas
 
 
 def leer_tabla(elementos) -> dict:
-    tabla = {"columnas": [], "pk": [], "fks": {}, "checks": [], "uniques": []}
+    tabla = {"columnas": [], "pk": [], "fks": {}, "checks": {}, "uniques": []}  # checks: {nombre: expresión}
     for e in elementos:
         tipo = e.func.attr
         if tipo == "Column":
@@ -96,7 +99,8 @@ def leer_tabla(elementos) -> dict:
             for col, destino in zip(columnas, destinos):
                 tabla["fks"][col] = destino  # por ejemplo "promotor.rfc"
         elif tipo == "CheckConstraint":
-            tabla["checks"].append(valor(e.args[0]))
+            opciones = {k.arg: k.value for k in e.keywords}
+            tabla["checks"][valor(opciones["name"])] = valor(e.args[0])
         elif tipo == "UniqueConstraint":
             tabla["uniques"].append([valor(a) for a in e.args])
     return tabla
@@ -132,7 +136,7 @@ DISPOSICION = {
 def lineas_restricciones(tabla: dict, ancho: int) -> list:
     """Texto de los CHECK y UNIQUE, partido en renglones que quepan en la caja."""
     letras = int((ancho - 28) / 7.6)
-    textos = [f"CHECK {c}" for c in tabla["checks"]]
+    textos = [f"CHECK {c}" for c in tabla["checks"].values()]
     textos += [f"UNIQUE ({', '.join(u)})" for u in tabla["uniques"] if len(u) > 1]
     renglones = []
     for t in textos:
@@ -264,7 +268,7 @@ def generar_er(tablas: dict) -> str:
         ("alumno_grupo: su PK es compuesta (nocontrol, idgrupo), así un", False),
         ("alumno no se inscribe dos veces al mismo grupo.", False),
         ("usuario no se relaciona con las demás tablas: son las cuentas", False),
-        ("de acceso (correo único, rol administrador o capturista).", False),
+        ("de acceso (correo único, rol administrador, capturista o lector).", False),
     ]
     alto_notas = 56 + len(notas) * 24
     leyenda = [f'<rect class="notas" x="{nx}" y="{ny}" width="{nw}" height="{alto_notas}" rx="10"/>',
@@ -300,12 +304,12 @@ def generar_er(tablas: dict) -> str:
             f'viewBox="0 0 {ANCHO_ER} {ALTO_ER}" font-family="Segoe UI, Arial, sans-serif">',
             "<title>Modelo entidad-relación de Extra-Liebres</title>",
             "<desc>Siete tablas de PostgreSQL con sus columnas, llaves y restricciones, "
-            "generadas desde la migración de Alembic.</desc>",
+            "generadas desde las migraciones de Alembic.</desc>",
             f"<style>{estilos}</style>",
             f'<rect width="{ANCHO_ER}" height="{ALTO_ER}" fill="#ffffff"/>',
             '<text class="titulo" x="40" y="55">Extra-Liebres · Modelo entidad-relación</text>',
-            '<text class="sub" x="40" y="90">PostgreSQL · 7 tablas · generado desde '
-            "db/migrations/versions/20261121_0001_esquema_inicial.py</text>",
+            '<text class="sub" x="40" y="90">PostgreSQL · 7 tablas · generado desde las migraciones '
+            "de db/migrations/versions/ (0001 a 0004)</text>",
             *lineas,
             *svg_cajas,
             *leyenda,

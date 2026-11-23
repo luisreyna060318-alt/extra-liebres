@@ -2,7 +2,7 @@
 
 | Imagen | Qué muestra | Fuente editable |
 |---|---|---|
-| [`docs/arquitectura.png`](../arquitectura.png) | Navegador, frontend, API por capas, base de datos, Open-Meteo, entornos y CI | [`arquitectura.svg`](arquitectura.svg) (escrito a mano) |
+| [`docs/arquitectura.png`](../arquitectura.png) | Navegador, frontend, API por capas, base de datos, Open-Meteo (con respaldo en wttr.in), entornos y CI | [`arquitectura.svg`](arquitectura.svg) (escrito a mano) |
 | [`db/er.png`](../../db/er.png) | Modelo entidad-relación: 7 tablas, llaves, relaciones 1:N y N:M, restricciones | [`er.svg`](er.svg) (generado por `generar.py`) |
 
 ## Cómo se generan
@@ -14,10 +14,11 @@ python docs/diagramas/generar.py             # SVG y PNG
 python docs/diagramas/generar.py --solo-svg  # solo los SVG (no necesita navegador)
 ```
 
-1. **Modelo entidad-relación.** `generar.py` lee la migración de Alembic (`db/migrations/versions/`) con el
-   módulo `ast` de Python, sin ejecutarla ni conectarse a la base de datos. De ahí saca tablas, columnas con su
-   tipo, `NULL`, llaves primarias y foráneas, `CHECK` y `UNIQUE`, y dibuja `er.svg`. Si cambia el modelo y se
-   crea otra migración, se vuelve a correr el script. La posición de cada tabla está en el diccionario
+1. **Modelo entidad-relación.** `generar.py` lee las migraciones de Alembic (`db/migrations/versions/`) con el
+   módulo `ast` de Python, sin ejecutarlas ni conectarse a la base de datos. De la función `upgrade()` saca tablas,
+   columnas con su tipo, `NULL`, llaves primarias y foráneas, `CHECK` y `UNIQUE` (incluidos los `CHECK` que cambian
+   migraciones posteriores, como el rol lector de la 0004), y dibuja `er.svg`. Si cambia el modelo y se crea otra
+   migración, se vuelve a correr el script. La posición de cada tabla está en el diccionario
    `DISPOSICION` del script.
 2. **Arquitectura.** `arquitectura.svg` se edita a mano (es texto; se puede abrir en el navegador o en VS Code).
    Cada dato sale del código: puertos y servicios de `infra/docker-compose.yml`, `render.yaml`,
@@ -29,5 +30,4 @@ python docs/diagramas/generar.py --solo-svg  # solo los SVG (no necesita navegad
 ## Qué revisar a mano después de cambiar algo
 
 - Que el PNG se vea completo (nada encimado ni cortado).
-- Que el diagrama de arquitectura no muestre nada que no exista en el código (por ejemplo, la URL pública del
-  despliegue sigue pendiente).
+- Que el diagrama de arquitectura no muestre nada que no exista en el código.
