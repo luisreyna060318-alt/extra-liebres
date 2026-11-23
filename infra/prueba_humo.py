@@ -201,14 +201,18 @@ def main() -> int:
         ok("crea una actividad", c == 201)
         if c == 201:
             temporales.append(("actividad", f"/api/extraescolares/{actividad['idextraescolar']}"))
+        # El servidor solo acepta años de 2000 a 2027 y dos periodos (enero-junio y agosto-diciembre), así que se
+        # busca, del año más alto hacia atrás, el primer semestre que todavía no exista (409 = ya existe)
         semestre = None
-        for mes in range(1, 13):
-            c, semestre = llamar(
-                base, "POST", "/api/semestres", admin, {"anio": 2099, "mesinicio": mes, "mestermino": min(mes + 5, 12)}
-            )
+        for anio in range(2027, 1999, -1):
+            for mesinicio, mestermino in ((8, 12), (1, 6)):
+                datos = {"anio": anio, "mesinicio": mesinicio, "mestermino": mestermino}
+                c, semestre = llamar(base, "POST", "/api/semestres", admin, datos)
+                if c != 409:
+                    break
             if c != 409:
                 break
-        ok("crea un semestre de prueba (año 2099)", c == 201)
+        ok("crea un semestre de prueba (el más alto libre, hasta 2027)", c == 201, f"{anio}, mes {mesinicio}")
         if c == 201:
             temporales.append(("semestre", f"/api/semestres/{semestre['idsemestre']}"))
 
